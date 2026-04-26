@@ -207,9 +207,10 @@ function App() {
         <AnimatePresence mode="wait">
           {activeTab === 'overview' && (
             <motion.div key="ov" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="space-y-8">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6">
                 {[
                   { label: 'Burn Rate', value: `$${filteredOverview?.cost.toFixed(2)}`, icon: <Coins />, color: 'text-yellow-400', sub: 'Total Investment' },
+                  { label: 'Code Authored', value: (currentStats.gitLoc?.insertions || 0).toLocaleString(), icon: <FileCode />, color: 'text-pink-400', sub: 'Git Insertions (30d)' },
                   { label: 'Total Tokens', value: (filteredOverview?.tokens || 0).toLocaleString(), icon: <Zap />, color: 'text-purple-400', sub: 'Input + Output' },
                   { label: 'Input Prompts', value: (dateRange === 'all' ? currentStats.messageCount.input : filteredOverview.inputMessages).toLocaleString(), icon: <ActivityIcon />, color: 'text-blue-400', sub: 'User Invocations' },
                   { label: 'Stability', value: `${(((1 - ((filteredOverview?.errors || 0) / (currentStats.messageCount.output || 1))) * 100)).toFixed(1)}%`, icon: <AlertCircle />, color: 'text-green-400', sub: `${filteredOverview.errors} Errors Logged` },
