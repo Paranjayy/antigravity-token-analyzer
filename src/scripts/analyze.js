@@ -5,6 +5,7 @@ import Database from 'better-sqlite3';
 
 const ANTIGRAVITY_PATH = '/Users/paranjay/.gemini/antigravity/brain';
 const OPENCODE_DB_PATH = '/Users/paranjay/.local/share/opencode/opencode.db';
+const MEDIA_PATH = '/Users/paranjay/.gemini/antigravity/brain/tempmediaStorage';
 const PRICING_PATH = path.join(process.cwd(), 'src/data/pricing.json');
 const OUTPUT_PATH = path.join(process.cwd(), 'src/data/stats.json');
 
@@ -23,19 +24,24 @@ async function analyze() {
     toolUsage: {},
     timeline: {},
     providers: {
-      antigravity: { conversations: 0, tokens: { input: 0, output: 0 }, cost: 0 },
-      opencode: { conversations: 0, tokens: { input: 0, output: 0 }, cost: 0 }
+      antigravity: { conversations: 0, tokens: { input: 0, output: 0 }, cost: 0, artifacts: 0, filesChanged: 0, locAdded: 0, locRemoved: 0 },
+      opencode: { conversations: 0, tokens: { input: 0, output: 0 }, cost: 0, artifacts: 0, filesChanged: 0, locAdded: 0, locRemoved: 0 }
     },
-    modelLimits: {},
-    timelineArray: []
+    mediaCount: 0,
+    projects: {}, // project name -> { tokens, cost, files }
+    timelineArray: [],
+    recentArtifacts: []
   };
 
-  // Find model data for limits
+  // Count media
+  if (fs.existsSync(MEDIA_PATH)) {
+    stats.mediaCount = fs.readdirSync(MEDIA_PATH).length;
+  }
+
   let modelData = null;
   for (const provider in pricing) {
     if (pricing[provider].models && pricing[provider].models[DEFAULT_MODEL]) {
       modelData = pricing[provider].models[DEFAULT_MODEL];
-      stats.modelLimits[DEFAULT_MODEL] = modelData.limit;
       break;
     }
   }
@@ -56,6 +62,7 @@ async function analyze() {
       let convInputTokens = 0;
       let convOutputTokens = 0;
       let convDate = null;
+      let projectCwd = 'Unknown';
 
       for (const line of lines) {
         try {
@@ -64,7 +71,6 @@ async function analyze() {
           
           const text = entry.content || '';
           const tokens = encoding.encode(text).length;
-          
           const isInput = entry.source === 'USER_EXPLICIT' || entry.type === 'USER_INPUT';
           
           if (isInput) {
@@ -77,12 +83,51 @@ async function analyze() {
 
           if (entry.tool_calls) {
             entry.tool_calls.forEach(tc => {
-              stats.toolUsage[tc.name] = (stats.toolUsage[tc.name] || 0) + 1;
-              if (tc.args) convInputTokens += encoding.encode(JSON.stringify(tc.args)).length;
+              const name = tc.name;
+              stats.toolUsage[name] = (stats.toolUsage[name] || 0) + 1;
+              
+              if (tc.args) {
+                const args = tc.args;
+                convInputTokens += encoding.encode(JSON.stringify(args)).length;
+                
+                // Track project and LOC
+                if (args.Cwd) projectCwd = args.Cwd.split('/').pop();
+                
+                if (name === 'write_to_file' || name === 'replace_file_content' || name === 'multi_replace_file_content') {
+                  stats.providers.antigravity.filesChanged++;
+                  
+                  if (args.CodeContent) {
+                    stats.providers.antigravity.locAdded += args.CodeContent.split('\n').length;
+                  }
+                  if (args.ReplacementContent) {
+                    stats.providers.antigravity.locAdded += args.ReplacementContent.split('\n').length;
+                  }
+                  if (args.TargetContent) {
+                    stats.providers.antigravity.locRemoved += args.TargetContent.split('\n').length;
+                  }
+                  if (args.ReplacementChunks) {
+                    args.ReplacementChunks.forEach(chunk => {
+                      if (chunk.ReplacementContent) stats.providers.antigravity.locAdded += chunk.ReplacementContent.split('\n').length;
+                      if (chunk.TargetContent) stats.providers.antigravity.locRemoved += chunk.TargetContent.split('\n').length;
+                    });
+                  }
+                }
+              }
             });
           }
           if (entry.type === 'TOOL_OUTPUT') convInputTokens += tokens;
         } catch (e) {}
+      }
+
+      // Count artifacts for this conv
+      const stepsPath = path.join(ANTIGRAVITY_PATH, dir, '.system_generated/steps');
+      if (fs.existsSync(stepsPath)) {
+        const steps = fs.readdirSync(stepsPath);
+        for (const step of steps) {
+          if (fs.existsSync(path.join(stepsPath, step, 'content.md'))) {
+            stats.providers.antigravity.artifacts++;
+          }
+        }
       }
 
       if (modelData) {
@@ -101,6 +146,13 @@ async function analyze() {
           stats.timeline[convDate].output += convOutputTokens;
           stats.timeline[convDate].cost += convCost;
         }
+
+        if (projectCwd) {
+          if (!stats.projects[projectCwd]) stats.projects[projectCwd] = { tokens: 0, cost: 0, files: 0 };
+          stats.projects[projectCwd].tokens += convInputTokens + convOutputTokens;
+          stats.projects[projectCwd].cost += convCost;
+          stats.projects[projectCwd].files++;
+        }
       }
 
       stats.totalTokens.input += convInputTokens;
@@ -112,15 +164,11 @@ async function analyze() {
   if (fs.existsSync(OPENCODE_DB_PATH)) {
     try {
       const db = new Database(OPENCODE_DB_PATH, { readonly: true });
-      
-      // Get all sessions
       const sessions = db.prepare('SELECT count(*) as count FROM session').get();
       stats.conversations += sessions.count;
       stats.providers.opencode.conversations += sessions.count;
 
-      // Get all messages with cost/token data
       const messages = db.prepare('SELECT data FROM message').all();
-      
       for (const row of messages) {
         try {
           const data = JSON.parse(row.data);
@@ -129,7 +177,7 @@ async function analyze() {
           if (data.tokens) {
             const input = data.tokens.input || 0;
             const output = data.tokens.output || 0;
-            const cost = data.cost || 0; // OpenCode stores cost directly?
+            const cost = data.cost || 0;
 
             stats.totalTokens.input += input;
             stats.totalTokens.output += output;
@@ -155,9 +203,7 @@ async function analyze() {
         } catch (e) {}
       }
       db.close();
-    } catch (e) {
-      console.error('Error parsing OpenCode DB:', e);
-    }
+    } catch (e) {}
   }
 
   stats.timelineArray = Object.entries(stats.timeline)
@@ -165,7 +211,7 @@ async function analyze() {
     .sort((a, b) => a.date.localeCompare(b.date));
 
   fs.writeFileSync(OUTPUT_PATH, JSON.stringify(stats, null, 2));
-  console.log('Analysis complete. Comprehensive stats updated.');
+  console.log('Analysis complete. Granular stats updated.');
 }
 
 analyze().catch(console.error);

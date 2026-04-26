@@ -1,13 +1,13 @@
 {
   "totalTokens": {
-    "input": 21568266,
-    "output": 485562
+    "input": 21570304,
+    "output": 486018
   },
-  "totalCost": 7.30587788,
+  "totalCost": 7.315425879999999,
   "conversations": 76,
   "messageCount": {
-    "input": 1199,
-    "output": 11169
+    "input": 1207,
+    "output": 11203
   },
   "modelUsage": {
     "mimo-v2-omni-free": 0,
@@ -26,14 +26,14 @@
     "moonshotai/kimi-k2.6": 0
   },
   "toolUsage": {
-    "list_dir": 81,
-    "view_file": 727,
-    "run_command": 819,
-    "multi_replace_file_content": 192,
-    "replace_file_content": 410,
+    "list_dir": 86,
+    "view_file": 729,
+    "run_command": 825,
+    "multi_replace_file_content": 187,
+    "replace_file_content": 409,
     "command_status": 300,
-    "grep_search": 76,
-    "write_to_file": 312,
+    "grep_search": 74,
+    "write_to_file": 318,
     "read_url_content": 6,
     "send_command_input": 5,
     "generate_image": 18,
@@ -44,9 +44,9 @@
   },
   "timeline": {
     "2026-04-25": {
-      "input": 120466,
-      "output": 27420,
-      "cost": 0.569972
+      "input": 123163,
+      "output": 27438,
+      "cost": 0.575582
     },
     "2026-04-22": {
       "input": 46476,
@@ -64,9 +64,9 @@
       "cost": 0.114814
     },
     "2026-04-26": {
-      "input": 3309,
-      "output": 0,
-      "cost": 0.006618
+      "input": 4613,
+      "output": 438,
+      "cost": 0.014482
     },
     "2026-04-18": {
       "input": 48521,
@@ -74,9 +74,9 @@
       "cost": 0.303718
     },
     "2026-04-20": {
-      "input": 36313,
+      "input": 34350,
       "output": 6162,
-      "cost": 0.14656999999999998
+      "cost": 0.142644
     },
     "2026-03-27": {
       "input": 10453689,
@@ -128,10 +128,14 @@
     "antigravity": {
       "conversations": 19,
       "tokens": {
-        "input": 475937,
-        "output": 94559
+        "input": 477975,
+        "output": 95015
       },
-      "cost": 2.086582
+      "cost": 2.09613,
+      "artifacts": 9,
+      "filesChanged": 914,
+      "locAdded": 1333,
+      "locRemoved": 631
     },
     "opencode": {
       "conversations": 57,
@@ -139,13 +143,69 @@
         "input": 21092329,
         "output": 391003
       },
-      "cost": 5.21929588
+      "cost": 5.21929588,
+      "artifacts": 0,
+      "filesChanged": 0,
+      "locAdded": 0,
+      "locRemoved": 0
     }
   },
-  "modelLimits": {
-    "gemini-3-pro-preview": {
-      "context": 1000000,
-      "output": 64000
+  "mediaCount": 31,
+  "projects": {
+    "svgl-raycast\"": {
+      "tokens": 4524,
+      "cost": 0.014098,
+      "files": 1
+    },
+    "Workout buddy\"": {
+      "tokens": 58539,
+      "cost": 0.210948,
+      "files": 2
+    },
+    "ipl-2026-engine\"": {
+      "tokens": 39295,
+      "cost": 0.11785999999999999,
+      "files": 2
+    },
+    "Antigravity-Dev-Vault\"": {
+      "tokens": 199306,
+      "cost": 0.761742,
+      "files": 3
+    },
+    "design-palace-kimi\"": {
+      "tokens": 1914,
+      "cost": 0.005228,
+      "files": 1
+    },
+    "paranjayy\"": {
+      "tokens": 131488,
+      "cost": 0.42568599999999995,
+      "files": 2
+    },
+    "Unknown": {
+      "tokens": 12914,
+      "cost": 0.072018,
+      "files": 3
+    },
+    "Design Palace\"": {
+      "tokens": 9339,
+      "cost": 0.033888,
+      "files": 1
+    },
+    "\"": {
+      "tokens": 8163,
+      "cost": 0.020926,
+      "files": 1
+    },
+    "iftt\"": {
+      "tokens": 105325,
+      "cost": 0.42713,
+      "files": 2
+    },
+    "ideaverse\"": {
+      "tokens": 2183,
+      "cost": 0.006605999999999999,
+      "files": 1
     }
   },
   "timelineArray": [
@@ -211,9 +271,9 @@
     },
     {
       "date": "2026-04-20",
-      "input": 36313,
+      "input": 34350,
       "output": 6162,
-      "cost": 0.14656999999999998
+      "cost": 0.142644
     },
     {
       "date": "2026-04-22",
@@ -235,15 +295,16 @@
     },
     {
       "date": "2026-04-25",
-      "input": 120466,
-      "output": 27420,
-      "cost": 0.569972
+      "input": 123163,
+      "output": 27438,
+      "cost": 0.575582
     },
     {
       "date": "2026-04-26",
-      "input": 3309,
-      "output": 0,
-      "cost": 0.006618
+      "input": 4613,
+      "output": 438,
+      "cost": 0.014482
     }
-  ]
+  ],
+  "recentArtifacts": []
 }

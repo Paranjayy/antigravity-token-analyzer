@@ -6,6 +6,8 @@ A high-fidelity, local-first intelligence dashboard for tracking AI usage, token
 ![Vite](https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white)
 ![React](https://img.shields.io/badge/react-%2320232b.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
 
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FParanjayy%2Fantigravity-token-analyzer)
+
 ## ✨ Features
 
 - **Multi-Provider Support**: Seamlessly aggregates data from **Antigravity** (NDJSON logs) and **OpenCode** (SQLite databases).
