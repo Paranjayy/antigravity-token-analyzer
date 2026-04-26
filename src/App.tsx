@@ -24,7 +24,6 @@ import {
   Code2,
   ShieldCheck,
   MousePointer2,
-  Settings,
   Brain
 } from 'lucide-react';
 import { 
@@ -59,6 +58,7 @@ function App() {
   const [activeTab, setActiveTab] = useState('overview');
   const [currentStats, setCurrentStats] = useState(stats);
   const [dateRange, setDateRange] = useState<'all'|'7'|'30'>('all');
+  const [sourceFilter, setSourceFilter] = useState<'all'|'antigravity'|'opencode'>('all');
 
   const handleDownload = () => {
     const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(currentStats));
@@ -88,9 +88,10 @@ function App() {
 
   const modelDistribution = useMemo(() => {
     return Object.entries(currentStats.models || {})
+      .filter(([, data]: [string, any]) => sourceFilter === 'all' || data.source === sourceFilter)
       .map(([name, data]) => ({ name, value: (data as any).tokens }))
       .sort((a, b) => b.value - a.value);
-  }, [currentStats]);
+  }, [currentStats, sourceFilter]);
 
   const intelligenceDensity = useMemo(() => {
     const totalInput = currentStats.totalTokens.input;
@@ -100,7 +101,7 @@ function App() {
 
   const projectData = useMemo(() => {
     return Object.entries(currentStats.projects)
-      .map(([name, data]) => ({ name, ...data }))
+      .map(([name, data]) => ({ name, ...(data as any) }))
       .sort((a, b) => (b as any).tokens - (a as any).tokens)
       .slice(0, 12);
   }, [currentStats]);
@@ -117,8 +118,16 @@ function App() {
 
   const filteredOverview = useMemo(() => {
     return filteredTimeline.reduce((acc, day) => {
-      acc.cost += day.cost;
-      acc.tokens += day.input + day.output;
+      if (sourceFilter === 'antigravity') {
+        acc.cost += day.ag_cost || 0;
+        acc.tokens += (day.ag_input || 0) + (day.ag_output || 0);
+      } else if (sourceFilter === 'opencode') {
+        acc.cost += day.oc_cost || 0;
+        acc.tokens += (day.oc_input || 0) + (day.oc_output || 0);
+      } else {
+        acc.cost += day.cost;
+        acc.tokens += day.input + day.output;
+      }
       acc.tools += day.tools;
       acc.inputMessages += day.inputMessages || 0;
       acc.outputMessages += day.outputMessages || 0;
@@ -131,7 +140,7 @@ function App() {
       inputMessages: 0,
       outputMessages: 0
     });
-  }, [currentStats, filteredTimeline]);
+  }, [currentStats, filteredTimeline, sourceFilter]);
 
   const efficiencyScore = useMemo(() => {
     const tokensPerLoc = (currentStats.totalTokens.input + currentStats.totalTokens.output) / (currentStats.engineering.totalLOC || 1);
@@ -141,51 +150,64 @@ function App() {
   }, [currentStats]);
 
   return (
-    <div className="min-h-screen text-[var(--color-foreground)] selection:bg-[var(--color-accent)] font-sans flex overflow-hidden">
+    <div className="min-h-screen text-[var(--color-foreground)] selection:bg-[var(--color-accent)] font-sans flex flex-col bg-[var(--color-background)] overflow-hidden">
 
-      {/* Modern Sidebar */}
-      <nav className="w-20 lg:w-24 flex flex-col items-center py-10 border-r border-[var(--color-border)] bg-[var(--color-background)] z-50 shrink-0">
-        <div className="h-12 w-12 rounded-[var(--radius-lg)] bg-[var(--color-primary)] text-[var(--color-primary-foreground)] flex items-center justify-center mb-12 cursor-pointer transition-transform hover:scale-105">
-          <Cpu size={24} />
-        </div>
-        
-        <div className="flex flex-col gap-5">
-          {[
-            { id: 'overview', icon: <Layout size={22} />, label: 'Intelligence Hub' },
-            { id: 'projects', icon: <Briefcase size={22} />, label: 'Active Projects' },
-            { id: 'engineering', icon: <Code2 size={22} />, label: 'Deep Engineering' },
-            { id: 'halloffame', icon: <Trophy size={22} />, label: 'Elite Sessions' },
-          ].map(tab => (
-            <button 
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`sidebar-item group ${activeTab === tab.id ? 'active' : ''}`}
-            >
-              {tab.icon}
-              <div className="tooltip">{tab.label}</div>
-            </button>
-          ))}
-        </div>
-        
-        <div className="mt-auto flex flex-col gap-5">
-          <label className="sidebar-item group cursor-pointer">
-            <FolderOpen size={22} />
-            <input type="file" className="hidden" onChange={handleUpload} accept=".json" />
-            <div className="tooltip">Import Dataset</div>
-          </label>
-          <button onClick={handleDownload} className="sidebar-item group">
-            <Download size={22} />
-            <div className="tooltip">Export Report</div>
-          </button>
-          <div className="sidebar-item group">
-            <Settings size={22} />
-            <div className="tooltip">Settings</div>
+      {/* Modern Topbar */}
+      <nav className="w-full flex items-center justify-between px-6 py-4 border-b border-[var(--color-border)] bg-[var(--color-background)] z-50 shrink-0">
+        <div className="flex items-center gap-8">
+          <div className="flex items-center gap-3">
+            <div className="h-10 w-10 rounded-[var(--radius)] bg-[var(--color-primary)] text-[var(--color-primary-foreground)] flex items-center justify-center cursor-pointer transition-transform hover:scale-105">
+              <Cpu size={20} />
+            </div>
+            <span className="font-extrabold text-lg tracking-tight hidden md:block">Antigravity</span>
           </div>
+          
+          <div className="hidden md:flex items-center gap-1 bg-[var(--color-muted)]/50 p-1 rounded-[var(--radius)]">
+            {[
+              { id: 'overview', icon: <Layout size={16} />, label: 'Intelligence' },
+              { id: 'projects', icon: <Briefcase size={16} />, label: 'Projects' },
+              { id: 'engineering', icon: <Code2 size={16} />, label: 'Engineering' },
+              { id: 'halloffame', icon: <Trophy size={16} />, label: 'Elite' },
+            ].map(tab => (
+              <button 
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex items-center gap-2 px-4 py-2 rounded-[var(--radius-sm)] text-sm font-medium transition-all ${activeTab === tab.id ? 'bg-[var(--color-background)] text-[var(--color-foreground)] shadow-sm' : 'text-[var(--color-muted-foreground)] hover:text-[var(--color-foreground)] hover:bg-[var(--color-background)]/50'}`}
+              >
+                {tab.icon}
+                {tab.label}
+              </button>
+            ))}
+          </div>
+        </div>
+        
+        <div className="flex items-center gap-4">
+          <div className="hidden sm:flex items-center gap-2 bg-[var(--color-muted)] p-1 rounded-[var(--radius)]">
+            {(['all', 'antigravity', 'opencode'] as const).map((s) => (
+              <button
+                key={s}
+                onClick={() => setSourceFilter(s)}
+                className={`px-3 py-1.5 rounded-[var(--radius-sm)] text-xs font-semibold capitalize transition-all ${sourceFilter === s ? 'bg-[var(--color-background)] text-[var(--color-foreground)] shadow-sm' : 'text-[var(--color-muted-foreground)] hover:text-[var(--color-foreground)]'}`}
+              >
+                {s}
+              </button>
+            ))}
+          </div>
+
+          <div className="h-6 w-[1px] bg-[var(--color-border)] mx-2 hidden sm:block" />
+
+          <label className="p-2 rounded-[var(--radius)] text-[var(--color-muted-foreground)] hover:text-[var(--color-foreground)] hover:bg-[var(--color-muted)] cursor-pointer transition-colors" title="Import Dataset">
+            <FolderOpen size={18} />
+            <input type="file" className="hidden" onChange={handleUpload} accept=".json" />
+          </label>
+          <button onClick={handleDownload} className="p-2 rounded-[var(--radius)] text-[var(--color-muted-foreground)] hover:text-[var(--color-foreground)] hover:bg-[var(--color-muted)] transition-colors" title="Export Report">
+            <Download size={18} />
+          </button>
         </div>
       </nav>
 
       {/* Main Scrollable Content */}
-      <div className="flex-1 h-screen overflow-y-auto relative scroll-smooth">
+      <div className="flex-1 overflow-y-auto relative scroll-smooth">
         <main className="p-8 lg:p-12 max-w-[1600px] mx-auto w-full">
           {/* Header */}
           <header className="mb-14 flex flex-col md:flex-row md:items-end justify-between gap-8">
@@ -285,13 +307,18 @@ function App() {
                     
                     <div className="flex-1 w-full min-h-[250px]">
                       <ResponsiveContainer width="100%" height="100%">
-                        <AreaChart data={filteredTimeline}>
+                        <AreaChart data={filteredTimeline.map(d => ({
+                          ...d,
+                          dateLabel: d.date.split('-').slice(1).join('/'),
+                          displayInput: sourceFilter === 'antigravity' ? (d.ag_input || 0) : sourceFilter === 'opencode' ? (d.oc_input || 0) : d.input,
+                          displayOutput: sourceFilter === 'antigravity' ? (d.ag_output || 0) : sourceFilter === 'opencode' ? (d.oc_output || 0) : d.output
+                        }))}>
                           <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" vertical={false} />
-                          <XAxis dataKey="date" stroke="var(--color-muted-foreground)" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(val) => val.split('-').slice(1).join('/')} />
+                          <XAxis dataKey="dateLabel" stroke="var(--color-muted-foreground)" fontSize={12} tickLine={false} axisLine={false} />
                           <YAxis hide />
                           <Tooltip contentStyle={{ backgroundColor: 'var(--color-card)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius)', color: 'var(--color-card-foreground)' }} />
-                          <Area type="monotone" dataKey="input" stroke="#6366f1" strokeWidth={2} fillOpacity={0.1} fill="#6366f1" />
-                          <Area type="monotone" dataKey="output" stroke="#f43f5e" strokeWidth={2} fillOpacity={0.1} fill="#f43f5e" />
+                          <Area type="monotone" dataKey="displayInput" stroke="#6366f1" strokeWidth={2} fillOpacity={0.1} fill="#6366f1" name="Input" />
+                          <Area type="monotone" dataKey="displayOutput" stroke="#f43f5e" strokeWidth={2} fillOpacity={0.1} fill="#f43f5e" name="Output" />
                         </AreaChart>
                       </ResponsiveContainer>
                     </div>
@@ -429,7 +456,7 @@ function App() {
                         d.setDate(d.getDate() - (59 - i));
                         const dateStr = d.toISOString().split('T')[0];
                         const dayData = (currentStats.timeline as any)?.[dateStr];
-                        const count = dayData ? dayData.input + dayData.output : 0;
+                        const count = !dayData ? 0 : sourceFilter === 'antigravity' ? (dayData.ag_input + dayData.ag_output) : sourceFilter === 'opencode' ? (dayData.oc_input + dayData.oc_output) : (dayData.input + dayData.output);
                         
                         let bgClass = "bg-[var(--color-muted)]";
                         if (count > 0 && count < 50000) bgClass = "bg-indigo-500/30";
@@ -512,7 +539,9 @@ function App() {
                 </div>
                 
                 <div className="grid gap-4">
-                  {currentStats.topConversations.map((c: any, i: number) => (
+                  {currentStats.topConversations
+                    .filter((c: any) => sourceFilter === 'all' || (sourceFilter === 'antigravity' && c.id.includes('-')) || (sourceFilter === 'opencode' && !c.id.includes('-'))) // Simple heuristic for now, better would be source in summary
+                    .map((c: any, i: number) => (
                     <div 
                       key={c.id} 
                       className="ui-card flex flex-col lg:flex-row lg:items-center gap-6 group hover:border-[var(--color-muted-foreground)] transition-colors relative overflow-hidden p-5"

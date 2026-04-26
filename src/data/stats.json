@@ -1,26 +1,26 @@
 {
   "totalTokens": {
-    "input": 28874915,
-    "output": 496225
+    "input": 28938193,
+    "output": 496895
   },
-  "totalCost": 22.047131880000006,
+  "totalCost": 27.401023759999994,
   "conversations": 23,
   "messageCount": {
-    "input": 1329,
-    "output": 12748
+    "input": 1341,
+    "output": 13042
   },
   "toolUsage": {
-    "list_dir": 123,
-    "view_file": 922,
-    "run_command": 984,
-    "multi_replace_file_content": 243,
-    "replace_file_content": 537,
-    "command_status": 325,
-    "grep_search": 119,
-    "search_web": 14,
+    "list_dir": 130,
+    "view_file": 973,
+    "run_command": 1022,
+    "multi_replace_file_content": 246,
+    "replace_file_content": 536,
+    "command_status": 340,
+    "grep_search": 129,
+    "search_web": 13,
     "write_to_file": 389,
-    "read_url_content": 9,
-    "send_command_input": 5,
+    "read_url_content": 10,
+    "send_command_input": 6,
     "generate_image": 30,
     "mcp_chrome-devtools_navigate_page": 3,
     "mcp_chrome-devtools_list_pages": 3,
@@ -28,12 +28,15 @@
   },
   "timeline": {
     "2026-04-25": {
-      "input": 3983243,
-      "output": 32019,
-      "cost": 16.701427999999993,
-      "tools": 974,
+      "input": 4022144,
+      "output": 32222,
+      "cost": 16.861903999999996,
+      "tools": 1016,
       "inputMessages": null,
-      "outputMessages": null
+      "outputMessages": null,
+      "ag_input": null,
+      "ag_output": null,
+      "ag_cost": null
     },
     "2026-04-22": {
       "input": 224540,
@@ -41,15 +44,24 @@
       "cost": 1.1851039999999995,
       "tools": 330,
       "inputMessages": null,
-      "outputMessages": null
+      "outputMessages": null,
+      "ag_input": null,
+      "ag_output": null,
+      "ag_cost": null
     },
     "2026-04-24": {
-      "input": 6917093,
-      "output": 81795,
-      "cost": 15.833235880000004,
-      "tools": 1123,
+      "input": 6918884,
+      "output": 81782,
+      "cost": 15.840087880000006,
+      "tools": 1166,
       "inputMessages": null,
-      "outputMessages": null
+      "outputMessages": null,
+      "ag_input": null,
+      "ag_output": null,
+      "ag_cost": null,
+      "oc_input": null,
+      "oc_output": null,
+      "oc_cost": null
     },
     "2026-04-23": {
       "input": 111448,
@@ -57,15 +69,21 @@
       "cost": 0.55084,
       "tools": 300,
       "inputMessages": null,
-      "outputMessages": null
+      "outputMessages": null,
+      "ag_input": null,
+      "ag_output": null,
+      "ag_cost": null
     },
     "2026-04-26": {
-      "input": 156353,
-      "output": 9383,
-      "cost": 0.8506040000000002,
-      "tools": 465,
+      "input": 178939,
+      "output": 9863,
+      "cost": 0.9524679999999998,
+      "tools": 504,
       "inputMessages": null,
-      "outputMessages": null
+      "outputMessages": null,
+      "ag_input": null,
+      "ag_output": null,
+      "ag_cost": null
     },
     "2026-04-18": {
       "input": 601606,
@@ -73,7 +91,10 @@
       "cost": 2.819776000000001,
       "tools": 317,
       "inputMessages": null,
-      "outputMessages": null
+      "outputMessages": null,
+      "ag_input": null,
+      "ag_output": null,
+      "ag_cost": null
     },
     "2026-04-20": {
       "input": 196523,
@@ -81,72 +102,147 @@
       "cost": 0.93398,
       "tools": 201,
       "inputMessages": null,
-      "outputMessages": null
+      "outputMessages": null,
+      "ag_input": null,
+      "ag_output": null,
+      "ag_cost": null
     },
     "2026-03-27": {
       "input": 10453689,
       "output": 149142,
       "cost": 0,
-      "tools": 0
+      "tools": 0,
+      "inputMessages": 0,
+      "outputMessages": 0,
+      "ag_input": 0,
+      "ag_output": 0,
+      "ag_cost": 0,
+      "oc_input": 10453689,
+      "oc_output": 149142,
+      "oc_cost": 0
     },
     "2026-03-28": {
       "input": 3124159,
       "output": 38883,
       "cost": 0,
-      "tools": 0
+      "tools": 0,
+      "inputMessages": 0,
+      "outputMessages": 0,
+      "ag_input": 0,
+      "ag_output": 0,
+      "ag_cost": 0,
+      "oc_input": 3124159,
+      "oc_output": 38883,
+      "oc_cost": 0
     },
     "2026-03-29": {
       "input": 1644442,
       "output": 95263,
       "cost": 0,
-      "tools": 0
+      "tools": 0,
+      "inputMessages": 0,
+      "outputMessages": 0,
+      "ag_input": 0,
+      "ag_output": 0,
+      "ag_cost": 0,
+      "oc_input": 1644442,
+      "oc_output": 95263,
+      "oc_cost": 0
     },
     "2026-03-30": {
       "input": 49332,
       "output": 2142,
       "cost": 0,
-      "tools": 0
+      "tools": 0,
+      "inputMessages": 0,
+      "outputMessages": 0,
+      "ag_input": 0,
+      "ag_output": 0,
+      "ag_cost": 0,
+      "oc_input": 49332,
+      "oc_output": 2142,
+      "oc_cost": 0
     },
     "2026-04-04": {
       "input": 131668,
       "output": 10422,
       "cost": 0,
-      "tools": 0
+      "tools": 0,
+      "inputMessages": 0,
+      "outputMessages": 0,
+      "ag_input": 0,
+      "ag_output": 0,
+      "ag_cost": 0,
+      "oc_input": 131668,
+      "oc_output": 10422,
+      "oc_cost": 0
     },
     "2026-04-06": {
       "input": 14917,
       "output": 820,
       "cost": 0,
-      "tools": 0
+      "tools": 0,
+      "inputMessages": 0,
+      "outputMessages": 0,
+      "ag_input": 0,
+      "ag_output": 0,
+      "ag_cost": 0,
+      "oc_input": 14917,
+      "oc_output": 820,
+      "oc_cost": 0
     },
     "2026-04-07": {
       "input": 180084,
       "output": 1653,
       "cost": 0,
-      "tools": 0
+      "tools": 0,
+      "inputMessages": 0,
+      "outputMessages": 0,
+      "ag_input": 0,
+      "ag_output": 0,
+      "ag_cost": 0,
+      "oc_input": 180084,
+      "oc_output": 1653,
+      "oc_cost": 0
     },
     "2026-04-08": {
       "input": 896167,
       "output": 6291,
       "cost": 0,
-      "tools": 0
+      "tools": 0,
+      "inputMessages": 0,
+      "outputMessages": 0,
+      "ag_input": 0,
+      "ag_output": 0,
+      "ag_cost": 0,
+      "oc_input": 896167,
+      "oc_output": 6291,
+      "oc_cost": 0
     },
     "2026-04-16": {
       "input": 189651,
       "output": 28694,
       "cost": 0,
-      "tools": 0
+      "tools": 0,
+      "inputMessages": 0,
+      "outputMessages": 0,
+      "ag_input": 0,
+      "ag_output": 0,
+      "ag_cost": 0,
+      "oc_input": 189651,
+      "oc_output": 28694,
+      "oc_cost": 0
     }
   },
   "providers": {
     "antigravity": {
       "conversations": 23,
       "tokens": {
-        "input": 7782586,
-        "output": 105222
+        "input": 7845864,
+        "output": 105892
       },
-      "cost": 16.82783600000001,
-      "artifacts": 12,
+      "cost": 16.962432000000003,
+      "artifacts": 13,
       "errors": 0
     },
     "opencode": {
@@ -155,109 +251,12 @@
         "input": 21092329,
         "output": 391003
       },
-      "cost": 5.21929588,
+      "cost": 10.438591759999998,
       "artifacts": 0,
       "errors": 0
     }
   },
-  "projects": {
-    "Developer": {
-      "tokens": 24094,
-      "cost": 0.06490800000000001,
-      "sessions": 1,
-      "errors": 0
-    },
-    "Workout buddy": {
-      "tokens": 219664,
-      "cost": 0.5331979999999998,
-      "sessions": 2,
-      "errors": 0
-    },
-    "ipl-2026-engine": {
-      "tokens": 112544,
-      "cost": 0.261978,
-      "sessions": 2,
-      "errors": 0
-    },
-    "Antigravity-Dev-Vault": {
-      "tokens": 4093427,
-      "cost": 8.536274,
-      "sessions": 3,
-      "errors": 0
-    },
-    "design-palace-kimi": {
-      "tokens": 1809,
-      "cost": 0.005018,
-      "sessions": 1,
-      "errors": 0
-    },
-    "paranjayy": {
-      "tokens": 2387023,
-      "cost": 4.934615999999998,
-      "sessions": 1,
-      "errors": 0
-    },
-    "dev": {
-      "tokens": 16679,
-      "cost": 0.046048000000000006,
-      "sessions": 1,
-      "errors": 0
-    },
-    "General": {
-      "tokens": 31349,
-      "cost": 0.11125800000000001,
-      "sessions": 3,
-      "errors": 0
-    },
-    "Design Palace": {
-      "tokens": 11833,
-      "cost": 0.038875999999999994,
-      "sessions": 1,
-      "errors": 0
-    },
-    "antigravity-token-analyzer": {
-      "tokens": 186325,
-      "cost": 0.41323,
-      "sessions": 1,
-      "errors": 0
-    },
-    "chess-analytics-extension": {
-      "tokens": 8564,
-      "cost": 0.028447999999999994,
-      "sessions": 1,
-      "errors": 0
-    },
-    "iftt": {
-      "tokens": 642622,
-      "cost": 1.4709140000000005,
-      "sessions": 2,
-      "errors": 0
-    },
-    "gemini-design-palace": {
-      "tokens": 13581,
-      "cost": 0.041172,
-      "sessions": 1,
-      "errors": 0
-    },
-    "word-vibe": {
-      "tokens": 3175,
-      "cost": 0.01056,
-      "sessions": 1,
-      "errors": 0
-    },
-    "Praduman Khachar": {
-      "tokens": 134067,
-      "cost": 0.324454,
-      "sessions": 1,
-      "errors": 0
-    },
-    "ideaverse": {
-      "tokens": 1052,
-      "cost": 0.0068839999999999995,
-      "sessions": 1,
-      "errors": 0
-    }
-  },
+  "projects": {},
   "hourHeatmap": [
     1,
     0,
@@ -297,11 +296,11 @@
     {
       "id": "ebe0fe5f-3b8e-40e9-bc3b-adb538b5d93d",
       "title": "Untitled Session",
-      "tokens": 3791262,
-      "cost": 7.831404000000001,
+      "tokens": 3781449,
+      "cost": 7.811328000000001,
       "date": "2026-04-25",
       "project": "Antigravity-Dev-Vault",
-      "tools": 497,
+      "tools": 494,
       "errors": 0,
       "artifacts": 0
     },
@@ -328,6 +327,17 @@
       "artifacts": 0
     },
     {
+      "id": "886a667c-29c8-4411-a988-819f8f2feb92",
+      "title": "Untitled Session",
+      "tokens": 235242,
+      "cost": 0.5135439999999999,
+      "date": "2026-04-25",
+      "project": "antigravity-token-analyzer",
+      "tools": 375,
+      "errors": 0,
+      "artifacts": 2
+    },
+    {
       "id": "15be178c-d5dc-479d-b8b3-71e74e142283",
       "title": "<USER_REQUEST> - lets create Workout buddy/helper/tracker/co...",
       "tokens": 213468,
@@ -350,24 +360,13 @@
       "artifacts": 0
     },
     {
-      "id": "886a667c-29c8-4411-a988-819f8f2feb92",
-      "title": "Untitled Session",
-      "tokens": 186325,
-      "cost": 0.41323,
-      "date": "2026-04-25",
-      "project": "antigravity-token-analyzer",
-      "tools": 330,
-      "errors": 0,
-      "artifacts": 2
-    },
-    {
       "id": "e76a9c21-3106-4364-aade-1d275267f79b",
       "title": "<USER_REQUEST> - i have many ideas and things ffor my father...",
-      "tokens": 134067,
-      "cost": 0.324454,
+      "tokens": 145737,
+      "cost": 0.350164,
       "date": "2026-04-26",
       "project": "Praduman Khachar",
-      "tools": 249,
+      "tools": 269,
       "errors": 0,
       "artifacts": 3
     },
@@ -394,6 +393,28 @@
       "artifacts": 0
     },
     {
+      "id": "3f31209c-a920-47cb-8160-2fc29c36ee0b",
+      "title": "Untitled Session",
+      "tokens": 28075,
+      "cost": 0.07127000000000001,
+      "date": "2026-04-26",
+      "project": "chess-analytics-extension",
+      "tools": 92,
+      "errors": 0,
+      "artifacts": 0
+    },
+    {
+      "id": "d261c27b-8302-4773-b111-e95a136f8789",
+      "title": "Untitled Session",
+      "tokens": 27720,
+      "cost": 0.06888,
+      "date": "2026-04-24",
+      "project": "iftt",
+      "tools": 249,
+      "errors": 0,
+      "artifacts": 0
+    },
+    {
       "id": "13a0d51f-20de-41f7-b76e-f51baf8a1ff9",
       "title": "<USER_REQUEST> what are more raycast ideas(add it to general...",
       "tokens": 24094,
@@ -405,17 +426,6 @@
       "artifacts": 0
     },
     {
-      "id": "d261c27b-8302-4773-b111-e95a136f8789",
-      "title": "Untitled Session",
-      "tokens": 23793,
-      "cost": 0.061026000000000004,
-      "date": "2026-04-24",
-      "project": "iftt",
-      "tools": 236,
-      "errors": 0,
-      "artifacts": 0
-    },
-    {
       "id": "4b6fbbfa-1c39-41a6-8ce9-e1a48a653778",
       "title": "Untitled Session",
       "tokens": 23028,
@@ -423,17 +433,6 @@
       "date": "2026-04-22",
       "project": "General",
       "tools": 16,
-      "errors": 0,
-      "artifacts": 0
-    },
-    {
-      "id": "3f31209c-a920-47cb-8160-2fc29c36ee0b",
-      "title": "Untitled Session",
-      "tokens": 16679,
-      "cost": 0.046048000000000006,
-      "date": "2026-04-26",
-      "project": "dev",
-      "tools": 73,
       "errors": 0,
       "artifacts": 0
     },
@@ -486,13 +485,13 @@
     {
       "id": "1a96cd87-3301-4748-83a4-d95861f26409",
       "title": "Untitled Session",
-      "tokens": 2915,
-      "cost": 0.008409999999999999,
+      "tokens": 766,
+      "cost": 0.003981999999999999,
       "date": "2026-04-24",
       "project": "ipl-2026-engine",
-      "tools": 72,
+      "tools": 102,
       "errors": 0,
-      "artifacts": 2
+      "artifacts": 3
     },
     {
       "id": "1b1fe853-13ee-4985-beff-a4d74b7ec129",
@@ -541,11 +540,11 @@
     {
       "id": "3f31209c-a920-47cb-8160-2fc29c36ee0b",
       "title": "Untitled Session",
-      "tokens": 16679,
-      "cost": 0.046048000000000006,
+      "tokens": 28075,
+      "cost": 0.07127000000000001,
       "date": "2026-04-26",
-      "project": "dev",
-      "tools": 73,
+      "project": "chess-analytics-extension",
+      "tools": 92,
       "errors": 0,
       "artifacts": 0
     },
@@ -574,64 +573,75 @@
   ],
   "engineering": {
     "totalLOC": 1941,
-    "filesAffected": 1169,
+    "filesAffected": 1171,
     "toolsPerSession": 0,
     "avgResponseTime": 0
   },
   "models": {
     "gemini-3-pro-preview": {
-      "tokens": 7887808,
+      "source": "antigravity",
+      "tokens": 7951756,
       "sessions": 23,
-      "cost": 16.827836
+      "cost": 16.962432
     },
     "mimo-v2-omni-free": {
+      "source": "opencode",
       "tokens": 13174532,
-      "sessions": 0,
+      "sessions": 468,
       "cost": 0
     },
     "gpt-5-nano": {
+      "source": "opencode",
       "tokens": 2118640,
-      "sessions": 0,
+      "sessions": 149,
       "cost": 0
     },
     "minimax-m2.5-free": {
+      "source": "opencode",
       "tokens": 11112,
-      "sessions": 0,
+      "sessions": 9,
       "cost": 0
     },
     "antigravity-claude-sonnet-4-5-thinking": {
+      "source": "opencode",
       "tokens": 0,
-      "sessions": 0,
+      "sessions": 2,
       "cost": 0
     },
     "grok-code-fast-1": {
+      "source": "opencode",
       "tokens": 252768,
-      "sessions": 0,
+      "sessions": 24,
       "cost": 0
     },
     "gpt-5.4-mini": {
+      "source": "opencode",
       "tokens": 1242022,
-      "sessions": 0,
+      "sessions": 55,
       "cost": 0
     },
     "big-pickle": {
+      "source": "opencode",
       "tokens": 137649,
-      "sessions": 0,
+      "sessions": 37,
       "cost": 0
     },
     "claude-sonnet-4.6": {
+      "source": "opencode",
       "tokens": 0,
-      "sessions": 0,
+      "sessions": 2,
       "cost": 0
     },
     "nemotron-3-super-free": {
+      "source": "opencode",
       "tokens": 80696,
-      "sessions": 0,
+      "sessions": 5,
       "cost": 0
     },
     "moonshotai/kimi-k2.6": {
+      "source": "opencode",
       "tokens": 4465913,
-      "sessions": 0,
+      "sessions": 73,
       "cost": 5.21929588
     }
   },
@@ -641,63 +651,135 @@
       "input": 10453689,
       "output": 149142,
       "cost": 0,
-      "tools": 0
+      "tools": 0,
+      "inputMessages": 0,
+      "outputMessages": 0,
+      "ag_input": 0,
+      "ag_output": 0,
+      "ag_cost": 0,
+      "oc_input": 10453689,
+      "oc_output": 149142,
+      "oc_cost": 0
     },
     {
       "date": "2026-03-28",
       "input": 3124159,
       "output": 38883,
       "cost": 0,
-      "tools": 0
+      "tools": 0,
+      "inputMessages": 0,
+      "outputMessages": 0,
+      "ag_input": 0,
+      "ag_output": 0,
+      "ag_cost": 0,
+      "oc_input": 3124159,
+      "oc_output": 38883,
+      "oc_cost": 0
     },
     {
       "date": "2026-03-29",
       "input": 1644442,
       "output": 95263,
       "cost": 0,
-      "tools": 0
+      "tools": 0,
+      "inputMessages": 0,
+      "outputMessages": 0,
+      "ag_input": 0,
+      "ag_output": 0,
+      "ag_cost": 0,
+      "oc_input": 1644442,
+      "oc_output": 95263,
+      "oc_cost": 0
     },
     {
       "date": "2026-03-30",
       "input": 49332,
       "output": 2142,
       "cost": 0,
-      "tools": 0
+      "tools": 0,
+      "inputMessages": 0,
+      "outputMessages": 0,
+      "ag_input": 0,
+      "ag_output": 0,
+      "ag_cost": 0,
+      "oc_input": 49332,
+      "oc_output": 2142,
+      "oc_cost": 0
     },
     {
       "date": "2026-04-04",
       "input": 131668,
       "output": 10422,
       "cost": 0,
-      "tools": 0
+      "tools": 0,
+      "inputMessages": 0,
+      "outputMessages": 0,
+      "ag_input": 0,
+      "ag_output": 0,
+      "ag_cost": 0,
+      "oc_input": 131668,
+      "oc_output": 10422,
+      "oc_cost": 0
     },
     {
       "date": "2026-04-06",
       "input": 14917,
       "output": 820,
       "cost": 0,
-      "tools": 0
+      "tools": 0,
+      "inputMessages": 0,
+      "outputMessages": 0,
+      "ag_input": 0,
+      "ag_output": 0,
+      "ag_cost": 0,
+      "oc_input": 14917,
+      "oc_output": 820,
+      "oc_cost": 0
     },
     {
       "date": "2026-04-07",
       "input": 180084,
       "output": 1653,
       "cost": 0,
-      "tools": 0
+      "tools": 0,
+      "inputMessages": 0,
+      "outputMessages": 0,
+      "ag_input": 0,
+      "ag_output": 0,
+      "ag_cost": 0,
+      "oc_input": 180084,
+      "oc_output": 1653,
+      "oc_cost": 0
     },
     {
       "date": "2026-04-08",
       "input": 896167,
       "output": 6291,
       "cost": 0,
-      "tools": 0
+      "tools": 0,
+      "inputMessages": 0,
+      "outputMessages": 0,
+      "ag_input": 0,
+      "ag_output": 0,
+      "ag_cost": 0,
+      "oc_input": 896167,
+      "oc_output": 6291,
+      "oc_cost": 0
     },
     {
       "date": "2026-04-16",
       "input": 189651,
       "output": 28694,
       "cost": 0,
-      "tools": 0
+      "tools": 0,
+      "inputMessages": 0,
+      "outputMessages": 0,
+      "ag_input": 0,
+      "ag_output": 0,
+      "ag_cost": 0,
+      "oc_input": 189651,
+      "oc_output": 28694,
+      "oc_cost": 0
     },
     {
       "date": "2026-04-18",
@@ -706,7 +788,10 @@
       "cost": 2.819776000000001,
       "tools": 317,
       "inputMessages": null,
-      "outputMessages": null
+      "outputMessages": null,
+      "ag_input": null,
+      "ag_output": null,
+      "ag_cost": null
     },
     {
       "date": "2026-04-20",
@@ -715,7 +800,10 @@
       "cost": 0.93398,
       "tools": 201,
       "inputMessages": null,
-      "outputMessages": null
+      "outputMessages": null,
+      "ag_input": null,
+      "ag_output": null,
+      "ag_cost": null
     },
     {
       "date": "2026-04-22",
@@ -724,7 +812,10 @@
       "cost": 1.1851039999999995,
       "tools": 330,
       "inputMessages": null,
-      "outputMessages": null
+      "outputMessages": null,
+      "ag_input": null,
+      "ag_output": null,
+      "ag_cost": null
     },
     {
       "date": "2026-04-23",
@@ -733,34 +824,49 @@
       "cost": 0.55084,
       "tools": 300,
       "inputMessages": null,
-      "outputMessages": null
+      "outputMessages": null,
+      "ag_input": null,
+      "ag_output": null,
+      "ag_cost": null
     },
     {
       "date": "2026-04-24",
-      "input": 6917093,
-      "output": 81795,
-      "cost": 15.833235880000004,
-      "tools": 1123,
+      "input": 6918884,
+      "output": 81782,
+      "cost": 15.840087880000006,
+      "tools": 1166,
       "inputMessages": null,
-      "outputMessages": null
+      "outputMessages": null,
+      "ag_input": null,
+      "ag_output": null,
+      "ag_cost": null,
+      "oc_input": null,
+      "oc_output": null,
+      "oc_cost": null
     },
     {
       "date": "2026-04-25",
-      "input": 3983243,
-      "output": 32019,
-      "cost": 16.701427999999993,
-      "tools": 974,
+      "input": 4022144,
+      "output": 32222,
+      "cost": 16.861903999999996,
+      "tools": 1016,
       "inputMessages": null,
-      "outputMessages": null
+      "outputMessages": null,
+      "ag_input": null,
+      "ag_output": null,
+      "ag_cost": null
     },
     {
       "date": "2026-04-26",
-      "input": 156353,
-      "output": 9383,
-      "cost": 0.8506040000000002,
-      "tools": 465,
+      "input": 178939,
+      "output": 9863,
+      "cost": 0.9524679999999998,
+      "tools": 504,
       "inputMessages": null,
-      "outputMessages": null
+      "outputMessages": null,
+      "ag_input": null,
+      "ag_output": null,
+      "ag_cost": null
     }
   ],
   "gitLoc": {

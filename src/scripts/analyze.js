@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { get_encoding } from 'tiktoken';
 import Database from 'better-sqlite3';
+import axios from 'axios';
 import { execSync } from 'child_process';
 
 const ANTIGRAVITY_PATH = '/Users/paranjay/.gemini/antigravity/brain';
@@ -10,6 +11,7 @@ const PRICING_PATH = path.join(process.cwd(), 'src/data/pricing.json');
 const OUTPUT_PATH = path.join(process.cwd(), 'src/data/stats.json');
 
 const DEFAULT_MODEL = 'gemini-3-pro-preview';
+const MODELS_DEV_URL = 'https://models.dev/api.json';
 
 async function analyze() {
   const pricing = JSON.parse(fs.readFileSync(PRICING_PATH, 'utf8'));
@@ -41,13 +43,27 @@ async function analyze() {
     timelineArray: []
   };
 
-  let modelData = null;
-  for (const provider in pricing) {
-    if (pricing[provider].models && pricing[provider].models[DEFAULT_MODEL]) {
-      modelData = pricing[provider].models[DEFAULT_MODEL];
-      break;
-    }
+  let pricingData = {};
+  try {
+    const res = await axios.get(MODELS_DEV_URL);
+    pricingData = res.data;
+  } catch (e) {
+    console.error('Failed to fetch models.dev API, falling back to empty pricing:', e.message);
   }
+
+  const getModelPricing = (modelId) => {
+    if (pricingData[modelId]) {
+      return {
+        input: pricingData[modelId].cost?.input || 0,
+        output: pricingData[modelId].cost?.output || 0
+      };
+    }
+    return { input: 0, output: 0 };
+  };
+
+  const getBaseModelPricing = () => {
+    return { input: 1.25, output: 5.00 }; // Fallback rough estimate for gemini-3-pro-preview
+  };
 
   // 1. Analyze Antigravity
   if (fs.existsSync(ANTIGRAVITY_PATH)) {
@@ -218,24 +234,26 @@ async function analyze() {
       if (stats.recentActivity.length < 10) stats.recentActivity.push(convSummary);
 
       if (convDate) {
-        if (!stats.timeline[convDate]) stats.timeline[convDate] = { input: 0, output: 0, cost: 0, tools: 0, inputMessages: 0, outputMessages: 0 };
+        if (!stats.timeline[convDate]) stats.timeline[convDate] = { 
+          input: 0, output: 0, cost: 0, tools: 0, inputMessages: 0, outputMessages: 0,
+          ag_input: 0, ag_output: 0, ag_cost: 0,
+          oc_input: 0, oc_output: 0, oc_cost: 0
+        };
         stats.timeline[convDate].input += convProcessedInputTokens;
         stats.timeline[convDate].output += convOutputTokens;
         stats.timeline[convDate].cost += convCost;
         stats.timeline[convDate].tools += convTools;
         stats.timeline[convDate].inputMessages += convInputMessages;
         stats.timeline[convDate].outputMessages += convOutputMessages;
+        
+        stats.timeline[convDate].ag_input += convProcessedInputTokens;
+        stats.timeline[convDate].ag_output += convOutputTokens;
+        stats.timeline[convDate].ag_cost += convCost;
       }
 
-      if (!stats.projects[projectCwd]) stats.projects[projectCwd] = { tokens: 0, cost: 0, sessions: 0, errors: 0 };
-      stats.projects[projectCwd].tokens += (convProcessedInputTokens + convOutputTokens);
-      stats.projects[projectCwd].cost += convCost;
-      stats.projects[projectCwd].sessions++;
-      stats.projects[projectCwd].errors += convErrors;
-
-      if (!stats.models[convModel]) stats.models[convModel] = { tokens: 0, sessions: 0, cost: 0 };
+      if (!stats.models[convModel]) stats.models[convModel] = { source: 'antigravity', tokens: 0, sessions: 0, cost: 0 };
       stats.models[convModel].tokens += (convProcessedInputTokens + convOutputTokens);
-      stats.models[convModel].sessions++;
+      stats.models[convModel].sessions += 1;
       stats.models[convModel].cost += convCost;
     }
   }
@@ -263,16 +281,35 @@ async function analyze() {
             stats.providers.opencode.tokens.output += output;
             stats.providers.opencode.cost += cost;
 
-            if (!stats.timeline[date]) stats.timeline[date] = { input: 0, output: 0, cost: 0, tools: 0 };
+            if (!stats.timeline[date]) stats.timeline[date] = { 
+              input: 0, output: 0, cost: 0, tools: 0, inputMessages: 0, outputMessages: 0,
+              ag_input: 0, ag_output: 0, ag_cost: 0,
+              oc_input: 0, oc_output: 0, oc_cost: 0
+            };
             stats.timeline[date].input += input;
             stats.timeline[date].output += output;
-            stats.timeline[date].cost += cost;
+            stats.timeline[date].oc_input += input;
+            stats.timeline[date].oc_output += output;
 
             const opModel = data.modelID || (data.model && data.model.modelID);
+            
+            let finalCost = cost;
+            if (finalCost === 0 && opModel) {
+              const opPrice = getModelPricing(opModel);
+              finalCost = ((input / 1000000) * opPrice.input) + ((output / 1000000) * opPrice.output);
+            }
+
+            stats.totalCost += finalCost;
+            stats.providers.opencode.cost += finalCost;
+            stats.timeline[date].cost += finalCost;
+            stats.timeline[date].oc_cost += finalCost;
+
             if (opModel) {
-              if (!stats.models[opModel]) stats.models[opModel] = { tokens: 0, sessions: 0, cost: 0 };
+              if (!stats.models[opModel]) stats.models[opModel] = { source: 'opencode', tokens: 0, sessions: 0, cost: 0 };
               stats.models[opModel].tokens += (input + output);
-              stats.models[opModel].cost += cost;
+              stats.models[opModel].cost += finalCost;
+              // Only count sessions if this looks like a main request to avoid double counting too much
+              if (data.role === 'assistant') stats.models[opModel].sessions += 1;
             }
           }
           if (data.role === 'user') stats.messageCount.input++;
