@@ -18,7 +18,6 @@ import {
   AlertCircle,
   Trophy,
   Flame,
-  MousePointer2,
   Calendar,
   Activity as ActivityIcon,
   FolderOpen,
@@ -105,6 +104,7 @@ function App() {
     });
   }, [currentStats, dateRange]);
 
+  const filteredOverview = useMemo(() => {
     return filteredTimeline.reduce((acc, day) => {
       acc.cost += day.cost;
       acc.tokens += day.input + day.output;
