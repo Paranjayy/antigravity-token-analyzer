@@ -37,6 +37,7 @@ async function analyze() {
       toolsPerSession: 0,
       avgResponseTime: 0
     },
+    models: {},
     timelineArray: []
   };
 
@@ -231,6 +232,11 @@ async function analyze() {
       stats.projects[projectCwd].cost += convCost;
       stats.projects[projectCwd].sessions++;
       stats.projects[projectCwd].errors += convErrors;
+
+      if (!stats.models[convModel]) stats.models[convModel] = { tokens: 0, sessions: 0, cost: 0 };
+      stats.models[convModel].tokens += (convProcessedInputTokens + convOutputTokens);
+      stats.models[convModel].sessions++;
+      stats.models[convModel].cost += convCost;
     }
   }
 

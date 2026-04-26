@@ -25,7 +25,8 @@ import {
   TrendingUp,
   ShieldCheck,
   MousePointer2,
-  Settings
+  Settings,
+  Brain
 } from 'lucide-react';
 import { 
   PieChart, 
@@ -86,10 +87,17 @@ function App() {
     }
   };
 
-  const tokenData = useMemo(() => [
-    { name: 'Input', value: currentStats.totalTokens.input },
-    { name: 'Output', value: currentStats.totalTokens.output },
-  ], [currentStats]);
+  const modelDistribution = useMemo(() => {
+    return Object.entries(currentStats.models || {})
+      .map(([name, data]) => ({ name, value: (data as any).tokens }))
+      .sort((a, b) => b.value - a.value);
+  }, [currentStats]);
+
+  const intelligenceDensity = useMemo(() => {
+    const totalInput = currentStats.totalTokens.input;
+    const totalPrompts = currentStats.messageCount.input;
+    return (totalInput / (totalPrompts || 1)).toFixed(0);
+  }, [currentStats]);
 
   const projectData = useMemo(() => {
     return Object.entries(currentStats.projects)
@@ -242,7 +250,7 @@ function App() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6">
                   {[
                     { label: 'Total Investment', value: `$${filteredOverview?.cost.toFixed(2)}`, icon: <Coins />, color: 'text-cyan-400', sub: 'Burn Rate' },
-                    { label: 'Code Synthetic', value: (currentStats.gitLoc?.insertions || 0).toLocaleString(), icon: <FileCode />, color: 'text-fuchsia-400', sub: 'Git Insertions' },
+                    { label: 'Intelligence Density', value: `${parseInt(intelligenceDensity).toLocaleString()}`, icon: <Brain />, color: 'text-fuchsia-400', sub: 'Tokens / Prompt' },
                     { label: 'Context Throughput', value: (filteredOverview?.tokens / 1e6).toFixed(1) + 'M', icon: <Zap />, color: 'text-purple-400', sub: 'Input + Output' },
                     { label: 'Human Logic', value: (dateRange === 'all' ? currentStats.messageCount.input : filteredOverview.inputMessages).toLocaleString(), icon: <MousePointer2 />, color: 'text-blue-400', sub: 'Prompts' },
                     { label: 'Engine Health', value: efficiencyScore + '%', icon: <ActivityIcon />, color: 'text-emerald-400', sub: 'Efficiency Score' },
@@ -311,35 +319,36 @@ function App() {
 
                   <div className="glass-card flex flex-col min-h-[450px]">
                     <h3 className="text-xl font-bold mb-10 flex items-center gap-3">
-                      <Layers size={20} className="text-primary" /> 
-                      CONTEXT SPLIT
+                      <Cpu size={20} className="text-primary" /> 
+                      NEURAL DISTRIBUTION
                     </h3>
                     <div className="flex-1 flex flex-col justify-center">
                       <div className="h-[240px] relative">
                         <ResponsiveContainer width="100%" height="100%">
                           <PieChart>
-                            <Pie data={tokenData} innerRadius={80} outerRadius={105} paddingAngle={10} dataKey="value" stroke="none">
-                              {tokenData.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
+                            <Pie data={modelDistribution} innerRadius={80} outerRadius={105} paddingAngle={8} dataKey="value" stroke="none">
+                              {modelDistribution.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
                             </Pie>
                             <Tooltip contentStyle={{ backgroundColor: '#0f172a', border: 'none', borderRadius: '16px' }} />
                           </PieChart>
                         </ResponsiveContainer>
                         <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                          <span className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em]">Total</span>
+                          <span className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em]">Core</span>
                           <span className="text-3xl font-black text-white leading-none mt-1">
-                            {((currentStats.totalTokens.input + currentStats.totalTokens.output) / 1e6).toFixed(1)}M
+                            {modelDistribution.length}
                           </span>
+                          <span className="text-[8px] font-black text-slate-600 uppercase tracking-widest mt-1">Active Models</span>
                         </div>
                       </div>
                       
-                      <div className="mt-8 space-y-4 px-2">
-                        {tokenData.map((d, i) => (
+                      <div className="mt-8 space-y-3 px-2 overflow-y-auto max-h-[150px] scrollbar-hide">
+                        {modelDistribution.map((d, i) => (
                           <div key={d.name} className="flex justify-between items-center group">
                             <div className="flex items-center gap-4">
-                              <div className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: COLORS[i] }} />
-                              <span className="text-xs font-bold text-slate-400 group-hover:text-slate-200 transition-colors uppercase tracking-widest">{d.name} Payload</span>
+                              <div className="h-2 w-2 rounded-full shadow-[0_0_8px_rgba(255,255,255,0.2)]" style={{ backgroundColor: COLORS[i % COLORS.length] }} />
+                              <span className="text-[10px] font-black text-slate-400 group-hover:text-white transition-colors uppercase tracking-[0.1em] truncate max-w-[140px]">{d.name}</span>
                             </div>
-                            <span className="font-black text-sm text-white">{(d.value / 1e6).toFixed(1)}M</span>
+                            <span className="font-black text-[10px] text-white">{(d.value / 1e6).toFixed(1)}M</span>
                           </div>
                         ))}
                       </div>
