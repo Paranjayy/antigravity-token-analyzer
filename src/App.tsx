@@ -105,20 +105,21 @@ function App() {
     });
   }, [currentStats, dateRange]);
 
-  const filteredOverview = useMemo(() => {
-    if (dateRange === 'all') return {
-      cost: currentStats.totalCost,
-      tokens: currentStats.totalTokens.input + currentStats.totalTokens.output,
-      errors: currentStats.providers.antigravity.errors,
-      tools: Object.values(currentStats.toolUsage).reduce((a: any, b: any) => a + b, 0) as number
-    };
-    
     return filteredTimeline.reduce((acc, day) => {
       acc.cost += day.cost;
       acc.tokens += day.input + day.output;
       acc.tools += day.tools;
+      acc.inputMessages += day.inputMessages || 0;
+      acc.outputMessages += day.outputMessages || 0;
       return acc;
-    }, { cost: 0, tokens: 0, errors: currentStats.providers.antigravity.errors, tools: 0 }); // errors remain global
+    }, { 
+      cost: 0, 
+      tokens: 0, 
+      errors: currentStats.providers.antigravity.errors, 
+      tools: 0,
+      inputMessages: 0,
+      outputMessages: 0
+    });
   }, [currentStats, filteredTimeline, dateRange]);
 
   return (
@@ -205,20 +206,21 @@ function App() {
         <AnimatePresence mode="wait">
           {activeTab === 'overview' && (
             <motion.div key="ov" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="space-y-8">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
                 {[
-                  { label: 'Cloud Burn Rate', value: `$${filteredOverview?.cost.toFixed(2)}`, icon: <Coins />, color: 'text-yellow-400', sub: 'Total LLM Investment' },
-                  { label: 'Token Throughput', value: (filteredOverview?.tokens || 0).toLocaleString(), icon: <Zap />, color: 'text-purple-400', sub: 'Input + Output' },
-                  { label: 'Error Resilience', value: `${(((1 - ((filteredOverview?.errors || 0) / (currentStats.messageCount.output || 1))) * 100)).toFixed(1)}%`, icon: <AlertCircle />, color: 'text-green-400', sub: 'Success vs Failure' },
-                  { label: 'Tool Multiplier', value: `x${((filteredOverview?.tools || 0) / (currentStats.conversations || 1)).toFixed(1)}`, icon: <MousePointer2 />, color: 'text-blue-400', sub: 'Tools per Session' },
+                  { label: 'Burn Rate', value: `$${filteredOverview?.cost.toFixed(2)}`, icon: <Coins />, color: 'text-yellow-400', sub: 'Total Investment' },
+                  { label: 'Total Tokens', value: (filteredOverview?.tokens || 0).toLocaleString(), icon: <Zap />, color: 'text-purple-400', sub: 'Input + Output' },
+                  { label: 'Input Prompts', value: (dateRange === 'all' ? currentStats.messageCount.input : filteredOverview.inputMessages).toLocaleString(), icon: <ActivityIcon />, color: 'text-blue-400', sub: 'User Invocations' },
+                  { label: 'Stability', value: `${(((1 - ((filteredOverview?.errors || 0) / (currentStats.messageCount.output || 1))) * 100)).toFixed(1)}%`, icon: <AlertCircle />, color: 'text-green-400', sub: `${filteredOverview.errors} Errors Logged` },
+                  { label: 'Tool Usage', value: (filteredOverview?.tools || 0).toLocaleString(), icon: <Terminal />, color: 'text-orange-400', sub: 'MCP Tool Calls' },
                 ].map((s) => (
-                  <div key={s.label} className="glass-card hover:border-accent/40 transition-all group cursor-default">
+                  <div key={s.label} className="glass-card hover:border-accent/40 transition-all group cursor-default !p-6">
                     <div className="flex items-center justify-between mb-4">
-                      <div className={`p-3 rounded-xl bg-white/5 ${s.color} group-hover:scale-110 transition-transform`}>{s.icon}</div>
+                      <div className={`p-2.5 rounded-xl bg-white/5 ${s.color} group-hover:scale-110 transition-transform`}>{s.icon}</div>
                     </div>
-                    <p className="text-[10px] font-bold text-white/30 uppercase tracking-widest">{s.label}</p>
-                    <h2 className="text-4xl font-black mt-2 tracking-tighter group-hover:text-accent transition-colors">{s.value}</h2>
-                    <p className="text-[10px] text-white/10 mt-1 font-bold">{s.sub}</p>
+                    <p className="text-[9px] font-bold text-white/30 uppercase tracking-[0.2em]">{s.label}</p>
+                    <h2 className="text-3xl font-black mt-1 tracking-tighter group-hover:text-accent transition-colors leading-none">{s.value}</h2>
+                    <p className="text-[9px] text-white/10 mt-2 font-bold uppercase tracking-wider">{s.sub}</p>
                   </div>
                 ))}
               </div>

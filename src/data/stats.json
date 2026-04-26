@@ -1,73 +1,87 @@
 {
   "totalTokens": {
-    "input": 21204356,
-    "output": 490759
+    "input": 21207653,
+    "output": 492690
   },
-  "totalCost": 21.61247588,
+  "totalCost": 21.753043880000003,
   "conversations": 22,
   "messageCount": {
-    "input": 1264,
-    "output": 11926
+    "input": 1277,
+    "output": 12021
   },
   "toolUsage": {
     "list_dir": 98,
-    "view_file": 842,
-    "run_command": 934,
-    "multi_replace_file_content": 217,
-    "replace_file_content": 479,
-    "command_status": 308,
+    "view_file": 853,
+    "run_command": 951,
+    "multi_replace_file_content": 219,
+    "replace_file_content": 491,
+    "command_status": 312,
     "grep_search": 91,
     "search_web": 13,
-    "write_to_file": 347,
+    "write_to_file": 366,
     "read_url_content": 8,
     "send_command_input": 5,
     "generate_image": 20,
     "mcp_chrome-devtools_navigate_page": 3,
     "mcp_chrome-devtools_list_pages": 3,
-    "mcp_chrome-devtools_new_page": 3
+    "mcp_chrome-devtools_new_page": 4
   },
   "timeline": {
     "2026-04-25": {
-      "input": 37097,
-      "output": 29312,
-      "cost": 16.07282,
-      "tools": 841
+      "input": 37883,
+      "output": 30083,
+      "cost": 16.150744,
+      "tools": 866,
+      "inputMessages": null,
+      "outputMessages": null
     },
     "2026-04-22": {
       "input": 7457,
       "output": 11956,
       "cost": 1.1851039999999995,
-      "tools": 330
+      "tools": 330,
+      "inputMessages": null,
+      "outputMessages": null
     },
     "2026-04-24": {
       "input": 4449811,
       "output": 85060,
       "cost": 16.31987988,
-      "tools": 1175
+      "tools": 1175,
+      "inputMessages": null,
+      "outputMessages": null
     },
     "2026-04-23": {
       "input": 7092,
       "output": 4377,
       "cost": 0.55084,
-      "tools": 300
+      "tools": 300,
+      "inputMessages": null,
+      "outputMessages": null
     },
     "2026-04-26": {
-      "input": 3119,
-      "output": 3359,
-      "cost": 0.12325599999999995,
-      "tools": 207
+      "input": 5630,
+      "output": 4519,
+      "cost": 0.32646799999999987,
+      "tools": 248,
+      "inputMessages": null,
+      "outputMessages": null
     },
     "2026-04-18": {
       "input": 8923,
       "output": 17223,
       "cost": 2.819776000000001,
-      "tools": 317
+      "tools": 317,
+      "inputMessages": null,
+      "outputMessages": null
     },
     "2026-04-20": {
       "input": 6748,
       "output": 6162,
       "cost": 0.93398,
-      "tools": 201
+      "tools": 201,
+      "inputMessages": null,
+      "outputMessages": null
     },
     "2026-03-27": {
       "input": 10453689,
@@ -128,10 +142,10 @@
     "antigravity": {
       "conversations": 22,
       "tokens": {
-        "input": 112027,
-        "output": 99756
+        "input": 115324,
+        "output": 101687
       },
-      "cost": 16.393180000000005,
+      "cost": 16.533748000000006,
       "artifacts": 11,
       "errors": 0
     },
@@ -196,8 +210,8 @@
       "errors": 0
     },
     "antigravity-token-analyzer": {
-      "tokens": 5324,
-      "cost": 0.11077000000000002,
+      "tokens": 6132,
+      "cost": 0.137888,
       "sessions": 1,
       "errors": 0
     },
@@ -208,8 +222,8 @@
       "errors": 0
     },
     "gemini-design-palace": {
-      "tokens": 2340,
-      "cost": 0.029328,
+      "tokens": 3089,
+      "cost": 0.041172,
       "sessions": 1,
       "errors": 0
     },
@@ -220,8 +234,8 @@
       "errors": 0
     },
     "Praduman Khachar": {
-      "tokens": 2743,
-      "cost": 0.03121399999999999,
+      "tokens": 6414,
+      "cost": 0.13281999999999997,
       "sessions": 1,
       "errors": 0
     },
@@ -357,13 +371,24 @@
       "artifacts": 0
     },
     {
+      "id": "e76a9c21-3106-4364-aade-1d275267f79b",
+      "title": "<USER_REQUEST> - i have many ideas and things ffor my father...",
+      "tokens": 6414,
+      "cost": 0.13281999999999997,
+      "date": "2026-04-26",
+      "project": "Praduman Khachar",
+      "tools": 155,
+      "errors": 0,
+      "artifacts": 2
+    },
+    {
       "id": "886a667c-29c8-4411-a988-819f8f2feb92",
       "title": "Untitled Session",
-      "tokens": 5324,
-      "cost": 0.11077000000000002,
+      "tokens": 6132,
+      "cost": 0.137888,
       "date": "2026-04-25",
       "project": "antigravity-token-analyzer",
-      "tools": 209,
+      "tools": 222,
       "errors": 0,
       "artifacts": 2
     },
@@ -390,6 +415,17 @@
       "artifacts": 0
     },
     {
+      "id": "bfa528a4-9688-4eda-8110-5ead13264102",
+      "title": "<USER_REQUEST> # inital prompt for any model(u are currently...",
+      "tokens": 3089,
+      "cost": 0.041172,
+      "date": "2026-04-25",
+      "project": "gemini-design-palace",
+      "tools": 74,
+      "errors": 0,
+      "artifacts": 0
+    },
+    {
       "id": "6d6ae6cc-5d61-44b5-84dd-14852d5103c6",
       "title": "<USER_REQUEST> - Design palace component library and ppallat...",
       "tokens": 2928,
@@ -397,28 +433,6 @@
       "date": "2026-04-24",
       "project": "Design Palace",
       "tools": 64,
-      "errors": 0,
-      "artifacts": 0
-    },
-    {
-      "id": "e76a9c21-3106-4364-aade-1d275267f79b",
-      "title": "<USER_REQUEST> - i have many ideas and things ffor my father...",
-      "tokens": 2743,
-      "cost": 0.03121399999999999,
-      "date": "2026-04-26",
-      "project": "Praduman Khachar",
-      "tools": 114,
-      "errors": 0,
-      "artifacts": 2
-    },
-    {
-      "id": "bfa528a4-9688-4eda-8110-5ead13264102",
-      "title": "<USER_REQUEST> # inital prompt for any model(u are currently...",
-      "tokens": 2340,
-      "cost": 0.029328,
-      "date": "2026-04-25",
-      "project": "gemini-design-palace",
-      "tools": 62,
       "errors": 0,
       "artifacts": 0
     },
@@ -547,8 +561,8 @@
     }
   ],
   "engineering": {
-    "totalLOC": 1723,
-    "filesAffected": 1043,
+    "totalLOC": 1785,
+    "filesAffected": 1076,
     "toolsPerSession": 0,
     "avgResponseTime": 0
   },
@@ -621,49 +635,63 @@
       "input": 8923,
       "output": 17223,
       "cost": 2.819776000000001,
-      "tools": 317
+      "tools": 317,
+      "inputMessages": null,
+      "outputMessages": null
     },
     {
       "date": "2026-04-20",
       "input": 6748,
       "output": 6162,
       "cost": 0.93398,
-      "tools": 201
+      "tools": 201,
+      "inputMessages": null,
+      "outputMessages": null
     },
     {
       "date": "2026-04-22",
       "input": 7457,
       "output": 11956,
       "cost": 1.1851039999999995,
-      "tools": 330
+      "tools": 330,
+      "inputMessages": null,
+      "outputMessages": null
     },
     {
       "date": "2026-04-23",
       "input": 7092,
       "output": 4377,
       "cost": 0.55084,
-      "tools": 300
+      "tools": 300,
+      "inputMessages": null,
+      "outputMessages": null
     },
     {
       "date": "2026-04-24",
       "input": 4449811,
       "output": 85060,
       "cost": 16.31987988,
-      "tools": 1175
+      "tools": 1175,
+      "inputMessages": null,
+      "outputMessages": null
     },
     {
       "date": "2026-04-25",
-      "input": 37097,
-      "output": 29312,
-      "cost": 16.07282,
-      "tools": 841
+      "input": 37883,
+      "output": 30083,
+      "cost": 16.150744,
+      "tools": 866,
+      "inputMessages": null,
+      "outputMessages": null
     },
     {
       "date": "2026-04-26",
-      "input": 3119,
-      "output": 3359,
-      "cost": 0.12325599999999995,
-      "tools": 207
+      "input": 5630,
+      "output": 4519,
+      "cost": 0.32646799999999987,
+      "tools": 248,
+      "inputMessages": null,
+      "outputMessages": null
     }
   ]
 }

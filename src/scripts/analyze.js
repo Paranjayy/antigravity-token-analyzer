@@ -69,6 +69,8 @@ async function analyze() {
       let projectCwd = 'General';
       let convErrors = 0;
       let convTools = 0;
+      let convInputMessages = 0;
+      let convOutputMessages = 0;
 
       let convModel = DEFAULT_MODEL;
 
@@ -114,6 +116,7 @@ async function analyze() {
             // Estimate context growth: Add current conversation total to input
             const estimatedInput = convInputTokens + convOutputTokens + tokens;
             convInputTokens += tokens;
+            convInputMessages++;
             stats.messageCount.input++;
             
             // For pricing, we use the estimated total input (current context)
@@ -137,6 +140,7 @@ async function analyze() {
 
           } else {
             convOutputTokens += tokens;
+            convOutputMessages++;
             stats.messageCount.output++;
 
             // Output pricing
@@ -210,11 +214,13 @@ async function analyze() {
       if (stats.recentActivity.length < 10) stats.recentActivity.push(convSummary);
 
       if (convDate) {
-        if (!stats.timeline[convDate]) stats.timeline[convDate] = { input: 0, output: 0, cost: 0, tools: 0 };
+        if (!stats.timeline[convDate]) stats.timeline[convDate] = { input: 0, output: 0, cost: 0, tools: 0, inputMessages: 0, outputMessages: 0 };
         stats.timeline[convDate].input += convInputTokens;
         stats.timeline[convDate].output += convOutputTokens;
         stats.timeline[convDate].cost += convCost;
         stats.timeline[convDate].tools += convTools;
+        stats.timeline[convDate].inputMessages += convInputMessages;
+        stats.timeline[convDate].outputMessages += convOutputMessages;
       }
 
       if (!stats.projects[projectCwd]) stats.projects[projectCwd] = { tokens: 0, cost: 0, sessions: 0, errors: 0 };
