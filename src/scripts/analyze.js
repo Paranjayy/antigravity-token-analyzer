@@ -5,7 +5,6 @@ import Database from 'better-sqlite3';
 
 const ANTIGRAVITY_PATH = '/Users/paranjay/.gemini/antigravity/brain';
 const OPENCODE_DB_PATH = '/Users/paranjay/.local/share/opencode/opencode.db';
-const MEDIA_PATH = '/Users/paranjay/.gemini/antigravity/brain/tempmediaStorage';
 const PRICING_PATH = path.join(process.cwd(), 'src/data/pricing.json');
 const OUTPUT_PATH = path.join(process.cwd(), 'src/data/stats.json');
 
@@ -20,23 +19,25 @@ async function analyze() {
     totalCost: 0,
     conversations: 0,
     messageCount: { input: 0, output: 0 },
-    modelUsage: {},
     toolUsage: {},
     timeline: {},
     providers: {
-      antigravity: { conversations: 0, tokens: { input: 0, output: 0 }, cost: 0, artifacts: 0, filesChanged: 0, locAdded: 0, locRemoved: 0 },
-      opencode: { conversations: 0, tokens: { input: 0, output: 0 }, cost: 0, artifacts: 0, filesChanged: 0, locAdded: 0, locRemoved: 0 }
+      antigravity: { conversations: 0, tokens: { input: 0, output: 0 }, cost: 0, artifacts: 0, errors: 0 },
+      opencode: { conversations: 0, tokens: { input: 0, output: 0 }, cost: 0, artifacts: 0, errors: 0 }
     },
-    mediaCount: 0,
-    projects: {}, // project name -> { tokens, cost, files }
-    timelineArray: [],
-    recentArtifacts: []
+    projects: {}, 
+    hourHeatmap: Array(24).fill(0),
+    dayHeatmap: Array(7).fill(0),
+    topConversations: [],
+    recentActivity: [],
+    engineering: {
+      totalLOC: 0,
+      filesAffected: 0,
+      toolsPerSession: 0,
+      avgResponseTime: 0
+    },
+    timelineArray: []
   };
-
-  // Count media
-  if (fs.existsSync(MEDIA_PATH)) {
-    stats.mediaCount = fs.readdirSync(MEDIA_PATH).length;
-  }
 
   let modelData = null;
   for (const provider in pricing) {
@@ -53,21 +54,31 @@ async function analyze() {
       const logPath = path.join(ANTIGRAVITY_PATH, dir, '.system_generated/logs/overview.txt');
       if (!fs.existsSync(logPath)) continue;
 
+      const content = fs.readFileSync(logPath, 'utf8');
+      const lines = content.split('\n').filter(l => l.trim());
+      if (lines.length === 0) continue;
+
       stats.conversations++;
       stats.providers.antigravity.conversations++;
       
-      const content = fs.readFileSync(logPath, 'utf8');
-      const lines = content.split('\n').filter(l => l.trim());
-
       let convInputTokens = 0;
       let convOutputTokens = 0;
       let convDate = null;
-      let projectCwd = 'Unknown';
+      let convTitle = "Untitled Session";
+      let projectCwd = 'General';
+      let convErrors = 0;
+      let convTools = 0;
 
       for (const line of lines) {
         try {
           const entry = JSON.parse(line);
-          if (!convDate && entry.created_at) convDate = entry.created_at.split('T')[0];
+          const dateObj = new Date(entry.created_at);
+          if (!convDate) {
+            convDate = entry.created_at.split('T')[0];
+            stats.hourHeatmap[dateObj.getHours()]++;
+            stats.dayHeatmap[dateObj.getDay()]++;
+            if (entry.content) convTitle = entry.content.substring(0, 60) + '...';
+          }
           
           const text = entry.content || '';
           const tokens = encoding.encode(text).length;
@@ -81,82 +92,69 @@ async function analyze() {
             stats.messageCount.output++;
           }
 
+          if (entry.type === 'TOOL_OUTPUT' && (text.toLowerCase().includes('error') || text.toLowerCase().includes('failed'))) {
+            convErrors++;
+            stats.providers.antigravity.errors++;
+          }
+
           if (entry.tool_calls) {
+            convTools += entry.tool_calls.length;
             entry.tool_calls.forEach(tc => {
-              const name = tc.name;
-              stats.toolUsage[name] = (stats.toolUsage[name] || 0) + 1;
+              stats.toolUsage[tc.name] = (stats.toolUsage[tc.name] || 0) + 1;
+              if (tc.args?.Cwd) projectCwd = tc.args.Cwd.split('/').pop().replace(/"/g, '');
               
-              if (tc.args) {
-                const args = tc.args;
-                convInputTokens += encoding.encode(JSON.stringify(args)).length;
-                
-                // Track project and LOC
-                if (args.Cwd) projectCwd = args.Cwd.split('/').pop();
-                
-                if (name === 'write_to_file' || name === 'replace_file_content' || name === 'multi_replace_file_content') {
-                  stats.providers.antigravity.filesChanged++;
-                  
-                  if (args.CodeContent) {
-                    stats.providers.antigravity.locAdded += args.CodeContent.split('\n').length;
-                  }
-                  if (args.ReplacementContent) {
-                    stats.providers.antigravity.locAdded += args.ReplacementContent.split('\n').length;
-                  }
-                  if (args.TargetContent) {
-                    stats.providers.antigravity.locRemoved += args.TargetContent.split('\n').length;
-                  }
-                  if (args.ReplacementChunks) {
-                    args.ReplacementChunks.forEach(chunk => {
-                      if (chunk.ReplacementContent) stats.providers.antigravity.locAdded += chunk.ReplacementContent.split('\n').length;
-                      if (chunk.TargetContent) stats.providers.antigravity.locRemoved += chunk.TargetContent.split('\n').length;
-                    });
-                  }
-                }
+              // LOC Tracking
+              if (tc.name === 'write_to_file' || tc.name === 'replace_file_content' || tc.name === 'multi_replace_file_content') {
+                stats.engineering.filesAffected++;
+                const code = tc.args.CodeContent || tc.args.ReplacementContent || '';
+                stats.engineering.totalLOC += code.split('\n').length;
               }
             });
           }
-          if (entry.type === 'TOOL_OUTPUT') convInputTokens += tokens;
         } catch (e) {}
       }
 
-      // Count artifacts for this conv
       const stepsPath = path.join(ANTIGRAVITY_PATH, dir, '.system_generated/steps');
+      let artifactCount = 0;
       if (fs.existsSync(stepsPath)) {
-        const steps = fs.readdirSync(stepsPath);
-        for (const step of steps) {
-          if (fs.existsSync(path.join(stepsPath, step, 'content.md'))) {
-            stats.providers.antigravity.artifacts++;
-          }
-        }
+        artifactCount = fs.readdirSync(stepsPath).length;
+        stats.providers.antigravity.artifacts += artifactCount;
       }
 
-      if (modelData) {
-        const inputCost = (convInputTokens / 1000000) * modelData.cost.input;
-        const outputCost = (convOutputTokens / 1000000) * modelData.cost.output;
-        const convCost = inputCost + outputCost;
-        
-        stats.totalCost += convCost;
-        stats.providers.antigravity.cost += convCost;
-        stats.providers.antigravity.tokens.input += convInputTokens;
-        stats.providers.antigravity.tokens.output += convOutputTokens;
-        
-        if (convDate) {
-          if (!stats.timeline[convDate]) stats.timeline[convDate] = { input: 0, output: 0, cost: 0 };
-          stats.timeline[convDate].input += convInputTokens;
-          stats.timeline[convDate].output += convOutputTokens;
-          stats.timeline[convDate].cost += convCost;
-        }
-
-        if (projectCwd) {
-          if (!stats.projects[projectCwd]) stats.projects[projectCwd] = { tokens: 0, cost: 0, files: 0 };
-          stats.projects[projectCwd].tokens += convInputTokens + convOutputTokens;
-          stats.projects[projectCwd].cost += convCost;
-          stats.projects[projectCwd].files++;
-        }
-      }
-
+      const cost = modelData ? ((convInputTokens / 1e6) * modelData.cost.input + (convOutputTokens / 1e6) * modelData.cost.output) : 0;
+      
+      stats.totalCost += cost;
       stats.totalTokens.input += convInputTokens;
       stats.totalTokens.output += convOutputTokens;
+      
+      const convSummary = { 
+        id: dir, 
+        title: convTitle, 
+        tokens: convInputTokens + convOutputTokens, 
+        cost, 
+        date: convDate,
+        project: projectCwd,
+        tools: convTools,
+        errors: convErrors,
+        artifacts: artifactCount
+      };
+
+      stats.topConversations.push(convSummary);
+      if (stats.recentActivity.length < 10) stats.recentActivity.push(convSummary);
+
+      if (convDate) {
+        if (!stats.timeline[convDate]) stats.timeline[convDate] = { input: 0, output: 0, cost: 0, tools: 0 };
+        stats.timeline[convDate].input += convInputTokens;
+        stats.timeline[convDate].output += convOutputTokens;
+        stats.timeline[convDate].cost += cost;
+        stats.timeline[convDate].tools += convTools;
+      }
+
+      if (!stats.projects[projectCwd]) stats.projects[projectCwd] = { tokens: 0, cost: 0, sessions: 0, errors: 0 };
+      stats.projects[projectCwd].tokens += (convInputTokens + convOutputTokens);
+      stats.projects[projectCwd].cost += cost;
+      stats.projects[projectCwd].sessions++;
+      stats.projects[projectCwd].errors += convErrors;
     }
   }
 
@@ -164,15 +162,12 @@ async function analyze() {
   if (fs.existsSync(OPENCODE_DB_PATH)) {
     try {
       const db = new Database(OPENCODE_DB_PATH, { readonly: true });
-      const sessions = db.prepare('SELECT count(*) as count FROM session').get();
-      stats.conversations += sessions.count;
-      stats.providers.opencode.conversations += sessions.count;
-
       const messages = db.prepare('SELECT data FROM message').all();
       for (const row of messages) {
         try {
           const data = JSON.parse(row.data);
-          const date = new Date(data.time.created).toISOString().split('T')[0];
+          const dateObj = new Date(data.time.created);
+          const date = dateObj.toISOString().split('T')[0];
           
           if (data.tokens) {
             const input = data.tokens.input || 0;
@@ -182,24 +177,17 @@ async function analyze() {
             stats.totalTokens.input += input;
             stats.totalTokens.output += output;
             stats.totalCost += cost;
-
             stats.providers.opencode.tokens.input += input;
             stats.providers.opencode.tokens.output += output;
             stats.providers.opencode.cost += cost;
 
-            if (!stats.timeline[date]) stats.timeline[date] = { input: 0, output: 0, cost: 0 };
+            if (!stats.timeline[date]) stats.timeline[date] = { input: 0, output: 0, cost: 0, tools: 0 };
             stats.timeline[date].input += input;
             stats.timeline[date].output += output;
             stats.timeline[date].cost += cost;
           }
-
           if (data.role === 'user') stats.messageCount.input++;
-          if (data.role === 'assistant') stats.messageCount.output++;
-          
-          if (data.model && data.model.modelID) {
-            const m = data.model.modelID;
-            stats.modelUsage[m] = (stats.modelUsage[m] || 0) + (data.tokens?.total || 0);
-          }
+          else stats.messageCount.output++;
         } catch (e) {}
       }
       db.close();
@@ -210,8 +198,11 @@ async function analyze() {
     .map(([date, data]) => ({ date, ...data }))
     .sort((a, b) => a.date.localeCompare(b.date));
 
+  stats.topConversations.sort((a, b) => b.tokens - a.tokens);
+  stats.topConversations = stats.topConversations.slice(0, 15);
+
   fs.writeFileSync(OUTPUT_PATH, JSON.stringify(stats, null, 2));
-  console.log('Analysis complete. Granular stats updated.');
+  console.log('Advanced professional stats generated.');
 }
 
 analyze().catch(console.error);
