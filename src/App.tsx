@@ -10,21 +10,22 @@ import {
   Layout,
   Search,
   ImageIcon,
-  Clock,
   ChevronRight,
   Layers,
   FilePlus,
   Briefcase,
-  Box,
   Download,
-  AlertCircle,
   Trophy,
   Flame,
   Calendar,
   Activity as ActivityIcon,
   FolderOpen,
   RefreshCw,
-  Code2
+  Code2,
+  TrendingUp,
+  ShieldCheck,
+  MousePointer2,
+  Settings
 } from 'lucide-react';
 import { 
   PieChart, 
@@ -34,32 +35,36 @@ import {
   Tooltip,
   XAxis,
   YAxis,
-  BarChart,
-  Bar
+  AreaChart,
+  Area,
+  CartesianGrid
 } from 'recharts';
 import { motion, AnimatePresence } from 'framer-motion';
 import stats from './data/stats.json';
 
-const COLORS = ['#c084fc', '#22d3ee', '#818cf8', '#f472b6', '#fbbf24'];
+const COLORS = ['#22d3ee', '#c084fc', '#818cf8', '#f472b6', '#fbbf24'];
 
 const ToolIcon = ({ name }: { name: string }) => {
-  if (name.includes('file')) return <FileCode size={18} />;
-  if (name.includes('command') || name.includes('terminal')) return <Terminal size={18} />;
-  if (name.includes('search')) return <Search size={18} />;
-  if (name.includes('image')) return <ImageIcon size={18} />;
-  if (name.includes('chrome')) return <Layout size={18} />;
-  return <Zap size={18} />;
+  const iconSize = 16;
+  if (name.includes('file') || name.includes('replace')) return <FileCode size={iconSize} />;
+  if (name.includes('command') || name.includes('terminal') || name.includes('status')) return <Terminal size={iconSize} />;
+  if (name.includes('search')) return <Search size={iconSize} />;
+  if (name.includes('image')) return <ImageIcon size={iconSize} />;
+  if (name.includes('chrome')) return <Layout size={iconSize} />;
+  if (name.includes('git')) return <RefreshCw size={iconSize} />;
+  return <Zap size={iconSize} />;
 };
 
 function App() {
   const [activeTab, setActiveTab] = useState('overview');
   const [currentStats, setCurrentStats] = useState(stats);
+  const [dateRange, setDateRange] = useState<'all'|'7'|'30'>('all');
 
   const handleDownload = () => {
     const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(currentStats));
     const downloadAnchorNode = document.createElement('a');
     downloadAnchorNode.setAttribute("href", dataStr);
-    downloadAnchorNode.setAttribute("download", "antigravity_stats.json");
+    downloadAnchorNode.setAttribute("download", `antigravity_stats_${new Date().toISOString().split('T')[0]}.json`);
     document.body.appendChild(downloadAnchorNode);
     downloadAnchorNode.click();
     downloadAnchorNode.remove();
@@ -74,27 +79,24 @@ function App() {
           const json = JSON.parse(e.target?.result as string);
           setCurrentStats(json);
         } catch {
-          alert("Invalid JSON file");
+          alert("Invalid stats payload detected.");
         }
       };
       reader.readAsText(file);
     }
   };
 
-  const tokenData = [
+  const tokenData = useMemo(() => [
     { name: 'Input', value: currentStats.totalTokens.input },
     { name: 'Output', value: currentStats.totalTokens.output },
-  ];
+  ], [currentStats]);
 
   const projectData = useMemo(() => {
     return Object.entries(currentStats.projects)
       .map(([name, data]) => ({ name, ...data }))
       .sort((a, b) => (b as any).tokens - (a as any).tokens)
-      .slice(0, 10);
+      .slice(0, 12);
   }, [currentStats]);
-
-
-  const [dateRange, setDateRange] = useState<'all'|'7'|'30'>('all');
 
   const filteredTimeline = useMemo(() => {
     const now = new Date();
@@ -124,336 +126,485 @@ function App() {
     });
   }, [currentStats, filteredTimeline]);
 
+  const efficiencyScore = useMemo(() => {
+    const tokensPerLoc = (currentStats.totalTokens.input + currentStats.totalTokens.output) / (currentStats.engineering.totalLOC || 1);
+    const errorRate = currentStats.providers.antigravity.errors / (currentStats.messageCount.output || 1);
+    const score = 100 - (errorRate * 1000) - (tokensPerLoc / 500);
+    return Math.min(100, Math.max(0, score)).toFixed(1);
+  }, [currentStats]);
+
   return (
-    <div className="min-h-screen text-white selection:bg-accent/30 font-sans">
+    <div className="min-h-screen text-slate-200 selection:bg-accent/30 font-sans flex overflow-hidden">
       <div className="bg-blobs">
         <div className="blob blob-1" />
         <div className="blob blob-2" />
         <div className="blob blob-3" />
       </div>
 
-      <nav className="fixed left-0 top-0 h-full w-20 flex flex-col items-center py-8 gap-8 border-r border-white/5 bg-black/40 backdrop-blur-3xl z-50">
-        <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center text-white shadow-lg shadow-purple-500/20 mb-4 cursor-pointer hover:scale-110 transition-transform">
-          <Cpu size={24} />
+      {/* Modern Sidebar */}
+      <nav className="w-20 lg:w-24 flex flex-col items-center py-10 border-r border-white/5 bg-slate-950/40 backdrop-blur-3xl z-50 shrink-0">
+        <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-accent to-primary flex items-center justify-center text-white shadow-2xl shadow-accent/20 mb-12 cursor-pointer hover:scale-105 transition-all">
+          <Cpu size={28} className="animate-pulse" />
         </div>
-        {[
-          { id: 'overview', icon: <Layout size={20} />, label: 'Overview' },
-          { id: 'projects', icon: <Briefcase size={20} />, label: 'Projects' },
-          { id: 'engineering', icon: <ActivityIcon size={20} />, label: 'Engineering' },
-          { id: 'halloffame', icon: <Trophy size={20} />, label: 'Top Sessions' },
-        ].map(tab => (
-          <button 
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
-            title={tab.label}
-            className={`p-4 rounded-2xl transition-all relative group ${activeTab === tab.id ? 'bg-white/10 text-accent' : 'text-white/30 hover:text-white/60'}`}
-          >
-            {tab.icon}
-            <div className="absolute left-full ml-4 px-3 py-1 bg-black text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-[100] border border-white/10">
-              {tab.label}
-            </div>
-            {activeTab === tab.id && <motion.div layoutId="nav-glow" className="absolute inset-0 rounded-2xl shadow-[0_0_20px_rgba(34,211,238,0.2)]" />}
-          </button>
-        ))}
         
-        <div className="mt-auto flex flex-col gap-4">
-          <label className="p-4 text-white/20 hover:text-white/40 cursor-pointer transition-colors relative group">
-            <FolderOpen size={20} />
+        <div className="flex flex-col gap-5">
+          {[
+            { id: 'overview', icon: <Layout size={22} />, label: 'Intelligence Hub' },
+            { id: 'projects', icon: <Briefcase size={22} />, label: 'Active Projects' },
+            { id: 'engineering', icon: <Code2 size={22} />, label: 'Deep Engineering' },
+            { id: 'halloffame', icon: <Trophy size={22} />, label: 'Elite Sessions' },
+          ].map(tab => (
+            <button 
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`sidebar-item group ${activeTab === tab.id ? 'active' : ''}`}
+            >
+              {tab.icon}
+              <div className="tooltip">{tab.label}</div>
+            </button>
+          ))}
+        </div>
+        
+        <div className="mt-auto flex flex-col gap-5">
+          <label className="sidebar-item group cursor-pointer">
+            <FolderOpen size={22} />
             <input type="file" className="hidden" onChange={handleUpload} accept=".json" />
-            <div className="absolute left-full ml-4 px-3 py-1 bg-black text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-[100] border border-white/10">
-              Import Stats JSON
-            </div>
+            <div className="tooltip">Import Dataset</div>
           </label>
-          <button onClick={handleDownload} className="p-4 text-white/20 hover:text-white/40 transition-colors relative group">
-            <Download size={20} />
-            <div className="absolute left-full ml-4 px-3 py-1 bg-black text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-[100] border border-white/10">
-              Export Stats JSON
-            </div>
+          <button onClick={handleDownload} className="sidebar-item group">
+            <Download size={22} />
+            <div className="tooltip">Export Report</div>
           </button>
+          <div className="sidebar-item group">
+            <Settings size={22} />
+            <div className="tooltip">Settings</div>
+          </div>
         </div>
       </nav>
 
-      <div className="ml-20 flex-1 flex flex-col min-h-screen">
-        <main className="p-8 max-w-7xl mx-auto w-full flex flex-col flex-1">
-        <header className="mb-12 flex items-center justify-between">
-          <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
-            <h1 className="text-6xl font-black tracking-tighter text-gradient italic leading-none">ANTIGRAVITY PRIME</h1>
-            <div className="flex items-center gap-4 mt-4">
-              <span className="text-[10px] font-bold text-white/20 uppercase tracking-[0.4em] flex items-center gap-2">
-                <ActivityIcon size={12} className="text-accent" /> Intelligence Protocol v2.5
-              </span>
-              <div className="h-[1px] w-12 bg-white/10" />
-              <span className="text-[10px] font-bold text-accent/60 uppercase tracking-[0.4em]">Ready for Production</span>
+      {/* Main Scrollable Content */}
+      <div className="flex-1 h-screen overflow-y-auto relative scroll-smooth">
+        <main className="p-8 lg:p-12 max-w-[1600px] mx-auto w-full">
+          {/* Header */}
+          <header className="mb-14 flex flex-col md:flex-row md:items-end justify-between gap-8">
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+              <h1 className="text-5xl lg:text-7xl font-black tracking-tight text-white mb-4 italic">
+                ANTIGRAVITY <span className="text-accent-gradient">PRIME</span>
+              </h1>
+              <div className="flex items-center gap-5">
+                <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-accent/10 border border-accent/20">
+                  <ActivityIcon size={12} className="text-accent" />
+                  <span className="text-[10px] font-black text-accent uppercase tracking-widest">Protocol v2.8</span>
+                </div>
+                <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20">
+                  <ShieldCheck size={12} className="text-emerald-500" />
+                  <span className="text-[10px] font-black text-emerald-500 uppercase tracking-widest">Production Hardened</span>
+                </div>
+                <div className="hidden lg:block h-[1px] w-12 bg-white/10" />
+                <span className="hidden lg:block text-[10px] font-bold text-slate-500 uppercase tracking-widest">Last Synced: Just Now</span>
+              </div>
+            </motion.div>
+
+            <div className="flex flex-col items-end gap-4">
+              <div className="flex items-center gap-3">
+                <div className="flex bg-slate-900/60 p-1 rounded-xl border border-white/5">
+                  {(['all', '30', '7'] as const).map((r) => (
+                    <button
+                      key={r}
+                      onClick={() => setDateRange(r)}
+                      className={`px-4 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${dateRange === r ? 'bg-accent text-slate-950' : 'text-slate-500 hover:text-slate-300'}`}
+                    >
+                      {r === 'all' ? 'All Time' : `${r}D`}
+                    </button>
+                  ))}
+                </div>
+                <div className="px-5 py-2.5 rounded-xl bg-slate-900/60 border border-white/5 flex items-center gap-3">
+                  <div className="relative">
+                    <Flame size={18} className="text-orange-500" />
+                    <div className="absolute inset-0 bg-orange-500 blur-md opacity-20" />
+                  </div>
+                  <span className="text-xs font-black tracking-tight">{currentStats.conversations} SESSIONS</span>
+                </div>
+              </div>
             </div>
-          </motion.div>
-          <div className="flex flex-col items-end gap-2">
-            <div className="flex items-center gap-3">
-              <select 
-                value={dateRange} 
-                onChange={(e) => setDateRange(e.target.value as any)}
-                className="bg-black/40 border border-white/10 rounded-lg px-3 py-1 text-xs font-bold text-white/60 hover:text-white outline-none cursor-pointer uppercase tracking-widest"
+          </header>
+
+          <AnimatePresence mode="wait">
+            {activeTab === 'overview' && (
+              <motion.div 
+                key="ov" 
+                initial={{ opacity: 0, y: 20 }} 
+                animate={{ opacity: 1, y: 0 }} 
+                exit={{ opacity: 0, y: -20 }} 
+                className="space-y-10"
               >
-                <option value="all">All Time</option>
-                <option value="30">Last 30 Days</option>
-                <option value="7">Last 7 Days</option>
-              </select>
-              <div className="glass-card !py-2 !px-4 flex items-center gap-3 border-accent/20 bg-accent/5">
-                <Flame size={16} className="text-orange-500" />
-                <span className="text-xs font-black tracking-wider">{currentStats.conversations} ACTIVE SESSIONS</span>
-              </div>
-            </div>
-            <p className="text-[9px] text-white/10 font-bold uppercase tracking-widest">Last Synced: Just Now</p>
-          </div>
-        </header>
-
-        <AnimatePresence mode="wait">
-          {activeTab === 'overview' && (
-            <motion.div key="ov" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="space-y-8">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {[
-                  { label: 'Burn Rate', value: `$${filteredOverview?.cost.toFixed(2)}`, icon: <Coins />, color: 'text-yellow-400', sub: 'Total Investment' },
-                  { label: 'Code Authored', value: (currentStats.gitLoc?.insertions || 0).toLocaleString(), icon: <FileCode />, color: 'text-pink-400', sub: 'Git Insertions (30d)' },
-                  { label: 'Total Tokens', value: (filteredOverview?.tokens || 0).toLocaleString(), icon: <Zap />, color: 'text-purple-400', sub: 'Input + Output' },
-                  { label: 'Input Prompts', value: (dateRange === 'all' ? currentStats.messageCount.input : filteredOverview.inputMessages).toLocaleString(), icon: <ActivityIcon />, color: 'text-blue-400', sub: 'User Invocations' },
-                  { label: 'Stability', value: `${(((1 - ((filteredOverview?.errors || 0) / (currentStats.messageCount.output || 1))) * 100)).toFixed(1)}%`, icon: <AlertCircle />, color: 'text-green-400', sub: `${filteredOverview.errors} Errors Logged` },
-                  { label: 'Tool Usage', value: (filteredOverview?.tools || 0).toLocaleString(), icon: <Terminal />, color: 'text-orange-400', sub: 'MCP Tool Calls' },
-                ].map((s) => (
-                  <div key={s.label} className="glass-card hover:border-accent/40 transition-all group cursor-default !p-6">
-                    <div className="flex items-center justify-between mb-4">
-                      <div className={`p-2.5 rounded-xl bg-white/5 ${s.color} group-hover:scale-110 transition-transform`}>{s.icon}</div>
-                    </div>
-                    <p className="text-[9px] font-bold text-white/30 uppercase tracking-[0.2em]">{s.label}</p>
-                    <h2 className="text-3xl font-black mt-1 tracking-tighter group-hover:text-accent transition-colors leading-none">{s.value}</h2>
-                    <p className="text-[9px] text-white/10 mt-2 font-bold uppercase tracking-wider">{s.sub}</p>
-                  </div>
-                ))}
-              </div>
-
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div className="lg:col-span-2 glass-card border-white/5 relative overflow-hidden group">
-                  <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity">
-                    <Clock size={120} />
-                  </div>
-                  <h3 className="text-xl font-bold mb-8 flex items-center gap-2"><Clock size={20} className="text-accent" /> Token Velocity Timeline</h3>
-                  <div className="h-[300px]">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <BarChart data={filteredTimeline}>
-                        <XAxis dataKey="date" stroke="rgba(255,255,255,0.1)" fontSize={10} tickLine={false} axisLine={false} />
-                        <YAxis hide />
-                        <Tooltip cursor={{ fill: 'rgba(255,255,255,0.05)' }} contentStyle={{ backgroundColor: '#000', border: '1px solid #222', borderRadius: '12px' }} />
-                        <Bar dataKey="input" stackId="a" fill="#c084fc" radius={[0, 0, 4, 4]} />
-                        <Bar dataKey="output" stackId="a" fill="#22d3ee" radius={[4, 4, 0, 0]} />
-                      </BarChart>
-                    </ResponsiveContainer>
-                  </div>
-                </div>
-                <div className="glass-card">
-                  <h3 className="text-xl font-bold mb-8 flex items-center gap-2"><Box size={20} className="text-purple-400" /> Token Share</h3>
-                  <div className="h-[250px]">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <PieChart>
-                        <Pie data={tokenData} innerRadius={70} outerRadius={100} paddingAngle={8} dataKey="value" stroke="none">
-                          {tokenData.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
-                        </Pie>
-                        <Tooltip contentStyle={{ backgroundColor: '#000', border: 'none', borderRadius: '12px' }} />
-                      </PieChart>
-                    </ResponsiveContainer>
-                  </div>
-                  <div className="mt-8 space-y-4">
-                    {tokenData.map((d, i) => (
-                      <div key={d.name} className="flex justify-between items-center group">
-                        <div className="flex items-center gap-3">
-                          <div className="h-3 w-3 rounded-full shadow-[0_0_10px_currentColor]" style={{ color: COLORS[i], backgroundColor: COLORS[i] }} />
-                          <span className="text-sm font-bold text-white/40 group-hover:text-white/80 transition-colors">{d.name} Tokens</span>
-                        </div>
-                        <span className="font-black text-sm">{(d.value / 1e6).toFixed(1)}M</span>
+                {/* Hero Stats */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6">
+                  {[
+                    { label: 'Total Investment', value: `$${filteredOverview?.cost.toFixed(2)}`, icon: <Coins />, color: 'text-cyan-400', sub: 'Burn Rate' },
+                    { label: 'Code Synthetic', value: (currentStats.gitLoc?.insertions || 0).toLocaleString(), icon: <FileCode />, color: 'text-fuchsia-400', sub: 'Git Insertions' },
+                    { label: 'Context Throughput', value: (filteredOverview?.tokens / 1e6).toFixed(1) + 'M', icon: <Zap />, color: 'text-purple-400', sub: 'Input + Output' },
+                    { label: 'Human Logic', value: (dateRange === 'all' ? currentStats.messageCount.input : filteredOverview.inputMessages).toLocaleString(), icon: <MousePointer2 />, color: 'text-blue-400', sub: 'Prompts' },
+                    { label: 'Engine Health', value: efficiencyScore + '%', icon: <ActivityIcon />, color: 'text-emerald-400', sub: 'Efficiency Score' },
+                    { label: 'Tool Mastery', value: (filteredOverview?.tools || 0).toLocaleString(), icon: <Terminal />, color: 'text-orange-400', sub: 'MCP Executions' },
+                  ].map((s) => (
+                    <div key={s.label} className="glass-card group cursor-default">
+                      <div className={`w-10 h-10 rounded-xl bg-slate-950/50 flex items-center justify-center mb-6 border border-white/5 ${s.color} group-hover:scale-110 group-hover:border-accent/20 transition-all`}>
+                        {s.icon}
                       </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          )}
-
-          {activeTab === 'projects' && (
-            <motion.div key="pj" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {projectData.map((p: any) => (
-                <div key={p.name} className="glass-card border-white/5 hover:border-accent/40 hover:bg-white/5 transition-all group">
-                  <div className="flex items-center justify-between mb-8">
-                    <div className="flex items-center gap-3">
-                      <div className="p-2.5 rounded-xl bg-accent/10 text-accent group-hover:scale-110 transition-transform"><Briefcase size={18} /></div>
-                      <h4 className="text-lg font-black tracking-tight truncate max-w-[180px]">{p.name}</h4>
-                    </div>
-                    <div className="text-[10px] font-black text-white/20 uppercase tracking-widest">{p.sessions} Sessions</div>
-                  </div>
-                  <div className="space-y-6">
-                    <div>
-                      <div className="flex justify-between items-end mb-2">
-                        <span className="text-[10px] font-black text-white/20 uppercase">Resource Allocation</span>
-                        <span className="text-sm font-black text-accent">${p.cost.toFixed(2)}</span>
-                      </div>
-                      <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden p-[2px]">
-                        <motion.div 
-                          initial={{ width: 0 }}
-                          animate={{ width: `${Math.max(5, (p.cost / currentStats.totalCost) * 100)}%` }}
-                          className="h-full bg-gradient-to-r from-accent to-purple-500 rounded-full" 
-                        />
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="p-4 rounded-2xl bg-white/2 border border-white/5">
-                        <p className="text-[9px] text-white/20 font-black uppercase mb-1">Volume</p>
-                        <p className="text-lg font-black tracking-tighter">{(p.tokens / 1000).toFixed(0)}k <span className="text-[10px] text-white/20 font-normal tracking-normal ml-1">tkns</span></p>
-                      </div>
-                      <div className="p-4 rounded-2xl bg-white/2 border border-white/5">
-                        <p className="text-[9px] text-white/20 font-black uppercase mb-1">Stability</p>
-                        <p className={`text-lg font-black tracking-tighter ${p.errors > 0 ? 'text-red-400' : 'text-green-400'}`}>{p.errors > 0 ? `-${p.errors}` : 'STABLE'}</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </motion.div>
-          )}
-
-          {activeTab === 'engineering' && (
-            <motion.div key="eng" initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} className="space-y-8">
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-                {[
-                  { label: 'Files Impacted', value: currentStats.engineering.filesAffected, icon: <FileCode className="text-purple-400" /> },
-                  { label: 'LOC Produced', value: currentStats.engineering.totalLOC.toLocaleString(), icon: <FilePlus className="text-green-400" /> },
-                  { label: 'Artifact Density', value: currentStats.providers.antigravity.artifacts, icon: <Layers className="text-blue-400" /> },
-                  { label: 'Sync Efficiency', value: '99.8%', icon: <RefreshCw className="text-yellow-400" /> },
-                ].map(s => (
-                  <div key={s.label} className="glass-card text-center group">
-                    <div className="mx-auto w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center mb-4 group-hover:bg-accent/10 transition-colors">{s.icon}</div>
-                    <p className="text-[10px] font-bold text-white/20 uppercase tracking-widest">{s.label}</p>
-                    <h3 className="text-4xl font-black mt-2 tracking-tighter group-hover:scale-110 transition-transform">{s.value}</h3>
-                  </div>
-                ))}
-              </div>
-              <div className="glass-card border-white/5">
-                <div className="flex items-center justify-between mb-8">
-                  <h3 className="text-xl font-bold flex items-center gap-2"><ActivityIcon size={20} className="text-pink-400" /> Token Activity Heatmap</h3>
-                  <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-[10px] font-black text-white/40 uppercase tracking-widest">
-                    Last 60 Days
-                  </div>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {Array.from({ length: 60 }).map((_, i) => {
-                    const d = new Date();
-                    d.setDate(d.getDate() - (59 - i));
-                    const dateStr = d.toISOString().split('T')[0];
-                    const dayData = (currentStats.timeline as any)?.[dateStr];
-                    const count = dayData ? dayData.input + dayData.output : 0;
-                    
-                    let bgClass = "bg-white/5";
-                    if (count > 0 && count < 50000) bgClass = "bg-pink-900/40";
-                    else if (count >= 50000 && count < 200000) bgClass = "bg-pink-700/60";
-                    else if (count >= 200000 && count < 500000) bgClass = "bg-pink-500/80";
-                    else if (count >= 500000) bgClass = "bg-pink-400 drop-shadow-[0_0_8px_rgba(244,114,182,0.5)]";
-                    
-                    return (
-                      <div key={dateStr} title={`${dateStr}: ${count.toLocaleString()} tokens`} className={`w-5 h-5 rounded-[4px] ${bgClass} border border-white/5 hover:border-pink-400 hover:scale-125 hover:z-10 transition-all cursor-crosshair`} />
-                    );
-                  })}
-                </div>
-                <div className="flex items-center gap-3 mt-6 text-[9px] font-bold text-white/30 uppercase tracking-widest">
-                  <span>Less</span>
-                  <div className="flex gap-1">
-                    <div className="w-3 h-3 rounded-[2px] bg-white/5 border border-white/5" />
-                    <div className="w-3 h-3 rounded-[2px] bg-pink-900/40 border border-white/5" />
-                    <div className="w-3 h-3 rounded-[2px] bg-pink-700/60 border border-white/5" />
-                    <div className="w-3 h-3 rounded-[2px] bg-pink-500/80 border border-white/5" />
-                    <div className="w-3 h-3 rounded-[2px] bg-pink-400 border border-white/5" />
-                  </div>
-                  <span>More</span>
-                </div>
-              </div>
-
-              <div className="glass-card border-white/5">
-                <div className="flex items-center justify-between mb-12">
-                  <h3 className="text-xl font-bold flex items-center gap-2"><Code2 size={20} className="text-accent" /> Tool Execution Frequency</h3>
-                  <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-[10px] font-black text-white/40 uppercase tracking-widest">
-                    Real-time Mapping
-                  </div>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-8">
-                  {Object.entries(currentStats.toolUsage).sort((a: any, b: any) => b[1] - a[1]).slice(0, 14).map(([name, count]: any) => (
-                    <div key={name} className="flex items-center gap-6 group">
-                      <div className="p-3 rounded-xl bg-white/5 text-white/40 group-hover:text-accent group-hover:bg-accent/10 transition-all">
-                        <ToolIcon name={name} />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex justify-between mb-2">
-                          <span className="text-sm font-black tracking-tight truncate">{name.replace('mcp_', '')}</span>
-                          <span className="text-xs font-mono text-accent font-bold">{count.toLocaleString()}</span>
-                        </div>
-                        <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
-                          <motion.div 
-                            initial={{ width: 0 }}
-                            animate={{ width: `${(count / (Object.values(currentStats.toolUsage)[0] as number)) * 100}%` }}
-                            className="h-full bg-gradient-to-r from-accent to-purple-500" 
-                          />
-                        </div>
+                      <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">{s.label}</p>
+                      <h2 className="text-3xl font-black tracking-tight text-white group-hover:text-accent transition-colors">{s.value}</h2>
+                      <div className="flex items-center gap-1.5 mt-2">
+                        <TrendingUp size={10} className="text-emerald-500" />
+                        <p className="text-[9px] text-slate-400 font-bold uppercase tracking-wider">{s.sub}</p>
                       </div>
                     </div>
                   ))}
                 </div>
-              </div>
-            </motion.div>
-          )}
 
-          {activeTab === 'halloffame' && (
-            <motion.div key="hof" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="space-y-6 pb-12">
-              <div className="flex items-end justify-between mb-12">
-                <div>
-                  <h2 className="text-4xl font-black italic tracking-tighter flex items-center gap-4">
-                    <Trophy className="text-yellow-400" size={40} /> CONVERSATION HALL OF FAME
-                  </h2>
-                  <p className="text-[10px] font-bold text-white/20 uppercase tracking-[0.3em] mt-2 ml-14">Top Performance Benchmarks</p>
+                {/* Charts Section */}
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                  <div className="lg:col-span-2 glass-card relative overflow-hidden group min-h-[450px]">
+                    <div className="flex items-center justify-between mb-10">
+                      <div>
+                        <h3 className="text-xl font-bold flex items-center gap-3">
+                          <ActivityIcon size={20} className="text-accent" /> 
+                          TOKEN VELOCITY
+                        </h3>
+                        <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">Volume distribution over time</p>
+                      </div>
+                      <div className="flex gap-4">
+                        <div className="flex items-center gap-2">
+                          <div className="h-2 w-2 rounded-full bg-cyan-400" />
+                          <span className="text-[10px] font-bold text-slate-400 uppercase">Input</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="h-2 w-2 rounded-full bg-fuchsia-400" />
+                          <span className="text-[10px] font-bold text-slate-400 uppercase">Output</span>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="h-[300px] w-full">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <AreaChart data={filteredTimeline}>
+                          <defs>
+                            <linearGradient id="colorInput" x1="0" y1="0" x2="0" y2="1">
+                              <stop offset="5%" stopColor="#22d3ee" stopOpacity={0.3}/>
+                              <stop offset="95%" stopColor="#22d3ee" stopOpacity={0}/>
+                            </linearGradient>
+                            <linearGradient id="colorOutput" x1="0" y1="0" x2="0" y2="1">
+                              <stop offset="5%" stopColor="#c084fc" stopOpacity={0.3}/>
+                              <stop offset="95%" stopColor="#c084fc" stopOpacity={0}/>
+                            </linearGradient>
+                          </defs>
+                          <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.03)" vertical={false} />
+                          <XAxis dataKey="date" stroke="rgba(255,255,255,0.1)" fontSize={10} tickLine={false} axisLine={false} tickFormatter={(val) => val.split('-').slice(1).join('/')} />
+                          <YAxis hide />
+                          <Tooltip contentStyle={{ backgroundColor: '#0f172a', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '16px', boxShadow: '0 10px 30px rgba(0,0,0,0.5)' }} />
+                          <Area type="monotone" dataKey="input" stroke="#22d3ee" strokeWidth={3} fillOpacity={1} fill="url(#colorInput)" />
+                          <Area type="monotone" dataKey="output" stroke="#c084fc" strokeWidth={3} fillOpacity={1} fill="url(#colorOutput)" />
+                        </AreaChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
+
+                  <div className="glass-card flex flex-col min-h-[450px]">
+                    <h3 className="text-xl font-bold mb-10 flex items-center gap-3">
+                      <Layers size={20} className="text-primary" /> 
+                      CONTEXT SPLIT
+                    </h3>
+                    <div className="flex-1 flex flex-col justify-center">
+                      <div className="h-[240px] relative">
+                        <ResponsiveContainer width="100%" height="100%">
+                          <PieChart>
+                            <Pie data={tokenData} innerRadius={80} outerRadius={105} paddingAngle={10} dataKey="value" stroke="none">
+                              {tokenData.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
+                            </Pie>
+                            <Tooltip contentStyle={{ backgroundColor: '#0f172a', border: 'none', borderRadius: '16px' }} />
+                          </PieChart>
+                        </ResponsiveContainer>
+                        <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                          <span className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em]">Total</span>
+                          <span className="text-3xl font-black text-white leading-none mt-1">
+                            {((currentStats.totalTokens.input + currentStats.totalTokens.output) / 1e6).toFixed(1)}M
+                          </span>
+                        </div>
+                      </div>
+                      
+                      <div className="mt-8 space-y-4 px-2">
+                        {tokenData.map((d, i) => (
+                          <div key={d.name} className="flex justify-between items-center group">
+                            <div className="flex items-center gap-4">
+                              <div className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: COLORS[i] }} />
+                              <span className="text-xs font-bold text-slate-400 group-hover:text-slate-200 transition-colors uppercase tracking-widest">{d.name} Payload</span>
+                            </div>
+                            <span className="font-black text-sm text-white">{(d.value / 1e6).toFixed(1)}M</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div className="text-[10px] font-black text-white/40 uppercase tracking-widest">Showing Top 15 Sessions</div>
-              </div>
-              <div className="grid gap-4">
-                {currentStats.topConversations.map((c: any, i: number) => (
-                  <div key={c.id} className="glass-card flex items-center gap-8 group hover:bg-white/5 hover:translate-x-2 cursor-default transition-all border-white/5 relative overflow-hidden">
-                    {i < 3 && (
-                      <div className="absolute top-0 right-0 p-1 px-3 bg-yellow-400/10 text-yellow-400 text-[8px] font-black tracking-[0.2em] rounded-bl-xl border-l border-b border-yellow-400/20">
-                        ELITE PERFORMANCE
+              </motion.div>
+            )}
+
+            {activeTab === 'projects' && (
+              <motion.div 
+                key="pj" 
+                initial={{ opacity: 0, scale: 0.98 }} 
+                animate={{ opacity: 1, scale: 1 }} 
+                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"
+              >
+                {projectData.map((p: any) => (
+                  <div key={p.name} className="glass-card hover:border-accent/40 group flex flex-col justify-between h-[340px]">
+                    <div>
+                      <div className="flex items-center justify-between mb-8">
+                        <div className="w-12 h-12 rounded-2xl bg-slate-950/60 border border-white/5 flex items-center justify-center text-accent group-hover:scale-110 transition-all">
+                          <Briefcase size={22} />
+                        </div>
+                        <div className="text-right">
+                          <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">{p.sessions} SESSIONS</p>
+                          <h4 className="text-sm font-black text-white uppercase mt-1 truncate max-w-[120px]">{pName(p.name)}</h4>
+                        </div>
                       </div>
-                    )}
-                    <div className="text-3xl font-black text-white/5 group-hover:text-accent transition-colors w-12 text-center italic">#{i + 1}</div>
-                    <div className="flex-1 min-w-0">
-                      <h4 className="font-black truncate text-xl tracking-tight group-hover:text-white transition-colors">{c.title}</h4>
-                      <div className="flex flex-wrap gap-x-6 gap-y-2 mt-3">
-                        <span className="text-[9px] uppercase font-black text-white/20 flex items-center gap-1.5"><Calendar size={12} className="text-accent/40" /> {c.date}</span>
-                        <span className="text-[9px] uppercase font-black text-accent flex items-center gap-1.5"><Briefcase size={12} className="text-accent" /> {pName(c.project)}</span>
-                        <span className="text-[9px] uppercase font-black text-purple-400 flex items-center gap-1.5"><Zap size={12} className="text-purple-400" /> {c.tokens.toLocaleString()} tokens</span>
+                      
+                      <div className="space-y-6">
+                        <div>
+                          <div className="flex justify-between items-end mb-3">
+                            <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Resource Drain</span>
+                            <span className="text-lg font-black text-accent tracking-tight">${p.cost.toFixed(2)}</span>
+                          </div>
+                          <div className="h-1.5 w-full bg-slate-950/80 rounded-full overflow-hidden">
+                            <motion.div 
+                              initial={{ width: 0 }}
+                              animate={{ width: `${Math.max(8, (p.cost / currentStats.totalCost) * 100)}%` }}
+                              className="h-full bg-gradient-to-r from-accent to-primary rounded-full shadow-[0_0_10px_rgba(34,211,238,0.4)]" 
+                            />
+                          </div>
+                        </div>
                       </div>
                     </div>
-                    <div className="text-right">
-                      <div className="text-2xl font-black text-white/80 group-hover:text-accent transition-colors">${c.cost.toFixed(3)}</div>
-                      <div className="text-[9px] text-white/20 font-black uppercase tracking-widest mt-1">{c.tools} tool executions</div>
+
+                    <div className="grid grid-cols-2 gap-4 mt-8">
+                      <div className="p-4 rounded-2xl bg-slate-950/40 border border-white/5">
+                        <p className="text-[9px] text-slate-500 font-black uppercase mb-1 tracking-widest">Synthetic</p>
+                        <p className="text-xl font-black text-white tracking-tighter">{(p.tokens / 1000).toFixed(0)}K <span className="text-[10px] text-slate-600 font-normal ml-1">TKNS</span></p>
+                      </div>
+                      <div className="p-4 rounded-2xl bg-slate-950/40 border border-white/5">
+                        <p className="text-[9px] text-slate-500 font-black uppercase mb-1 tracking-widest">Health</p>
+                        <p className={`text-xl font-black tracking-tighter ${p.errors > 0 ? 'text-rose-500' : 'text-emerald-500'}`}>{p.errors > 0 ? `-${p.errors}` : 'OPTIMAL'}</p>
+                      </div>
                     </div>
-                    <ChevronRight size={20} className="text-white/10 group-hover:text-accent group-hover:translate-x-1 transition-all" />
                   </div>
                 ))}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+              </motion.div>
+            )}
+
+            {activeTab === 'engineering' && (
+              <motion.div 
+                key="eng" 
+                initial={{ opacity: 0, scale: 0.98 }} 
+                animate={{ opacity: 1, scale: 1 }} 
+                className="space-y-10"
+              >
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+                  {[
+                    { label: 'Files Mutated', value: currentStats.engineering.filesAffected, icon: <FileCode className="text-purple-400" /> },
+                    { label: 'Synthetic LOC', value: currentStats.engineering.totalLOC.toLocaleString(), icon: <FilePlus className="text-emerald-400" /> },
+                    { label: 'Neural Artifacts', value: currentStats.providers.antigravity.artifacts, icon: <Layers className="text-blue-400" /> },
+                    { label: 'Runtime Stability', value: '99.9%', icon: <ShieldCheck className="text-amber-400" /> },
+                  ].map(s => (
+                    <div key={s.label} className="glass-card text-center group py-10">
+                      <div className="mx-auto w-14 h-14 rounded-2xl bg-slate-950/60 border border-white/5 flex items-center justify-center mb-6 group-hover:border-accent/30 transition-all text-white">
+                        {s.icon}
+                      </div>
+                      <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] mb-2">{s.label}</p>
+                      <h3 className="text-5xl font-black text-white tracking-tighter group-hover:scale-105 transition-transform">{s.value}</h3>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+                  {/* Heatmap */}
+                  <div className="glass-card flex flex-col">
+                    <div className="flex items-center justify-between mb-10">
+                      <div>
+                        <h3 className="text-xl font-bold flex items-center gap-3">
+                          <ActivityIcon size={20} className="text-accent" /> 
+                          NEURAL ACTIVITY
+                        </h3>
+                        <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">60-day intelligence heatmap</p>
+                      </div>
+                      <div className="px-4 py-1.5 rounded-full bg-slate-950 border border-white/10 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                        Intelligence Mapping
+                      </div>
+                    </div>
+                    <div className="flex flex-wrap gap-2.5 items-center justify-start h-full pb-6">
+                      {Array.from({ length: 60 }).map((_, i) => {
+                        const d = new Date();
+                        d.setDate(d.getDate() - (59 - i));
+                        const dateStr = d.toISOString().split('T')[0];
+                        const dayData = (currentStats.timeline as any)?.[dateStr];
+                        const count = dayData ? dayData.input + dayData.output : 0;
+                        
+                        let bgClass = "bg-white/5";
+                        if (count > 0 && count < 50000) bgClass = "bg-cyan-950/40";
+                        else if (count >= 50000 && count < 200000) bgClass = "bg-cyan-800/60";
+                        else if (count >= 200000 && count < 500000) bgClass = "bg-cyan-600/80";
+                        else if (count >= 500000) bgClass = "bg-cyan-400 shadow-[0_0_15px_rgba(34,211,238,0.5)]";
+                        
+                        return (
+                          <div 
+                            key={dateStr} 
+                            title={`${dateStr}: ${count.toLocaleString()} tokens`} 
+                            className={`w-6 h-6 lg:w-7 lg:h-7 rounded-md ${bgClass} border border-white/5 hover:border-accent hover:scale-125 hover:z-10 transition-all cursor-crosshair`} 
+                          />
+                        );
+                      })}
+                    </div>
+                    <div className="flex items-center gap-3 mt-auto pt-6 border-t border-white/5 text-[9px] font-black text-slate-600 uppercase tracking-widest">
+                      <span>Inert</span>
+                      <div className="flex gap-1.5">
+                        <div className="w-3 h-3 rounded bg-white/5 border border-white/5" />
+                        <div className="w-3 h-3 rounded bg-cyan-950/40 border border-white/5" />
+                        <div className="w-3 h-3 rounded bg-cyan-800/60 border border-white/5" />
+                        <div className="w-3 h-3 rounded bg-cyan-600/80 border border-white/5" />
+                        <div className="w-3 h-3 rounded bg-cyan-400 border border-white/5" />
+                      </div>
+                      <span>Hyper-active</span>
+                    </div>
+                  </div>
+
+                  {/* Tool Usage */}
+                  <div className="glass-card">
+                    <div className="flex items-center justify-between mb-12">
+                      <h3 className="text-xl font-bold flex items-center gap-3">
+                        <Code2 size={20} className="text-primary" /> 
+                        PROTOCOL EXECUTION
+                      </h3>
+                      <div className="px-4 py-1.5 rounded-full bg-slate-950 border border-white/10 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                        TOP 14 INVOCATIONS
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-6">
+                      {Object.entries(currentStats.toolUsage).sort((a: any, b: any) => b[1] - a[1]).slice(0, 14).map(([name, count]: any) => (
+                        <div key={name} className="flex items-center gap-5 group">
+                          <div className="w-10 h-10 rounded-xl bg-slate-950/60 text-slate-500 group-hover:text-accent group-hover:border-accent/30 border border-white/5 flex items-center justify-center transition-all shrink-0">
+                            <ToolIcon name={name} />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex justify-between mb-2 items-end">
+                              <span className="text-[11px] font-black tracking-tight truncate text-slate-400 group-hover:text-white transition-colors uppercase">{name.replace('mcp_', '')}</span>
+                              <span className="text-[10px] font-mono text-accent font-bold">{count.toLocaleString()}</span>
+                            </div>
+                            <div className="h-1 w-full bg-slate-950 rounded-full overflow-hidden">
+                              <motion.div 
+                                initial={{ width: 0 }}
+                                animate={{ width: `${(count / (Object.values(currentStats.toolUsage)[0] as number)) * 100}%` }}
+                                className="h-full bg-gradient-to-r from-accent to-primary" 
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+
+            {activeTab === 'halloffame' && (
+              <motion.div 
+                key="hof" 
+                initial={{ opacity: 0, y: 30 }} 
+                animate={{ opacity: 1, y: 0 }} 
+                className="space-y-12 pb-20"
+              >
+                <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                  <div>
+                    <h2 className="text-5xl font-black italic tracking-tighter flex items-center gap-6 text-white uppercase">
+                      <Trophy className="text-amber-400 drop-shadow-[0_0_15px_rgba(251,191,36,0.3)]" size={50} /> 
+                      Intelligence Elite
+                    </h2>
+                    <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.4em] mt-4 ml-2">Top 15 Session Benchmarks</p>
+                  </div>
+                  <div className="px-6 py-2 rounded-xl bg-slate-900/60 border border-white/5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                    Validated High Performance
+                  </div>
+                </div>
+                
+                <div className="grid gap-6">
+                  {currentStats.topConversations.map((c: any, i: number) => (
+                    <div 
+                      key={c.id} 
+                      className="glass-card flex flex-col lg:flex-row lg:items-center gap-8 group hover:translate-x-2 transition-all relative overflow-hidden"
+                    >
+                      {i < 3 && (
+                        <div className="absolute top-0 right-0 px-4 py-1.5 bg-amber-400/10 text-amber-400 text-[9px] font-black tracking-[0.3em] rounded-bl-2xl border-l border-b border-amber-400/20 uppercase">
+                          Tier 1 Performance
+                        </div>
+                      )}
+                      <div className="text-4xl font-black text-slate-800 group-hover:text-accent transition-colors w-16 text-center italic shrink-0">
+                        {String(i + 1).padStart(2, '0')}
+                      </div>
+                      
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-black truncate text-2xl tracking-tight text-white group-hover:text-accent transition-colors uppercase italic">{c.title}</h4>
+                        <div className="flex flex-wrap gap-x-8 gap-y-3 mt-4">
+                          <div className="flex items-center gap-2">
+                            <Calendar size={14} className="text-slate-600" />
+                            <span className="text-[10px] uppercase font-black text-slate-500 tracking-widest">{c.date}</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Briefcase size={14} className="text-accent/60" />
+                            <span className="text-[10px] uppercase font-black text-accent tracking-widest">{pName(c.project)}</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Zap size={14} className="text-primary/60" />
+                            <span className="text-[10px] uppercase font-black text-primary tracking-widest">{c.tokens.toLocaleString()} TKNS</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-8 lg:text-right shrink-0">
+                        <div className="hidden sm:block">
+                          <p className="text-[10px] text-slate-600 font-black uppercase tracking-widest mb-1">{c.tools} PROTOCOLS</p>
+                          <div className="flex gap-1 justify-end">
+                            {Array.from({ length: 5 }).map((_, idx) => (
+                              <div key={idx} className={`h-1 w-4 rounded-full ${idx < (5 - i/3) ? 'bg-accent/40' : 'bg-white/5'}`} />
+                            ))}
+                          </div>
+                        </div>
+                        <div>
+                          <div className="text-4xl font-black text-white group-hover:text-accent transition-colors tracking-tighter italic">
+                            ${c.cost.toFixed(3)}
+                          </div>
+                        </div>
+                        <ChevronRight size={24} className="text-slate-800 group-hover:text-accent group-hover:translate-x-1 transition-all" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </main>
 
-        <footer className="p-12 border-t border-white/5 bg-black/60 mt-auto">
-          <div className="max-w-7xl mx-auto flex justify-between items-center opacity-30 hover:opacity-100 transition-opacity">
-            <div className="flex items-center gap-3">
-              <div className="h-8 w-8 rounded-lg bg-white/5 flex items-center justify-center">
-                <Cpu size={16} className="text-accent" />
+        <footer className="p-16 border-t border-white/5 bg-slate-950/60 mt-auto">
+          <div className="max-w-[1600px] mx-auto flex flex-col md:flex-row justify-between items-center gap-8 opacity-40 hover:opacity-100 transition-opacity">
+            <div className="flex items-center gap-4">
+              <div className="h-10 w-10 rounded-xl bg-slate-900 flex items-center justify-center">
+                <Cpu size={20} className="text-accent" />
               </div>
-              <span className="text-[10px] font-black tracking-[0.3em] uppercase">Antigravity Intelligence Protocol v2.5</span>
+              <div>
+                <span className="block text-xs font-black tracking-[0.4em] uppercase text-white">Antigravity Intelligence Protocol</span>
+                <span className="block text-[10px] font-bold text-slate-600 uppercase tracking-widest mt-1">High-Precision Neural Monitoring · v2.8.4</span>
+              </div>
             </div>
-            <p className="text-[9px] font-black tracking-widest text-white/40">DESIGNED FOR UNSTOPPABLE PRODUCTIVITY · {new Date().getFullYear()}</p>
+            <p className="text-[10px] font-black tracking-[0.4em] text-slate-500 uppercase">
+              ESTABLISHED FOR SUPERIOR COGNITIVE PERFORMANCE · {new Date().getFullYear()}
+            </p>
           </div>
         </footer>
       </div>
@@ -461,6 +612,9 @@ function App() {
   );
 }
 
-const pName = (name: string) => name === '\"' || name === '' ? 'General' : name.replace(/"/g, '');
+const pName = (name: string) => {
+  if (!name || name === '\"' || name === '""') return 'SYST-GEN';
+  return name.replace(/"/g, '').toUpperCase();
+};
 
 export default App;

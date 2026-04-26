@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { get_encoding } from 'tiktoken';
 import Database from 'better-sqlite3';
+import { execSync } from 'child_process';
 
 const ANTIGRAVITY_PATH = '/Users/paranjay/.gemini/antigravity/brain';
 const OPENCODE_DB_PATH = '/Users/paranjay/.local/share/opencode/opencode.db';
@@ -61,7 +62,8 @@ async function analyze() {
       stats.conversations++;
       stats.providers.antigravity.conversations++;
       
-      let convInputTokens = 0;
+      let convInputTokens = 0; // Cumulative string length
+      let convProcessedInputTokens = 0; // True API throughput (context aware)
       let convOutputTokens = 0;
       let convCost = 0;
       let convDate = null;
@@ -116,6 +118,7 @@ async function analyze() {
             // Estimate context growth: Add current conversation total to input
             const estimatedInput = convInputTokens + convOutputTokens + tokens;
             convInputTokens += tokens;
+            convProcessedInputTokens += estimatedInput; // Track the TRUE amount of tokens sent
             convInputMessages++;
             stats.messageCount.input++;
             
@@ -193,15 +196,15 @@ async function analyze() {
       }
 
       // Final total token aggregation (pricing is now done per step)
-      stats.totalTokens.input += convInputTokens;
+      stats.totalTokens.input += convProcessedInputTokens;
       stats.totalTokens.output += convOutputTokens;
-      stats.providers.antigravity.tokens.input += convInputTokens;
+      stats.providers.antigravity.tokens.input += convProcessedInputTokens;
       stats.providers.antigravity.tokens.output += convOutputTokens;
       
       const convSummary = { 
         id: dir, 
         title: convTitle, 
-        tokens: convInputTokens + convOutputTokens, 
+        tokens: convProcessedInputTokens + convOutputTokens, 
         cost: convCost, 
         date: convDate,
         project: projectCwd,
@@ -215,7 +218,7 @@ async function analyze() {
 
       if (convDate) {
         if (!stats.timeline[convDate]) stats.timeline[convDate] = { input: 0, output: 0, cost: 0, tools: 0, inputMessages: 0, outputMessages: 0 };
-        stats.timeline[convDate].input += convInputTokens;
+        stats.timeline[convDate].input += convProcessedInputTokens;
         stats.timeline[convDate].output += convOutputTokens;
         stats.timeline[convDate].cost += convCost;
         stats.timeline[convDate].tools += convTools;
@@ -224,7 +227,7 @@ async function analyze() {
       }
 
       if (!stats.projects[projectCwd]) stats.projects[projectCwd] = { tokens: 0, cost: 0, sessions: 0, errors: 0 };
-      stats.projects[projectCwd].tokens += (convInputTokens + convOutputTokens);
+      stats.projects[projectCwd].tokens += (convProcessedInputTokens + convOutputTokens);
       stats.projects[projectCwd].cost += convCost;
       stats.projects[projectCwd].sessions++;
       stats.projects[projectCwd].errors += convErrors;
@@ -265,6 +268,33 @@ async function analyze() {
       }
       db.close();
     } catch (e) {}
+  }
+
+  // 3. Analyze Git Activity (LOC generated)
+  stats.gitLoc = { insertions: 0, deletions: 0, commits: 0 };
+  for (const projectPath in stats.projects) {
+    if (projectPath === 'General') continue;
+    try {
+      const gitStats = execSync('git log --shortstat --since="30 days ago"', { cwd: projectPath, encoding: 'utf-8', stdio: ['ignore', 'pipe', 'ignore'] });
+      
+      const insertionMatches = Array.from(gitStats.matchAll(/(\d+)\s+insertion/g));
+      const deletionMatches = Array.from(gitStats.matchAll(/(\d+)\s+deletion/g));
+      
+      if (insertionMatches.length > 0) {
+        stats.gitLoc.insertions += insertionMatches.reduce((acc, match) => acc + parseInt(match[1]), 0);
+      }
+      if (deletionMatches.length > 0) {
+        stats.gitLoc.deletions += deletionMatches.reduce((acc, match) => acc + parseInt(match[1]), 0);
+      }
+      
+      const commitMatches = gitStats.match(/^commit\s+[a-f0-9]{40}/gm);
+      if (commitMatches) {
+        stats.gitLoc.commits += commitMatches.length;
+        stats.projects[projectPath].commits = commitMatches.length;
+      }
+    } catch (e) {
+      // Not a git repo or no commits
+    }
   }
 
   stats.timelineArray = Object.entries(stats.timeline)
