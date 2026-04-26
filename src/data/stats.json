@@ -1,0 +1,249 @@
+{
+  "totalTokens": {
+    "input": 21568266,
+    "output": 485562
+  },
+  "totalCost": 7.30587788,
+  "conversations": 76,
+  "messageCount": {
+    "input": 1199,
+    "output": 11169
+  },
+  "modelUsage": {
+    "mimo-v2-omni-free": 0,
+    "gemini-3-pro-high": 0,
+    "minimax-m2.7": 0,
+    "minimax-m2.5": 0,
+    "claude-haiku-4-5": 0,
+    "gpt-5-nano": 0,
+    "minimax-m2.5-free": 0,
+    "antigravity-claude-sonnet-4-5-thinking": 0,
+    "grok-code-fast-1": 0,
+    "gpt-5.4-mini": 0,
+    "big-pickle": 0,
+    "claude-sonnet-4.6": 0,
+    "nemotron-3-super-free": 0,
+    "moonshotai/kimi-k2.6": 0
+  },
+  "toolUsage": {
+    "list_dir": 81,
+    "view_file": 727,
+    "run_command": 819,
+    "multi_replace_file_content": 192,
+    "replace_file_content": 410,
+    "command_status": 300,
+    "grep_search": 76,
+    "write_to_file": 312,
+    "read_url_content": 6,
+    "send_command_input": 5,
+    "generate_image": 18,
+    "search_web": 20,
+    "mcp_chrome-devtools_navigate_page": 2,
+    "mcp_chrome-devtools_list_pages": 2,
+    "mcp_chrome-devtools_new_page": 1
+  },
+  "timeline": {
+    "2026-04-25": {
+      "input": 120466,
+      "output": 27420,
+      "cost": 0.569972
+    },
+    "2026-04-22": {
+      "input": 46476,
+      "output": 11956,
+      "cost": 0.236424
+    },
+    "2026-04-24": {
+      "input": 4597927,
+      "output": 85114,
+      "cost": 5.92776188
+    },
+    "2026-04-23": {
+      "input": 31145,
+      "output": 4377,
+      "cost": 0.114814
+    },
+    "2026-04-26": {
+      "input": 3309,
+      "output": 0,
+      "cost": 0.006618
+    },
+    "2026-04-18": {
+      "input": 48521,
+      "output": 17223,
+      "cost": 0.303718
+    },
+    "2026-04-20": {
+      "input": 36313,
+      "output": 6162,
+      "cost": 0.14656999999999998
+    },
+    "2026-03-27": {
+      "input": 10453689,
+      "output": 149142,
+      "cost": 0
+    },
+    "2026-03-28": {
+      "input": 3124159,
+      "output": 38883,
+      "cost": 0
+    },
+    "2026-03-29": {
+      "input": 1644442,
+      "output": 95263,
+      "cost": 0
+    },
+    "2026-03-30": {
+      "input": 49332,
+      "output": 2142,
+      "cost": 0
+    },
+    "2026-04-04": {
+      "input": 131668,
+      "output": 10422,
+      "cost": 0
+    },
+    "2026-04-06": {
+      "input": 14917,
+      "output": 820,
+      "cost": 0
+    },
+    "2026-04-07": {
+      "input": 180084,
+      "output": 1653,
+      "cost": 0
+    },
+    "2026-04-08": {
+      "input": 896167,
+      "output": 6291,
+      "cost": 0
+    },
+    "2026-04-16": {
+      "input": 189651,
+      "output": 28694,
+      "cost": 0
+    }
+  },
+  "providers": {
+    "antigravity": {
+      "conversations": 19,
+      "tokens": {
+        "input": 475937,
+        "output": 94559
+      },
+      "cost": 2.086582
+    },
+    "opencode": {
+      "conversations": 57,
+      "tokens": {
+        "input": 21092329,
+        "output": 391003
+      },
+      "cost": 5.21929588
+    }
+  },
+  "modelLimits": {
+    "gemini-3-pro-preview": {
+      "context": 1000000,
+      "output": 64000
+    }
+  },
+  "timelineArray": [
+    {
+      "date": "2026-03-27",
+      "input": 10453689,
+      "output": 149142,
+      "cost": 0
+    },
+    {
+      "date": "2026-03-28",
+      "input": 3124159,
+      "output": 38883,
+      "cost": 0
+    },
+    {
+      "date": "2026-03-29",
+      "input": 1644442,
+      "output": 95263,
+      "cost": 0
+    },
+    {
+      "date": "2026-03-30",
+      "input": 49332,
+      "output": 2142,
+      "cost": 0
+    },
+    {
+      "date": "2026-04-04",
+      "input": 131668,
+      "output": 10422,
+      "cost": 0
+    },
+    {
+      "date": "2026-04-06",
+      "input": 14917,
+      "output": 820,
+      "cost": 0
+    },
+    {
+      "date": "2026-04-07",
+      "input": 180084,
+      "output": 1653,
+      "cost": 0
+    },
+    {
+      "date": "2026-04-08",
+      "input": 896167,
+      "output": 6291,
+      "cost": 0
+    },
+    {
+      "date": "2026-04-16",
+      "input": 189651,
+      "output": 28694,
+      "cost": 0
+    },
+    {
+      "date": "2026-04-18",
+      "input": 48521,
+      "output": 17223,
+      "cost": 0.303718
+    },
+    {
+      "date": "2026-04-20",
+      "input": 36313,
+      "output": 6162,
+      "cost": 0.14656999999999998
+    },
+    {
+      "date": "2026-04-22",
+      "input": 46476,
+      "output": 11956,
+      "cost": 0.236424
+    },
+    {
+      "date": "2026-04-23",
+      "input": 31145,
+      "output": 4377,
+      "cost": 0.114814
+    },
+    {
+      "date": "2026-04-24",
+      "input": 4597927,
+      "output": 85114,
+      "cost": 5.92776188
+    },
+    {
+      "date": "2026-04-25",
+      "input": 120466,
+      "output": 27420,
+      "cost": 0.569972
+    },
+    {
+      "date": "2026-04-26",
+      "input": 3309,
+      "output": 0,
+      "cost": 0.006618
+    }
+  ]
+}
