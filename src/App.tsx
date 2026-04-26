@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { 
   Activity, 
   BarChart3, 
@@ -11,11 +11,13 @@ import {
   FileCode,
   Layout,
   Search,
-  Image as ImageIcon,
-  CheckCircle2,
+  ImageIcon,
   TrendingUp,
   Clock,
-  ShieldCheck
+  ShieldCheck,
+  ChevronRight,
+  Database as DbIcon,
+  Layers
 } from 'lucide-react';
 import { 
   PieChart, 
@@ -23,13 +25,10 @@ import {
   Cell, 
   ResponsiveContainer, 
   Tooltip,
-  BarChart,
-  Bar,
   XAxis,
   YAxis,
   AreaChart,
-  Area,
-  CartesianGrid
+  Area
 } from 'recharts';
 import { motion } from 'framer-motion';
 import stats from './data/stats.json';
@@ -78,27 +77,30 @@ function App() {
               <Cpu size={28} />
             </div>
             <div>
-              <h1 className="text-3xl font-bold tracking-tight">Antigravity</h1>
-              <p className="text-sm font-medium text-purple-400/80">Token Analyzer & Stats</p>
+              <h1 className="text-3xl font-bold tracking-tight">Antigravity Analyzer</h1>
+              <p className="text-sm font-medium text-purple-400/80">Premium Usage Intelligence</p>
             </div>
           </motion.div>
 
           <motion.div 
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium backdrop-blur-md"
+            className="flex items-center gap-4"
           >
-            <span className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
-            Live Snapshot: {new Date().toLocaleDateString()}
+            <div className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium backdrop-blur-md">
+              <span className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
+              <span className="text-white/60">System Sync:</span> {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+            </div>
           </motion.div>
         </header>
 
+        {/* Global Stats Grid */}
         <div className="stat-grid">
           {[
-            { label: 'Total Estimated Cost', value: `$${stats.totalCost.toFixed(2)}`, icon: <Coins className="text-yellow-400" />, sub: 'Across all chats' },
-            { label: 'Total Tokens', value: (stats.totalTokens.input + stats.totalTokens.output).toLocaleString(), icon: <Zap className="text-purple-400" />, sub: `${stats.totalTokens.input.toLocaleString()} in / ${stats.totalTokens.output.toLocaleString()} out` },
-            { label: 'Conversations', value: stats.conversations, icon: <MessageSquare className="text-blue-400" />, sub: 'Local history scanned' },
-            { label: 'Avg Cost/Chat', value: `$${(stats.totalCost / stats.conversations).toFixed(3)}`, icon: <Activity className="text-green-400" />, sub: 'Model: Gemini 3 Pro' },
+            { label: 'Total Expenditure', value: `$${stats.totalCost.toFixed(2)}`, icon: <Coins className="text-yellow-400" />, sub: 'Aggregated across providers' },
+            { label: 'Token Throughput', value: (stats.totalTokens.input + stats.totalTokens.output).toLocaleString(), icon: <Zap className="text-purple-400" />, sub: `${stats.totalTokens.input.toLocaleString()} in / ${stats.totalTokens.output.toLocaleString()} out` },
+            { label: 'Session Velocity', value: stats.conversations, icon: <MessageSquare className="text-blue-400" />, sub: `${stats.messageCount.input.toLocaleString()} queries / ${stats.messageCount.output.toLocaleString()} responses` },
+            { label: 'Model Efficiency', value: `$${(stats.totalCost / stats.conversations).toFixed(3)}`, icon: <Activity className="text-green-400" />, sub: 'Avg. cost per interaction' },
           ].map((stat, i) => (
             <motion.div 
               key={stat.label}
@@ -109,26 +111,73 @@ function App() {
             >
               <div className="flex items-center justify-between">
                 <div className="rounded-xl bg-white/5 p-3">{stat.icon}</div>
+                <div className="text-[10px] font-bold text-white/20 uppercase tracking-widest">Real-time</div>
               </div>
               <div>
-                <p className="text-sm font-medium text-white/50">{stat.label}</p>
-                <h2 className="text-3xl font-bold">{stat.value}</h2>
-                <p className="mt-1 text-xs text-white/30">{stat.sub}</p>
+                <p className="text-xs font-bold text-white/40 uppercase tracking-wider">{stat.label}</p>
+                <h2 className="text-3xl font-bold mt-1">{stat.value}</h2>
+                <p className="mt-1 text-[11px] text-white/30">{stat.sub}</p>
               </div>
             </motion.div>
           ))}
         </div>
 
+        {/* Providers Section */}
+        <section className="mb-8">
+          <div className="flex items-center gap-3 mb-6">
+            <DbIcon className="text-white/40" size={20} />
+            <h3 className="text-lg font-bold uppercase tracking-widest text-white/60">Active Providers</h3>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {Object.entries(stats.providers).map(([name, data], i) => (
+              <motion.div 
+                key={name}
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.4 + i * 0.1 }}
+                className="glass-card relative overflow-hidden group"
+              >
+                <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                  <Layers size={80} />
+                </div>
+                <div className="flex items-center justify-between mb-6">
+                  <h4 className="text-xl font-bold capitalize">{name}</h4>
+                  <span className="text-xs font-bold px-2 py-1 rounded bg-white/5 text-white/40">Connected</span>
+                </div>
+                <div className="grid grid-cols-3 gap-4">
+                  <div>
+                    <p className="text-[10px] text-white/30 uppercase">Sessions</p>
+                    <p className="text-lg font-bold">{data.conversations}</p>
+                  </div>
+                  <div>
+                    <p className="text-[10px] text-white/30 uppercase">Tokens</p>
+                    <p className="text-lg font-bold">{(data.tokens.input + data.tokens.output).toLocaleString()}</p>
+                  </div>
+                  <div>
+                    <p className="text-[10px] text-white/30 uppercase">Cost</p>
+                    <p className="text-lg font-bold text-accent">${data.cost.toFixed(2)}</p>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </section>
+
+        {/* Timeline Chart */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
+          transition={{ delay: 0.6 }}
           className="glass-card mb-8"
         >
           <div className="flex items-center justify-between mb-8">
             <div className="flex items-center gap-3">
               <TrendingUp className="text-accent" />
-              <h3 className="text-xl font-bold">Usage Timeline</h3>
+              <h3 className="text-xl font-bold">Historical Trajectory</h3>
+            </div>
+            <div className="flex gap-2">
+              <div className="h-2 w-2 rounded-full bg-purple-500" />
+              <span className="text-[10px] text-white/40 uppercase font-bold">Expenditure Trend</span>
             </div>
           </div>
           <div className="h-[300px] w-full">
@@ -142,177 +191,130 @@ function App() {
                 </defs>
                 <XAxis 
                   dataKey="date" 
-                  stroke="rgba(255,255,255,0.3)" 
-                  fontSize={12} 
+                  stroke="rgba(255,255,255,0.1)" 
+                  fontSize={10} 
                   tickLine={false} 
                   axisLine={false} 
                 />
                 <YAxis 
-                  stroke="rgba(255,255,255,0.3)" 
-                  fontSize={12} 
+                  stroke="rgba(255,255,255,0.1)" 
+                  fontSize={10} 
                   tickLine={false} 
                   axisLine={false} 
-                  tickFormatter={(v) => `$${v.toFixed(2)}`}
+                  tickFormatter={(v) => `$${v}`}
                 />
                 <Tooltip 
                   contentStyle={{ 
-                    backgroundColor: 'rgba(0,0,0,0.8)', 
-                    borderRadius: '12px', 
+                    backgroundColor: 'rgba(5,5,5,0.9)', 
+                    borderRadius: '16px', 
                     border: '1px solid rgba(255,255,255,0.1)',
-                    backdropFilter: 'blur(10px)'
+                    backdropFilter: 'blur(20px)',
+                    fontSize: '12px'
                   }} 
                 />
-                <Area type="monotone" dataKey="cost" stroke="#c084fc" fillOpacity={1} fill="url(#colorCost)" />
+                <Area type="monotone" dataKey="cost" stroke="#c084fc" strokeWidth={3} fillOpacity={1} fill="url(#colorCost)" />
               </AreaChart>
             </ResponsiveContainer>
           </div>
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+          {/* Tool Distribution */}
           <motion.div 
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.5 }}
+            transition={{ delay: 0.7 }}
             className="glass-card"
           >
             <div className="flex items-center justify-between mb-8">
-              <h3 className="text-xl font-bold">Token Distribution</h3>
+              <h3 className="text-xl font-bold">Tool Execution Heatmap</h3>
               <BarChart3 className="text-white/20" />
             </div>
-            <div className="h-[300px] w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={tokenData}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={80}
-                    outerRadius={100}
-                    paddingAngle={8}
-                    dataKey="value"
-                  >
-                    {tokenData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip 
-                    contentStyle={{ 
-                      backgroundColor: 'rgba(0,0,0,0.8)', 
-                      borderRadius: '12px', 
-                      border: '1px solid rgba(255,255,255,0.1)',
-                      backdropFilter: 'blur(10px)'
-                    }} 
-                  />
-                </PieChart>
-              </ResponsiveContainer>
-              <div className="flex justify-center gap-8 mt-4">
-                {tokenData.map((d, i) => (
-                  <div key={d.name} className="flex items-center gap-2">
-                    <div className="h-3 w-3 rounded-full" style={{ backgroundColor: COLORS[i] }} />
-                    <span className="text-sm text-white/60">{d.name}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </motion.div>
-
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.6 }}
-            className="glass-card"
-          >
-            <div className="flex items-center justify-between mb-8">
-              <h3 className="text-xl font-bold">Tool Execution Density</h3>
-              <History className="text-white/20" />
-            </div>
             <div className="tool-list">
-              {sortedTools.map(([name, count], i) => (
-                <div key={name} className="tool-item">
+              {sortedTools.map(([name, count]) => (
+                <div key={name} className="tool-item group cursor-pointer hover:bg-white/5 transition-colors">
                   <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/5 text-white/60">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/5 text-white/40 group-hover:text-accent transition-colors">
                       <ToolIcon name={name} />
                     </div>
                     <div>
-                      <p className="tool-name">{name.replace('mcp_', '')}</p>
-                      <div className="h-1 w-24 rounded-full bg-white/5 mt-1 overflow-hidden">
+                      <p className="tool-name text-sm">{name.replace('mcp_', '')}</p>
+                      <div className="h-1 w-32 rounded-full bg-white/5 mt-1 overflow-hidden">
                         <div 
-                          className="h-full bg-accent" 
+                          className="h-full bg-gradient-to-r from-purple-500 to-accent" 
                           style={{ width: `${((count as number) / (sortedTools[0][1] as number)) * 100}%` }}
                         />
                       </div>
                     </div>
                   </div>
-                  <span className="tool-count">{count.toLocaleString()}</span>
+                  <div className="flex items-center gap-2">
+                    <span className="tool-count text-sm">{count.toLocaleString()}</span>
+                    <ChevronRight size={14} className="text-white/10" />
+                  </div>
                 </div>
               ))}
             </div>
           </motion.div>
-        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.7 }}
-            className="glass-card"
-          >
-            <div className="flex items-center gap-4 mb-8">
-              <ShieldCheck className="text-blue-400" />
-              <h3 className="text-xl font-bold">Model Context Limits</h3>
-            </div>
-            <div className="space-y-6">
-              <div>
-                <div className="flex justify-between text-sm mb-2">
-                  <span className="text-white/60">Context Window</span>
-                  <span className="font-bold">1M Tokens</span>
-                </div>
-                <div className="h-2 rounded-full bg-white/5 overflow-hidden">
-                  <div className="h-full bg-blue-500 w-[12%]" />
-                </div>
-                <p className="text-[10px] text-white/30 mt-2">Max historical peaks reaching ~120k tokens.</p>
+          {/* Model Context & Integrity */}
+          <div className="flex flex-col gap-8">
+            <motion.div 
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.8 }}
+              className="glass-card"
+            >
+              <div className="flex items-center gap-4 mb-8">
+                <ShieldCheck className="text-blue-400" />
+                <h3 className="text-xl font-bold">Operational Thresholds</h3>
               </div>
-              <div>
-                <div className="flex justify-between text-sm mb-2">
-                  <span className="text-white/60">Output Limit</span>
-                  <span className="font-bold">64K Tokens</span>
+              <div className="space-y-6">
+                <div>
+                  <div className="flex justify-between text-xs mb-2">
+                    <span className="text-white/40 uppercase font-bold">Primary Context Window</span>
+                    <span className="font-bold text-accent">1M Tokens</span>
+                  </div>
+                  <div className="h-2 rounded-full bg-white/5 overflow-hidden">
+                    <div className="h-full bg-accent w-[12%] shadow-[0_0_10px_rgba(34,211,238,0.5)]" />
+                  </div>
                 </div>
-                <div className="h-2 rounded-full bg-white/5 overflow-hidden">
-                  <div className="h-full bg-purple-500 w-[24%]" />
+                <div>
+                  <div className="flex justify-between text-xs mb-2">
+                    <span className="text-white/40 uppercase font-bold">Peak Output Buffer</span>
+                    <span className="font-bold text-purple-400">64K Tokens</span>
+                  </div>
+                  <div className="h-2 rounded-full bg-white/5 overflow-hidden">
+                    <div className="h-full bg-purple-500 w-[24%] shadow-[0_0_10px_rgba(168,85,247,0.5)]" />
+                  </div>
                 </div>
               </div>
-            </div>
-          </motion.div>
+            </motion.div>
 
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.8 }}
-            className="glass-card"
-          >
-            <div className="flex items-center gap-4 mb-8">
-              <Clock className="text-accent" />
-              <h3 className="text-xl font-bold">System Integrity</h3>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="p-4 rounded-xl bg-white/5">
-                <p className="text-xs text-white/40 uppercase">Parser Version</p>
-                <p className="text-lg font-bold">v1.2.0-beta</p>
+            <motion.div 
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.9 }}
+              className="glass-card"
+            >
+              <div className="flex items-center gap-4 mb-8">
+                <Clock className="text-accent" />
+                <h3 className="text-xl font-bold">Session Integrity</h3>
               </div>
-              <div className="p-4 rounded-xl bg-white/5">
-                <p className="text-xs text-white/40 uppercase">Data Source</p>
-                <p className="text-lg font-bold">Local Logs</p>
+              <div className="grid grid-cols-2 gap-4">
+                {[
+                  { l: 'Parser', v: 'v2.1.0' },
+                  { l: 'Providers', v: 'Multi-Core' },
+                  { l: 'Status', v: 'Synchronized', c: 'text-green-400' },
+                  { l: 'Metrics', v: 'High Fidelity' }
+                ].map(item => (
+                  <div key={item.l} className="p-4 rounded-2xl bg-white/2 border border-white/5">
+                    <p className="text-[10px] text-white/20 uppercase font-bold tracking-widest">{item.l}</p>
+                    <p className={`text-sm font-bold mt-1 ${item.c || 'text-white'}`}>{item.v}</p>
+                  </div>
+                ))}
               </div>
-              <div className="p-4 rounded-xl bg-white/5">
-                <p className="text-xs text-white/40 uppercase">Status</p>
-                <p className="text-lg font-bold text-green-400">Synced</p>
-              </div>
-              <div className="p-4 rounded-xl bg-white/5">
-                <p className="text-xs text-white/40 uppercase">Pricing</p>
-                <p className="text-lg font-bold">models.dev</p>
-              </div>
-            </div>
-          </motion.div>
+            </motion.div>
+          </div>
         </div>
       </main>
     </div>

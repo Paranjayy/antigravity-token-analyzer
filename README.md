@@ -1,73 +1,58 @@
-# React + TypeScript + Vite
+# 🌌 Antigravity Token Analyzer
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A high-fidelity, local-first intelligence dashboard for tracking AI usage, token consumption, and execution costs across multiple agentic platforms.
 
-Currently, two official plugins are available:
+![Design Palace Aesthetic](https://img.shields.io/badge/Design-Palace-purple?style=for-the-badge)
+![Vite](https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white)
+![React](https://img.shields.io/badge/react-%2320232b.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## ✨ Features
 
-## React Compiler
+- **Multi-Provider Support**: Seamlessly aggregates data from **Antigravity** (NDJSON logs) and **OpenCode** (SQLite databases).
+- **Comprehensive Analytics**:
+  - **Token Throughput**: Accurate counting using `tiktoken` (cl100k_base).
+  - **Financial Tracking**: Real-time cost estimation based on [models.dev](https://models.dev) pricing.
+  - **Message Velocity**: Breakdowns of input queries vs assistant responses.
+  - **Tool Heatmaps**: Identification of your most-used agentic tools (file edits, terminal commands, etc.).
+- **Premium UI**: Dark-mode, glassmorphic dashboard built with Framer Motion, Recharts, and Lucide icons.
+- **Local-First**: Zero data leaves your machine. The analyzer runs entirely against your local chat history.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🚀 Getting Started
 
-## Expanding the ESLint configuration
+### 1. Prerequisites
+- Node.js (v18+)
+- Local installations of Antigravity or OpenCode
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### 2. Installation
+```bash
+git clone https://github.com/Paranjayy/antigravity-token-analyzer.git
+cd antigravity-token-analyzer
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### 3. Sync Data
+The analyzer needs to parse your local logs to generate the dashboard data.
+```bash
+node src/scripts/analyze.js
 ```
+
+### 4. Launch Dashboard
+```bash
+npm run dev
+```
+Open [http://localhost:5173](http://localhost:5173) in your browser.
+
+## 📂 Architecture
+
+- `src/scripts/analyze.js`: The "brain" that crawls local directories and parses various log formats.
+- `src/data/stats.json`: The aggregated intelligence layer consumed by the UI.
+- `src/data/pricing.json`: A local snapshot of the global model pricing catalog.
+
+## 🛠️ Future Roadmap
+
+- [ ] Support for **OpenAI** / **Anthropic** local export logs.
+- [ ] Exportable PDF reports for usage audits.
+- [ ] Real-time "Cost-as-you-type" widget for CLI integration.
+
+---
+Built with 💜 by Antigravity
