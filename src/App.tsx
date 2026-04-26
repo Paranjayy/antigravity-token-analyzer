@@ -2,7 +2,6 @@
 import { useMemo, useState } from 'react';
 import {
   Activity,
-  BarChart3,
   Brain,
   Briefcase,
   Calendar,
@@ -11,14 +10,10 @@ import {
   Cpu,
   Download,
   FolderOpen,
-  Flame,
-  Layers,
   LineChart,
   MessageSquareText,
   ShieldCheck,
-  Sparkles,
   Terminal,
-  Zap
 } from 'lucide-react';
 import {
   Area,
@@ -33,6 +28,11 @@ import {
 } from 'recharts';
 import { motion } from 'framer-motion';
 import stats from './data/stats.json';
+import { Badge } from './components/ui/badge';
+import { Button } from './components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './components/ui/card';
+import { Progress } from './components/ui/progress';
+import { Separator } from './components/ui/separator';
 
 const SOURCE_COLORS = {
   antigravity: '#e879f9',
@@ -194,7 +194,6 @@ function App() {
       .slice(0, 12);
   }, [currentStats, sourceFilter]);
 
-  const heroTitle = sourceFilter === 'all' ? 'Analyzer Console' : `${sourceLabel(sourceFilter)} Console`;
   const totalSessions = (currentStats.conversations || 0).toLocaleString();
   const totalTokens = formatNumber((currentStats.totalTokens?.input || 0) + (currentStats.totalTokens?.output || 0));
   const totalCost = formatMoney(currentStats.totalCost || 0);
@@ -216,360 +215,314 @@ function App() {
         <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent,transparent_70%,color-mix(in_oklab,var(--color-background)_90%,white)_100%)] opacity-60" />
       </div>
 
-      <div className="relative mx-auto flex min-h-screen w-full max-w-[1600px] flex-col px-4 py-4 md:px-6 lg:px-8">
-        <header className="sticky top-4 z-20 mb-6 rounded-3xl border border-[var(--color-border)]/80 bg-[color-mix(in_oklab,var(--color-card)_82%,transparent)] px-4 py-4 shadow-[0_20px_80px_rgba(0,0,0,0.18)] backdrop-blur-xl md:px-5">
-          <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
-            <div className="flex items-center gap-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-[var(--color-border)] bg-[color-mix(in_oklab,var(--color-primary)_16%,transparent)] text-[var(--color-primary)]">
-                <Cpu size={20} />
-              </div>
-              <div>
-                <p className="text-[10px] font-semibold uppercase tracking-[0.35em] text-[var(--color-muted-foreground)]">Local AI usage atlas</p>
-                <h1 className="text-2xl font-semibold tracking-tight md:text-3xl">{heroTitle}</h1>
-              </div>
-            </div>
-
-            <div className="flex flex-wrap items-center gap-2">
-              <div className="flex rounded-full border border-[var(--color-border)] bg-[var(--color-background)] p-1">
-                {( ['all', 'antigravity', 'opencode', 'codex'] as SourceId[] ).map((source) => (
-                  <button
-                    key={source}
-                    onClick={() => setSourceFilter(source)}
-                    className={`rounded-full px-3 py-1.5 text-xs font-medium transition ${
-                      sourceFilter === source
-                        ? 'bg-[var(--color-primary)] text-[var(--color-primary-foreground)]'
-                        : 'text-[var(--color-muted-foreground)] hover:text-[var(--color-foreground)]'
-                    }`}
-                  >
-                    {sourceLabel(source)}
-                  </button>
-                ))}
-              </div>
-
-              <div className="flex rounded-full border border-[var(--color-border)] bg-[var(--color-background)] p-1">
-                {( ['all', '30', '7'] as RangeId[] ).map((range) => (
-                  <button
-                    key={range}
-                    onClick={() => setDateRange(range)}
-                    className={`rounded-full px-3 py-1.5 text-xs font-medium transition ${
-                      dateRange === range
-                        ? 'bg-[var(--color-primary)] text-[var(--color-primary-foreground)]'
-                        : 'text-[var(--color-muted-foreground)] hover:text-[var(--color-foreground)]'
-                    }`}
-                  >
-                    {range === 'all' ? 'All time' : `${range}d`}
-                  </button>
-                ))}
-              </div>
-
-              <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-[var(--color-border)] bg-[var(--color-background)] px-3 py-2 text-xs font-medium text-[var(--color-muted-foreground)] transition hover:text-[var(--color-foreground)]">
-                <FolderOpen size={14} />
-                Import JSON
-                <input type="file" className="hidden" accept=".json" onChange={handleUpload} />
-              </label>
-
-              <button
-                onClick={handleDownload}
-                className="inline-flex items-center gap-2 rounded-full border border-[var(--color-border)] bg-[var(--color-background)] px-3 py-2 text-xs font-medium text-[var(--color-muted-foreground)] transition hover:text-[var(--color-foreground)]"
-              >
-                <Download size={14} />
-                Export
-              </button>
-            </div>
-          </div>
-
-          <div className="mt-5 flex flex-wrap items-center gap-2">
-            {tabs.map((tab) => {
-              const Icon = tab.icon;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-medium transition ${
-                    activeTab === tab.id
-                      ? 'border-[var(--color-border)] bg-[var(--color-primary)] text-[var(--color-primary-foreground)]'
-                      : 'border-[var(--color-border)] bg-transparent text-[var(--color-muted-foreground)] hover:text-[var(--color-foreground)]'
-                  }`}
-                >
-                  <Icon size={13} />
-                  {tab.label}
-                </button>
-              );
-            })}
-          </div>
-        </header>
-
-        <main className="flex-1 pb-8">
-          <motion.section
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.45, ease: 'easeOut' }}
-            className="mb-6 grid gap-4 lg:grid-cols-[1.45fr_0.55fr]"
-          >
-            <div className="rounded-[2rem] border border-[var(--color-border)] bg-[color-mix(in_oklab,var(--color-card)_88%,transparent)] p-6 shadow-[0_20px_80px_rgba(0,0,0,0.16)]">
-              <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
-                <div className="max-w-2xl">
-                  <p className="mb-3 inline-flex items-center gap-2 rounded-full border border-[var(--color-border)] bg-[var(--color-background)] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.32em] text-[var(--color-muted-foreground)]">
-                    <Sparkles size={12} />
-                    Tastefully condensed telemetry
-                  </p>
-                  <h2 className="text-3xl font-semibold tracking-tight md:text-5xl">
-                    One clean place for Antigravity, OpenCode, and saved chat archives.
-                  </h2>
-                  <p className="mt-4 max-w-2xl text-sm leading-6 text-[var(--color-muted-foreground)] md:text-base">
-                    The dashboard now prioritizes signal over spectacle: real session counts, real model IDs, real costs, and a smaller set of well-balanced panels.
-                  </p>
+      <div className="relative mx-auto flex min-h-screen w-full max-w-[1840px] flex-col px-5 py-5 lg:px-8">
+        <header className="sticky top-4 z-20 mb-8">
+          <Card className="overflow-hidden">
+            <div className="px-6 py-6 lg:px-8 lg:py-7">
+              <div className="flex flex-col gap-6 xl:flex-row xl:items-start xl:justify-between">
+                <div className="max-w-4xl">
+                  <div className="mb-4 flex flex-wrap items-center gap-2">
+                    <Badge variant="soft">Local AI Usage Atlas</Badge>
+                    <Badge variant="outline">Pricing via models.dev</Badge>
+                    <Badge variant="outline">CodexBar-friendly logs</Badge>
+                  </div>
+                  <div className="flex items-start gap-4">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-[var(--color-border)] bg-[color-mix(in_oklab,var(--color-primary)_14%,transparent)] text-[var(--color-primary)]">
+                      <Cpu size={22} />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-[10px] font-semibold uppercase tracking-[0.38em] text-[var(--color-muted-foreground)]">Analyzer Console</p>
+                      <h1 className="mt-2 max-w-3xl text-[clamp(2rem,4vw,3.9rem)] font-semibold leading-[0.95] tracking-tight">
+                        One calm place for Antigravity, OpenCode, Codex, and saved chat archives.
+                      </h1>
+                      <p className="mt-4 max-w-3xl text-sm leading-7 text-[var(--color-muted-foreground)] md:text-base">
+                        Real session counts, model IDs, prompt flow, cost tracking, and engineering signals, laid out with a lot more breathing room so the data can actually read like a dashboard.
+                      </p>
+                    </div>
+                  </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3 md:min-w-[320px]">
+                <div className="grid gap-4 sm:grid-cols-2 xl:min-w-[430px]">
                   {[
-                    { label: 'Sessions', value: totalSessions, icon: MessageSquareText },
-                    { label: 'Models', value: formatPlain(modelCount), icon: Brain },
-                    { label: 'Tools', value: formatPlain(toolCount), icon: Terminal },
-                    { label: 'Errors', value: formatPlain(errorCount), icon: ShieldCheck }
+                    { label: 'Sessions', value: totalSessions, icon: MessageSquareText, tone: 'text-[var(--color-primary)]' },
+                    { label: 'Models', value: formatPlain(modelCount), icon: Brain, tone: 'text-cyan-300' },
+                    { label: 'Tools', value: formatPlain(toolCount), icon: Terminal, tone: 'text-amber-300' },
+                    { label: 'Errors', value: formatPlain(errorCount), icon: ShieldCheck, tone: 'text-emerald-300' }
                   ].map((item) => {
                     const Icon = item.icon;
                     return (
-                      <div key={item.label} className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-background)] p-4">
-                        <div className="flex items-center justify-between">
-                          <span className="text-[10px] font-semibold uppercase tracking-[0.3em] text-[var(--color-muted-foreground)]">{item.label}</span>
-                          <Icon size={14} className="text-[var(--color-muted-foreground)]" />
-                        </div>
-                        <div className="mt-4 text-2xl font-semibold tracking-tight">{item.value}</div>
-                      </div>
+                      <Card key={item.label} className="p-0">
+                        <CardContent className="flex items-start justify-between p-5">
+                          <div>
+                            <div className="text-[10px] font-semibold uppercase tracking-[0.32em] text-[var(--color-muted-foreground)]">
+                              {item.label}
+                            </div>
+                            <div className="mt-4 text-3xl font-semibold tracking-tight">{item.value}</div>
+                          </div>
+                          <div className={`rounded-full border border-[var(--color-border)] bg-[var(--color-background)] p-2.5 ${item.tone}`}>
+                            <Icon size={15} />
+                          </div>
+                        </CardContent>
+                      </Card>
                     );
                   })}
                 </div>
               </div>
-            </div>
 
-            <div className="rounded-[2rem] border border-[var(--color-border)] bg-[color-mix(in_oklab,var(--color-card)_88%,transparent)] p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.32em] text-[var(--color-muted-foreground)]">Snapshot</p>
-                  <h3 className="mt-1 text-lg font-semibold tracking-tight">Current view</h3>
+              <Separator className="my-6" />
+
+              <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+                <div className="flex flex-wrap gap-2">
+                  {tabs.map((tab) => {
+                    const Icon = tab.icon;
+                    return (
+                      <Button
+                        key={tab.id}
+                        variant={activeTab === tab.id ? 'default' : 'outline'}
+                        size="sm"
+                        onClick={() => setActiveTab(tab.id)}
+                        className="gap-2"
+                      >
+                        <Icon size={13} />
+                        {tab.label}
+                      </Button>
+                    );
+                  })}
                 </div>
-                <div className="rounded-full border border-[var(--color-border)] bg-[var(--color-background)] px-3 py-1 text-xs text-[var(--color-muted-foreground)]">
-                  {sourceLabel(sourceFilter)}
+
+                <div className="flex flex-wrap items-center gap-2">
+                  <div className="flex rounded-full border border-[var(--color-border)] bg-[var(--color-background)] p-1">
+                    {(['all', 'antigravity', 'opencode', 'codex'] as SourceId[]).map((source) => (
+                      <Button
+                        key={source}
+                        variant={sourceFilter === source ? 'default' : 'ghost'}
+                        size="sm"
+                        onClick={() => setSourceFilter(source)}
+                        className="px-3"
+                      >
+                        {sourceLabel(source)}
+                      </Button>
+                    ))}
+                  </div>
+
+                  <div className="flex rounded-full border border-[var(--color-border)] bg-[var(--color-background)] p-1">
+                    {(['all', '30', '7'] as RangeId[]).map((range) => (
+                      <Button
+                        key={range}
+                        variant={dateRange === range ? 'default' : 'ghost'}
+                        size="sm"
+                        onClick={() => setDateRange(range)}
+                        className="px-3"
+                      >
+                        {range === 'all' ? 'All time' : `${range}d`}
+                      </Button>
+                    ))}
+                  </div>
+
+                  <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-[var(--color-border)] bg-[var(--color-background)] px-3 py-2 text-xs font-medium text-[var(--color-muted-foreground)] transition hover:text-[var(--color-foreground)]">
+                    <FolderOpen size={14} />
+                    Import JSON
+                    <input type="file" className="hidden" accept=".json" onChange={handleUpload} />
+                  </label>
+
+                  <Button variant="outline" size="sm" onClick={handleDownload}>
+                    <Download size={14} />
+                    Export
+                  </Button>
                 </div>
               </div>
-
-              <div className="mt-6 space-y-4">
-                <div>
-                  <div className="mb-2 flex items-center justify-between text-xs">
-                    <span className="text-[var(--color-muted-foreground)]">Tokens</span>
-                    <span className="font-medium">{totalTokens}</span>
-                  </div>
-                  <div className="h-2 overflow-hidden rounded-full bg-[var(--color-muted)]">
-                    <div className="h-full rounded-full bg-[var(--color-primary)]" style={{ width: '88%' }} />
-                  </div>
-                </div>
-                <div>
-                  <div className="mb-2 flex items-center justify-between text-xs">
-                    <span className="text-[var(--color-muted-foreground)]">Spend</span>
-                    <span className="font-medium">{totalCost}</span>
-                  </div>
-                  <div className="h-2 overflow-hidden rounded-full bg-[var(--color-muted)]">
-                    <div className="h-full rounded-full bg-[var(--color-accent)]" style={{ width: '64%' }} />
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 gap-3 pt-2 text-xs">
-                  <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-background)] p-3">
-                    <div className="text-[10px] uppercase tracking-[0.25em] text-[var(--color-muted-foreground)]">Input msgs</div>
-                    <div className="mt-2 text-xl font-semibold">{formatPlain(overview.inputMessages)}</div>
-                  </div>
-                  <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-background)] p-3">
-                    <div className="text-[10px] uppercase tracking-[0.25em] text-[var(--color-muted-foreground)]">Output msgs</div>
-                    <div className="mt-2 text-xl font-semibold">{formatPlain(overview.outputMessages)}</div>
-                  </div>
-                </div>
-              </div>
             </div>
-          </motion.section>
+          </Card>
+        </header>
 
-          {activeTab === 'overview' && (
-            <motion.div
-              key="overview"
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, ease: 'easeOut' }}
-              className="space-y-6"
-            >
-              <section className="grid gap-4 lg:grid-cols-4">
-                {[
-                  {
-                    label: 'Total cost',
-                    value: totalCost,
-                    note: `${formatPlain(overview.cost)} filtered cost`,
-                    icon: Brain
-                  },
-                  {
-                    label: 'Combined tokens',
-                    value: totalTokens,
-                    note: `${formatPlain(overview.input)} input / ${formatPlain(overview.output)} output`,
-                    icon: Zap
-                  },
-                  {
-                    label: 'Tool calls',
-                    value: formatPlain(overview.tools),
-                    note: `${formatPlain(toolCount)} total across workspace`,
-                    icon: Terminal
-                  },
-                  {
-                    label: 'Sessions',
-                    value: totalSessions,
-                    note: `${sourceLabel(sourceFilter)} only`,
-                    icon: Activity
-                  }
-                ].map((metric) => {
-                  const Icon = metric.icon;
-                  return (
-                    <div
-                      key={metric.label}
-                      className="rounded-[1.75rem] border border-[var(--color-border)] bg-[color-mix(in_oklab,var(--color-card)_88%,transparent)] p-5"
-                    >
-                      <div className="flex items-center justify-between">
-                        <span className="text-[10px] font-semibold uppercase tracking-[0.3em] text-[var(--color-muted-foreground)]">{metric.label}</span>
-                        <div className="rounded-full border border-[var(--color-border)] bg-[var(--color-background)] p-2 text-[var(--color-foreground)]">
-                          <Icon size={14} />
-                        </div>
-                      </div>
-                      <div className="mt-4 text-3xl font-semibold tracking-tight">{metric.value}</div>
-                      <div className="mt-2 text-xs text-[var(--color-muted-foreground)]">{metric.note}</div>
-                    </div>
-                  );
-                })}
-              </section>
-
-              <section className="grid gap-6 xl:grid-cols-[1.5fr_0.75fr]">
-                <div className="rounded-[2rem] border border-[var(--color-border)] bg-[color-mix(in_oklab,var(--color-card)_88%,transparent)] p-6">
-                  <div className="flex flex-wrap items-end justify-between gap-4">
-                    <div>
-                      <p className="text-[10px] font-semibold uppercase tracking-[0.32em] text-[var(--color-muted-foreground)]">Usage over time</p>
-                      <h3 className="mt-1 text-xl font-semibold tracking-tight">Daily input and output flow</h3>
-                    </div>
-                    <div className="flex items-center gap-4 text-xs text-[var(--color-muted-foreground)]">
-                      <span className="inline-flex items-center gap-2">
-                        <span className="h-2 w-2 rounded-full" style={{ backgroundColor: chartInputColor }} />
-                        Input
-                      </span>
-                      <span className="inline-flex items-center gap-2">
-                        <span className="h-2 w-2 rounded-full" style={{ backgroundColor: chartOutputColor }} />
-                        Output
-                      </span>
-                    </div>
+        <main className="flex-1 pb-10">
+          <motion.section
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.45, ease: 'easeOut' }}
+            className="grid gap-12 xl:grid-cols-[minmax(0,1.55fr)_340px]"
+          >
+            <Card className="overflow-hidden">
+              <CardHeader className="px-8 pt-8">
+                <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+                  <div>
+                    <Badge variant="soft" className="w-fit">Usage over time</Badge>
+                    <CardTitle className="mt-3 text-[clamp(1.8rem,2.6vw,2.8rem)] leading-[0.98]">
+                      Daily input and output flow
+                    </CardTitle>
+                    <CardDescription className="mt-3 max-w-2xl text-base leading-7">
+                      A quieter time-series view with enough scale to see spikes, but not so many surrounding widgets that the chart gets crowded out.
+                    </CardDescription>
                   </div>
-
-                  <div className="mt-6 h-[360px]">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <AreaChart data={timelineChart}>
-                        <defs>
-                          <linearGradient id="inputFill" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor={chartInputColor} stopOpacity={0.28} />
-                            <stop offset="95%" stopColor={chartInputColor} stopOpacity={0} />
-                          </linearGradient>
-                          <linearGradient id="outputFill" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor={chartOutputColor} stopOpacity={0.24} />
-                            <stop offset="95%" stopColor={chartOutputColor} stopOpacity={0} />
-                          </linearGradient>
-                        </defs>
-                        <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" opacity={0.35} vertical={false} />
-                        <XAxis
-                          dataKey="dateLabel"
-                          stroke="var(--color-muted-foreground)"
-                          tickLine={false}
-                          axisLine={false}
-                          fontSize={11}
-                          minTickGap={24}
-                        />
-                        <YAxis hide />
-                        <Tooltip
-                          cursor={{ stroke: 'var(--color-border)', strokeWidth: 1 }}
-                          contentStyle={{
-                            backgroundColor: 'var(--color-card)',
-                            border: '1px solid var(--color-border)',
-                            borderRadius: '16px',
-                            color: 'var(--color-foreground)'
-                          }}
-                        />
-                        <Area
-                          type="monotone"
-                          dataKey="input"
-                          stroke={chartInputColor}
-                          strokeWidth={2.5}
-                          fill="url(#inputFill)"
-                          name="Input"
-                        />
-                        <Area
-                          type="monotone"
-                          dataKey="output"
-                          stroke={chartOutputColor}
-                          strokeWidth={2.5}
-                          fill="url(#outputFill)"
-                          name="Output"
-                        />
-                      </AreaChart>
-                    </ResponsiveContainer>
+                  <div className="grid grid-cols-2 gap-3 text-xs text-[var(--color-muted-foreground)] lg:min-w-[220px] lg:text-right">
+                    <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-background)] px-4 py-3">
+                      <div className="text-[10px] uppercase tracking-[0.28em]">Cost</div>
+                      <div className="mt-2 text-lg font-semibold text-[var(--color-foreground)]">{totalCost}</div>
+                    </div>
+                    <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-background)] px-4 py-3">
+                      <div className="text-[10px] uppercase tracking-[0.28em]">Tokens</div>
+                      <div className="mt-2 text-lg font-semibold text-[var(--color-foreground)]">{totalTokens}</div>
+                    </div>
+                    <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-background)] px-4 py-3">
+                      <div className="text-[10px] uppercase tracking-[0.28em]">Tools</div>
+                      <div className="mt-2 text-lg font-semibold text-[var(--color-foreground)]">{formatPlain(overview.tools)}</div>
+                    </div>
+                    <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-background)] px-4 py-3">
+                      <div className="text-[10px] uppercase tracking-[0.28em]">Sessions</div>
+                      <div className="mt-2 text-lg font-semibold text-[var(--color-foreground)]">{totalSessions}</div>
+                    </div>
                   </div>
                 </div>
+              </CardHeader>
+              <CardContent className="px-8 pt-8">
+                <div className="h-[440px]">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart data={timelineChart}>
+                      <defs>
+                        <linearGradient id="inputFill" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor={chartInputColor} stopOpacity={0.28} />
+                          <stop offset="95%" stopColor={chartInputColor} stopOpacity={0} />
+                        </linearGradient>
+                        <linearGradient id="outputFill" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor={chartOutputColor} stopOpacity={0.24} />
+                          <stop offset="95%" stopColor={chartOutputColor} stopOpacity={0} />
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" opacity={0.28} vertical={false} />
+                      <XAxis
+                        dataKey="dateLabel"
+                        stroke="var(--color-muted-foreground)"
+                        tickLine={false}
+                        axisLine={false}
+                        fontSize={11}
+                        minTickGap={28}
+                      />
+                      <YAxis hide />
+                      <Tooltip
+                        cursor={{ stroke: 'var(--color-border)', strokeWidth: 1 }}
+                        contentStyle={{
+                          backgroundColor: 'var(--color-card)',
+                          border: '1px solid var(--color-border)',
+                          borderRadius: '16px',
+                          color: 'var(--color-foreground)'
+                        }}
+                      />
+                      <Area
+                        type="monotone"
+                        dataKey="input"
+                        stroke={chartInputColor}
+                        strokeWidth={2.5}
+                        fill="url(#inputFill)"
+                        name="Input"
+                      />
+                      <Area
+                        type="monotone"
+                        dataKey="output"
+                        stroke={chartOutputColor}
+                        strokeWidth={2.5}
+                        fill="url(#outputFill)"
+                        name="Output"
+                      />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                </div>
+              </CardContent>
+            </Card>
 
-                <div className="space-y-6">
-                  <div className="rounded-[2rem] border border-[var(--color-border)] bg-[color-mix(in_oklab,var(--color-card)_88%,transparent)] p-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-[10px] font-semibold uppercase tracking-[0.32em] text-[var(--color-muted-foreground)]">Source split</p>
-                        <h3 className="mt-1 text-lg font-semibold tracking-tight">Antigravity vs OpenCode</h3>
-                      </div>
-                      <BarChart3 size={16} className="text-[var(--color-muted-foreground)]" />
+            <div className="space-y-7">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Current view</CardTitle>
+                  <CardDescription>Filter-aware snapshot of the data set.</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-5">
+                  <div>
+                    <div className="mb-2 flex items-center justify-between text-xs">
+                      <span className="text-[var(--color-muted-foreground)]">Tokens</span>
+                      <span className="font-medium">{totalTokens}</span>
                     </div>
+                    <Progress value={88} />
+                  </div>
+                  <div>
+                    <div className="mb-2 flex items-center justify-between text-xs">
+                      <span className="text-[var(--color-muted-foreground)]">Spend</span>
+                      <span className="font-medium">{totalCost}</span>
+                    </div>
+                    <Progress value={64} />
+                  </div>
+                  <div className="grid grid-cols-2 gap-3 text-xs">
+                    <Card className="p-0">
+                      <CardContent className="p-4">
+                        <div className="text-[10px] uppercase tracking-[0.25em] text-[var(--color-muted-foreground)]">Input msgs</div>
+                        <div className="mt-2 text-xl font-semibold">{formatPlain(overview.inputMessages)}</div>
+                      </CardContent>
+                    </Card>
+                    <Card className="p-0">
+                      <CardContent className="p-4">
+                        <div className="text-[10px] uppercase tracking-[0.25em] text-[var(--color-muted-foreground)]">Output msgs</div>
+                        <div className="mt-2 text-xl font-semibold">{formatPlain(overview.outputMessages)}</div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </CardContent>
+              </Card>
 
-                    <div className="mt-6 space-y-4">
-                      {providers.map((provider) => {
-                        const totalProviderTokens = (provider.tokens?.input || 0) + (provider.tokens?.output || 0);
-                        const share = (totalProviderTokens / Math.max(overview.input + overview.output, 1)) * 100;
-                        return (
-                          <div key={provider.id} className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-background)] p-4">
-                            <div className="flex items-center justify-between gap-4">
-                              <div>
-                                <div className="text-sm font-medium">{provider.label}</div>
-                                <div className="mt-1 text-xs text-[var(--color-muted-foreground)]">
-                                  {formatPlain(totalProviderTokens)} tokens · {formatMoney(provider.cost || 0)}
-                                </div>
-                              </div>
-                              <div className="text-right text-xs text-[var(--color-muted-foreground)]">
-                                <div>{formatPlain(provider.conversations || 0)} sessions</div>
-                                <div>{formatPlain(provider.errors || 0)} errors</div>
-                              </div>
-                            </div>
-                            <div className="mt-4 h-2 overflow-hidden rounded-full bg-[var(--color-muted)]">
-                              <div
-                                className="h-full rounded-full"
-                                style={{ width: `${Math.max(8, share)}%`, backgroundColor: provider.color }}
-                              />
+              <Card>
+                <CardHeader>
+                  <CardTitle>Source split</CardTitle>
+                  <CardDescription>Antigravity, OpenCode, and Codex, with real source shares.</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {providers.map((provider) => {
+                    const totalProviderTokens = (provider.tokens?.input || 0) + (provider.tokens?.output || 0);
+                    const share = (totalProviderTokens / Math.max(overview.input + overview.output, 1)) * 100;
+                    return (
+                      <div key={provider.id} className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-background)] p-4">
+                        <div className="flex items-start justify-between gap-4">
+                          <div>
+                            <div className="text-sm font-medium">{provider.label}</div>
+                            <div className="mt-1 text-xs text-[var(--color-muted-foreground)]">
+                              {formatPlain(totalProviderTokens)} tokens · {formatMoney(provider.cost || 0)}
                             </div>
                           </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-
-                  <div className="rounded-[2rem] border border-[var(--color-border)] bg-[color-mix(in_oklab,var(--color-card)_88%,transparent)] p-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-[10px] font-semibold uppercase tracking-[0.32em] text-[var(--color-muted-foreground)]">Signal</p>
-                        <h3 className="mt-1 text-lg font-semibold tracking-tight">Model coverage</h3>
+                          <div className="text-right text-xs text-[var(--color-muted-foreground)]">
+                            <div>{formatPlain(provider.conversations || 0)} sessions</div>
+                            <div>{formatPlain(provider.errors || 0)} errors</div>
+                          </div>
+                        </div>
+                        <div className="mt-4 h-2 overflow-hidden rounded-full bg-[var(--color-muted)]">
+                          <div
+                            className="h-full rounded-full"
+                            style={{
+                              width: `${Math.max(8, share)}%`,
+                              backgroundColor: provider.color
+                            }}
+                          />
+                        </div>
                       </div>
-                      <Layers size={16} className="text-[var(--color-muted-foreground)]" />
-                    </div>
-                    <div className="mt-4 text-3xl font-semibold tracking-tight">{modelCount}</div>
-                    <p className="mt-2 text-sm text-[var(--color-muted-foreground)]">
-                      Distinct model IDs detected across the filtered source set.
-                    </p>
+                    );
+                  })}
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Pricing source</CardTitle>
+                  <CardDescription>Live models.dev pricing with a local fallback snapshot.</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="flex items-center justify-between gap-4">
+                    <Badge variant="soft">models.dev</Badge>
+                    <span className="text-xs text-[var(--color-muted-foreground)]">Updated by analyzer</span>
                   </div>
-                </div>
-              </section>
-            </motion.div>
-          )}
+                  <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-background)] px-4 py-4">
+                    <div className="text-[10px] uppercase tracking-[0.28em] text-[var(--color-muted-foreground)]">Model coverage</div>
+                    <div className="mt-2 text-4xl font-semibold tracking-tight">{modelCount}</div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </motion.section>
 
           {activeTab === 'sessions' && (
             <motion.div
@@ -657,7 +610,7 @@ function App() {
                       <p className="text-[10px] font-semibold uppercase tracking-[0.32em] text-[var(--color-muted-foreground)]">Recent activity</p>
                       <h3 className="mt-1 text-lg font-semibold tracking-tight">Latest sessions in this view</h3>
                     </div>
-                    <Flame size={16} className="text-[var(--color-muted-foreground)]" />
+                    <Activity size={16} className="text-[var(--color-muted-foreground)]" />
                   </div>
                   <div className="mt-5 space-y-3">
                     {(currentStats.recentActivity || [])
