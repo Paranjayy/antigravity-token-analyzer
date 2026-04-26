@@ -34,8 +34,7 @@ import {
   XAxis,
   YAxis,
   BarChart,
-  Bar,
-  Cell as ReCell
+  Bar
 } from 'recharts';
 import { motion, AnimatePresence } from 'framer-motion';
 import stats from './data/stats.json';
@@ -93,12 +92,34 @@ function App() {
       .slice(0, 10);
   }, [currentStats]);
 
-  const heatmapData = useMemo(() => {
-    return currentStats.hourHeatmap.map((count: number, hour: number) => ({
-      hour: `${hour}:00`,
-      count
-    }));
-  }, [currentStats]);
+
+  const [dateRange, setDateRange] = useState<'all'|'7'|'30'>('all');
+
+  const filteredTimeline = useMemo(() => {
+    const now = new Date();
+    return currentStats.timelineArray.filter((t: any) => {
+      if (dateRange === 'all') return true;
+      const d = new Date(t.date);
+      const diffDays = (now.getTime() - d.getTime()) / (1000 * 3600 * 24);
+      return diffDays <= parseInt(dateRange);
+    });
+  }, [currentStats, dateRange]);
+
+  const filteredOverview = useMemo(() => {
+    if (dateRange === 'all') return {
+      cost: currentStats.totalCost,
+      tokens: currentStats.totalTokens.input + currentStats.totalTokens.output,
+      errors: currentStats.providers.antigravity.errors,
+      tools: Object.values(currentStats.toolUsage).reduce((a: any, b: any) => a + b, 0) as number
+    };
+    
+    return filteredTimeline.reduce((acc, day) => {
+      acc.cost += day.cost;
+      acc.tokens += day.input + day.output;
+      acc.tools += day.tools;
+      return acc;
+    }, { cost: 0, tokens: 0, errors: currentStats.providers.antigravity.errors, tools: 0 }); // errors remain global
+  }, [currentStats, filteredTimeline, dateRange]);
 
   return (
     <div className="min-h-screen text-white selection:bg-accent/30 font-sans">
@@ -162,9 +183,20 @@ function App() {
             </div>
           </motion.div>
           <div className="flex flex-col items-end gap-2">
-            <div className="glass-card !py-2 !px-4 flex items-center gap-3 border-accent/20 bg-accent/5">
-              <Flame size={16} className="text-orange-500" />
-              <span className="text-xs font-black tracking-wider">{currentStats.conversations} ACTIVE SESSIONS</span>
+            <div className="flex items-center gap-3">
+              <select 
+                value={dateRange} 
+                onChange={(e) => setDateRange(e.target.value as any)}
+                className="bg-black/40 border border-white/10 rounded-lg px-3 py-1 text-xs font-bold text-white/60 hover:text-white outline-none cursor-pointer uppercase tracking-widest"
+              >
+                <option value="all">All Time</option>
+                <option value="30">Last 30 Days</option>
+                <option value="7">Last 7 Days</option>
+              </select>
+              <div className="glass-card !py-2 !px-4 flex items-center gap-3 border-accent/20 bg-accent/5">
+                <Flame size={16} className="text-orange-500" />
+                <span className="text-xs font-black tracking-wider">{currentStats.conversations} ACTIVE SESSIONS</span>
+              </div>
             </div>
             <p className="text-[9px] text-white/10 font-bold uppercase tracking-widest">Last Synced: Just Now</p>
           </div>
@@ -175,10 +207,10 @@ function App() {
             <motion.div key="ov" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="space-y-8">
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 {[
-                  { label: 'Cloud Burn Rate', value: `$${currentStats.totalCost.toFixed(2)}`, icon: <Coins />, color: 'text-yellow-400', sub: 'Total LLM Investment' },
-                  { label: 'Token Throughput', value: (currentStats.totalTokens.input + currentStats.totalTokens.output).toLocaleString(), icon: <Zap />, color: 'text-purple-400', sub: 'Input + Output' },
-                  { label: 'Error Resilience', value: `${(((1 - (currentStats.providers.antigravity.errors / (currentStats.messageCount.output || 1))) * 100)).toFixed(1)}%`, icon: <AlertCircle />, color: 'text-green-400', sub: 'Success vs Failure' },
-                  { label: 'Tool Multiplier', value: `x${(Object.values(currentStats.toolUsage).reduce((a: any, b: any) => a + b, 0) as number / currentStats.conversations).toFixed(1)}`, icon: <MousePointer2 />, color: 'text-blue-400', sub: 'Tools per Session' },
+                  { label: 'Cloud Burn Rate', value: `$${filteredOverview?.cost.toFixed(2)}`, icon: <Coins />, color: 'text-yellow-400', sub: 'Total LLM Investment' },
+                  { label: 'Token Throughput', value: (filteredOverview?.tokens || 0).toLocaleString(), icon: <Zap />, color: 'text-purple-400', sub: 'Input + Output' },
+                  { label: 'Error Resilience', value: `${(((1 - ((filteredOverview?.errors || 0) / (currentStats.messageCount.output || 1))) * 100)).toFixed(1)}%`, icon: <AlertCircle />, color: 'text-green-400', sub: 'Success vs Failure' },
+                  { label: 'Tool Multiplier', value: `x${((filteredOverview?.tools || 0) / (currentStats.conversations || 1)).toFixed(1)}`, icon: <MousePointer2 />, color: 'text-blue-400', sub: 'Tools per Session' },
                 ].map((s) => (
                   <div key={s.label} className="glass-card hover:border-accent/40 transition-all group cursor-default">
                     <div className="flex items-center justify-between mb-4">
@@ -196,18 +228,15 @@ function App() {
                   <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity">
                     <Clock size={120} />
                   </div>
-                  <h3 className="text-xl font-bold mb-8 flex items-center gap-2"><Clock size={20} className="text-accent" /> Hourly Velocity Heatmap</h3>
+                  <h3 className="text-xl font-bold mb-8 flex items-center gap-2"><Clock size={20} className="text-accent" /> Token Velocity Timeline</h3>
                   <div className="h-[300px]">
                     <ResponsiveContainer width="100%" height="100%">
-                      <BarChart data={heatmapData}>
-                        <XAxis dataKey="hour" stroke="rgba(255,255,255,0.1)" fontSize={10} tickLine={false} axisLine={false} />
+                      <BarChart data={filteredTimeline}>
+                        <XAxis dataKey="date" stroke="rgba(255,255,255,0.1)" fontSize={10} tickLine={false} axisLine={false} />
                         <YAxis hide />
                         <Tooltip cursor={{ fill: 'rgba(255,255,255,0.05)' }} contentStyle={{ backgroundColor: '#000', border: '1px solid #222', borderRadius: '12px' }} />
-                        <Bar dataKey="count" radius={[4, 4, 0, 0]}>
-                          {heatmapData.map((entry: any, index: number) => (
-                            <ReCell key={`cell-${index}`} fill={entry.count > 10 ? '#c084fc' : (entry.count > 5 ? '#22d3ee' : '#ffffff10')} />
-                          ))}
-                        </Bar>
+                        <Bar dataKey="input" stackId="a" fill="#c084fc" radius={[0, 0, 4, 4]} />
+                        <Bar dataKey="output" stackId="a" fill="#22d3ee" radius={[4, 4, 0, 0]} />
                       </BarChart>
                     </ResponsiveContainer>
                   </div>
