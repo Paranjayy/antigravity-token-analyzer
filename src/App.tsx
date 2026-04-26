@@ -73,7 +73,7 @@ function App() {
         try {
           const json = JSON.parse(e.target?.result as string);
           setCurrentStats(json);
-        } catch (err) {
+        } catch {
           alert("Invalid JSON file");
         }
       };
@@ -122,7 +122,7 @@ function App() {
       inputMessages: 0,
       outputMessages: 0
     });
-  }, [currentStats, filteredTimeline, dateRange]);
+  }, [currentStats, filteredTimeline]);
 
   return (
     <div className="min-h-screen text-white selection:bg-accent/30 font-sans">
