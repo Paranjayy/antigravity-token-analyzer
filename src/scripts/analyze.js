@@ -69,6 +69,8 @@ async function analyze() {
       let convErrors = 0;
       let convTools = 0;
 
+      let convModel = DEFAULT_MODEL;
+
       for (const line of lines) {
         try {
           const entry = JSON.parse(line);
@@ -77,10 +79,26 @@ async function analyze() {
             convDate = entry.created_at.split('T')[0];
             stats.hourHeatmap[dateObj.getHours()]++;
             stats.dayHeatmap[dateObj.getDay()]++;
-            if (entry.content) convTitle = entry.content.substring(0, 60) + '...';
+            if (entry.content && !entry.content.includes('<USER_SETTINGS_CHANGE>')) {
+               convTitle = entry.content.substring(0, 60).replace(/\n/g, ' ') + '...';
+            }
           }
-          
+
           const text = entry.content || '';
+          
+          // Parse Model Change
+          if (text.includes('Model Selection')) {
+            const match = text.match(/setting `Model Selection` from .* to (.*?)\./);
+            if (match) {
+              const raw = match[1].toLowerCase();
+              if (raw.includes('gemini 3.1 pro')) convModel = 'gemini-3.1-pro-preview';
+              else if (raw.includes('gemini 3 flash')) convModel = 'gemini-3-flash-preview';
+              else if (raw.includes('gemini 2.5 pro')) convModel = 'gemini-2.5-pro-preview-05-06';
+              else if (raw.includes('gemini 2.5 flash')) convModel = 'gemini-2.5-flash-preview-05-20';
+              else if (raw.includes('gemini 3 pro')) convModel = 'gemini-3-pro-preview';
+            }
+          }
+
           const tokens = encoding.encode(text).length;
           const isInput = entry.source === 'USER_EXPLICIT' || entry.type === 'USER_INPUT';
           
@@ -121,7 +139,15 @@ async function analyze() {
         stats.providers.antigravity.artifacts += artifactCount;
       }
 
-      const cost = modelData ? ((convInputTokens / 1e6) * modelData.cost.input + (convOutputTokens / 1e6) * modelData.cost.output) : 0;
+      let convModelData = null;
+      for (const provider in pricing) {
+        if (pricing[provider].models && pricing[provider].models[convModel]) {
+          convModelData = pricing[provider].models[convModel];
+          break;
+        }
+      }
+
+      const cost = convModelData ? ((convInputTokens / 1e6) * convModelData.cost.input + (convOutputTokens / 1e6) * convModelData.cost.output) : 0;
       
       stats.totalCost += cost;
       stats.totalTokens.input += convInputTokens;

@@ -1,37 +1,37 @@
 {
   "totalTokens": {
-    "input": 21202408,
-    "output": 486944
+    "input": 21204633,
+    "output": 490145
   },
-  "totalCost": 6.590745879999999,
-  "conversations": 19,
+  "totalCost": 6.63360788,
+  "conversations": 22,
   "messageCount": {
-    "input": 1220,
-    "output": 11451
+    "input": 1246,
+    "output": 11752
   },
   "toolUsage": {
-    "list_dir": 85,
-    "view_file": 785,
-    "run_command": 834,
-    "multi_replace_file_content": 199,
-    "replace_file_content": 418,
-    "command_status": 292,
-    "grep_search": 83,
-    "search_web": 18,
-    "write_to_file": 316,
-    "read_url_content": 6,
+    "list_dir": 96,
+    "view_file": 814,
+    "run_command": 895,
+    "multi_replace_file_content": 210,
+    "replace_file_content": 455,
+    "command_status": 306,
+    "grep_search": 81,
+    "search_web": 17,
+    "write_to_file": 354,
+    "read_url_content": 8,
     "send_command_input": 5,
-    "generate_image": 18,
-    "mcp_chrome-devtools_navigate_page": 2,
-    "mcp_chrome-devtools_list_pages": 2,
-    "mcp_chrome-devtools_new_page": 1
+    "generate_image": 20,
+    "mcp_chrome-devtools_navigate_page": 3,
+    "mcp_chrome-devtools_list_pages": 3,
+    "mcp_chrome-devtools_new_page": 3
   },
   "timeline": {
     "2026-04-25": {
-      "input": 38039,
-      "output": 28359,
-      "cost": 0.41638600000000003,
-      "tools": 721
+      "input": 37374,
+      "output": 28919,
+      "cost": 0.421776,
+      "tools": 743
     },
     "2026-04-22": {
       "input": 7457,
@@ -40,10 +40,10 @@
       "tools": 330
     },
     "2026-04-24": {
-      "input": 4449292,
-      "output": 84849,
-      "cost": 5.627311880000001,
-      "tools": 1151
+      "input": 4449811,
+      "output": 85060,
+      "cost": 5.6308818800000005,
+      "tools": 1175
     },
     "2026-04-23": {
       "input": 7092,
@@ -52,10 +52,10 @@
       "tools": 300
     },
     "2026-04-26": {
-      "input": 748,
-      "output": 708,
-      "cost": 0.009992000000000001,
-      "tools": 44
+      "input": 3119,
+      "output": 3138,
+      "cost": 0.043893999999999996,
+      "tools": 204
     },
     "2026-04-18": {
       "input": 8923,
@@ -126,13 +126,13 @@
   },
   "providers": {
     "antigravity": {
-      "conversations": 19,
+      "conversations": 22,
       "tokens": {
         "input": 0,
         "output": 0
       },
       "cost": 0,
-      "artifacts": 9,
+      "artifacts": 11,
       "errors": 0
     },
     "opencode": {
@@ -147,9 +147,9 @@
     }
   },
   "projects": {
-    "Developer": {
-      "tokens": 2273,
-      "cost": 0.014006000000000001,
+    "7tv-raycast": {
+      "tokens": 2995,
+      "cost": 0.015450000000000002,
       "sessions": 1,
       "errors": 0
     },
@@ -160,14 +160,14 @@
       "errors": 0
     },
     "ipl-2026-engine": {
-      "tokens": 9544,
-      "cost": 0.055707999999999994,
+      "tokens": 10274,
+      "cost": 0.059278,
       "sessions": 2,
       "errors": 0
     },
     "Antigravity-Dev-Vault": {
-      "tokens": 82286,
-      "cost": 0.525552,
+      "tokens": 79870,
+      "cost": 0.52146,
       "sessions": 3,
       "errors": 0
     },
@@ -178,15 +178,15 @@
       "errors": 0
     },
     "paranjayy": {
-      "tokens": 43597,
-      "cost": 0.24990399999999996,
+      "tokens": 44072,
+      "cost": 0.25294399999999995,
       "sessions": 2,
       "errors": 0
     },
     "General": {
-      "tokens": 7710,
-      "cost": 0.06177,
-      "sessions": 3,
+      "tokens": 8559,
+      "cost": 0.065768,
+      "sessions": 4,
       "errors": 0
     },
     "Design Palace": {
@@ -196,8 +196,8 @@
       "errors": 0
     },
     "antigravity-token-analyzer": {
-      "tokens": 3389,
-      "cost": 0.018328,
+      "tokens": 4503,
+      "cost": 0.023326,
       "sessions": 1,
       "errors": 0
     },
@@ -205,6 +205,18 @@
       "tokens": 35858,
       "cost": 0.288196,
       "sessions": 2,
+      "errors": 0
+    },
+    "word-vibe": {
+      "tokens": 1209,
+      "cost": 0.006628,
+      "sessions": 1,
+      "errors": 0
+    },
+    "Praduman Khachar": {
+      "tokens": 2743,
+      "cost": 0.023275999999999998,
+      "sessions": 1,
       "errors": 0
     },
     "ideaverse": {
@@ -222,9 +234,9 @@
     2,
     3,
     2,
-    0,
-    2,
-    0,
+    1,
+    3,
+    1,
     0,
     3,
     1,
@@ -241,7 +253,7 @@
     1
   ],
   "dayHeatmap": [
-    4,
+    7,
     0,
     1,
     1,
@@ -253,17 +265,17 @@
     {
       "id": "ebe0fe5f-3b8e-40e9-bc3b-adb538b5d93d",
       "title": "Untitled Session",
-      "tokens": 60312,
-      "cost": 0.381064,
+      "tokens": 57896,
+      "cost": 0.376972,
       "date": "2026-04-25",
       "project": "Antigravity-Dev-Vault",
-      "tools": 534,
+      "tools": 505,
       "errors": 0,
       "artifacts": 0
     },
     {
       "id": "3454c4be-c23f-463c-9710-3d61d4114e74",
-      "title": "<USER_REQUEST>\ni like her commit time and day thing can u ad...",
+      "title": "<USER_REQUEST> i like her commit time and day thing can u ad...",
       "tokens": 43173,
       "cost": 0.24691599999999997,
       "date": "2026-04-24",
@@ -285,7 +297,7 @@
     },
     {
       "id": "15be178c-d5dc-479d-b8b3-71e74e142283",
-      "title": "<USER_REQUEST>\n- lets create Workout buddy/helper/tracker/co...",
+      "title": "<USER_REQUEST> - lets create Workout buddy/helper/tracker/co...",
       "tokens": 14502,
       "cost": 0.11341400000000001,
       "date": "2026-04-22",
@@ -296,7 +308,7 @@
     },
     {
       "id": "ad200bb9-0ed0-47c7-9e68-b5c08262a30f",
-      "title": "<USER_REQUEST>\n- @antigravity named folder -  in our extensi...",
+      "title": "<USER_REQUEST> - @antigravity named folder -  in our extensi...",
       "tokens": 12910,
       "cost": 0.08743999999999999,
       "date": "2026-04-20",
@@ -329,7 +341,7 @@
     },
     {
       "id": "1b1fe853-13ee-4985-beff-a4d74b7ec129",
-      "title": "<USER_REQUEST>\nis my dom cleaner working well or is it fucke...",
+      "title": "<USER_REQUEST> is my dom cleaner working well or is it fucke...",
       "tokens": 9064,
       "cost": 0.057048,
       "date": "2026-04-24",
@@ -351,18 +363,29 @@
     },
     {
       "id": "886a667c-29c8-4411-a988-819f8f2feb92",
-      "title": "<USER_REQUEST>\nreveal ur path for our thing to analyse btw f...",
-      "tokens": 3389,
-      "cost": 0.018328,
+      "title": "Untitled Session",
+      "tokens": 4503,
+      "cost": 0.023326,
       "date": "2026-04-25",
       "project": "antigravity-token-analyzer",
-      "tools": 110,
+      "tools": 139,
       "errors": 0,
       "artifacts": 2
     },
     {
+      "id": "13a0d51f-20de-41f7-b76e-f51baf8a1ff9",
+      "title": "<USER_REQUEST> what are more raycast ideas(add it to general...",
+      "tokens": 2995,
+      "cost": 0.015450000000000002,
+      "date": "2026-04-25",
+      "project": "7tv-raycast",
+      "tools": 60,
+      "errors": 0,
+      "artifacts": 0
+    },
+    {
       "id": "6d6ae6cc-5d61-44b5-84dd-14852d5103c6",
-      "title": "<USER_REQUEST>\n- Design palace component library and ppallat...",
+      "title": "<USER_REQUEST> - Design palace component library and ppallat...",
       "tokens": 2928,
       "cost": 0.021066,
       "date": "2026-04-24",
@@ -372,19 +395,19 @@
       "artifacts": 0
     },
     {
-      "id": "13a0d51f-20de-41f7-b76e-f51baf8a1ff9",
-      "title": "<USER_REQUEST>\nwhat are more raycast ideas(add it to general...",
-      "tokens": 2273,
-      "cost": 0.014006000000000001,
-      "date": "2026-04-25",
-      "project": "Developer",
-      "tools": 52,
+      "id": "e76a9c21-3106-4364-aade-1d275267f79b",
+      "title": "<USER_REQUEST> - i have many ideas and things ffor my father...",
+      "tokens": 2743,
+      "cost": 0.023275999999999998,
+      "date": "2026-04-26",
+      "project": "Praduman Khachar",
+      "tools": 114,
       "errors": 0,
-      "artifacts": 0
+      "artifacts": 2
     },
     {
       "id": "82975952-35f4-428b-ae8a-31c18d4562a4",
-      "title": "<USER_REQUEST>\ncan u pull cool features out frmom it ig idk ...",
+      "title": "<USER_REQUEST> can u pull cool features out frmom it ig idk ...",
       "tokens": 2175,
       "cost": 0.013249999999999998,
       "date": "2026-04-24",
@@ -395,7 +418,7 @@
     },
     {
       "id": "2733c759-1289-4138-b47b-9aae19dfa258",
-      "title": "<USER_REQUEST>\n@[conversation:\"Building A Personal Life-Orch...",
+      "title": "<USER_REQUEST> @[conversation:\"Building A Personal Life-Orch...",
       "tokens": 2156,
       "cost": 0.013772000000000001,
       "date": "2026-04-23",
@@ -403,34 +426,23 @@
       "tools": 44,
       "errors": 0,
       "artifacts": 0
-    },
-    {
-      "id": "2c67ade4-e30c-421e-a6fc-a7bc7b94fe37",
-      "title": "<USER_REQUEST>\ncd /Users/paranjay/Developer/design-palace-ki...",
-      "tokens": 945,
-      "cost": 0.00329,
-      "date": "2026-04-24",
-      "project": "design-palace-kimi",
-      "tools": 13,
-      "errors": 0,
-      "artifacts": 0
     }
   ],
   "recentActivity": [
     {
       "id": "13a0d51f-20de-41f7-b76e-f51baf8a1ff9",
-      "title": "<USER_REQUEST>\nwhat are more raycast ideas(add it to general...",
-      "tokens": 2273,
-      "cost": 0.014006000000000001,
+      "title": "<USER_REQUEST> what are more raycast ideas(add it to general...",
+      "tokens": 2995,
+      "cost": 0.015450000000000002,
       "date": "2026-04-25",
-      "project": "Developer",
-      "tools": 52,
+      "project": "7tv-raycast",
+      "tools": 60,
       "errors": 0,
       "artifacts": 0
     },
     {
       "id": "15be178c-d5dc-479d-b8b3-71e74e142283",
-      "title": "<USER_REQUEST>\n- lets create Workout buddy/helper/tracker/co...",
+      "title": "<USER_REQUEST> - lets create Workout buddy/helper/tracker/co...",
       "tokens": 14502,
       "cost": 0.11341400000000001,
       "date": "2026-04-22",
@@ -442,17 +454,17 @@
     {
       "id": "1a96cd87-3301-4748-83a4-d95861f26409",
       "title": "Untitled Session",
-      "tokens": 231,
-      "cost": 0.002772,
+      "tokens": 961,
+      "cost": 0.0063419999999999995,
       "date": "2026-04-24",
       "project": "ipl-2026-engine",
-      "tools": 113,
+      "tools": 137,
       "errors": 0,
       "artifacts": 2
     },
     {
       "id": "1b1fe853-13ee-4985-beff-a4d74b7ec129",
-      "title": "<USER_REQUEST>\nis my dom cleaner working well or is it fucke...",
+      "title": "<USER_REQUEST> is my dom cleaner working well or is it fucke...",
       "tokens": 9064,
       "cost": 0.057048,
       "date": "2026-04-24",
@@ -463,7 +475,7 @@
     },
     {
       "id": "2733c759-1289-4138-b47b-9aae19dfa258",
-      "title": "<USER_REQUEST>\n@[conversation:\"Building A Personal Life-Orch...",
+      "title": "<USER_REQUEST> @[conversation:\"Building A Personal Life-Orch...",
       "tokens": 2156,
       "cost": 0.013772000000000001,
       "date": "2026-04-23",
@@ -474,7 +486,7 @@
     },
     {
       "id": "2c67ade4-e30c-421e-a6fc-a7bc7b94fe37",
-      "title": "<USER_REQUEST>\ncd /Users/paranjay/Developer/design-palace-ki...",
+      "title": "<USER_REQUEST> cd /Users/paranjay/Developer/design-palace-ki...",
       "tokens": 945,
       "cost": 0.00329,
       "date": "2026-04-24",
@@ -485,7 +497,7 @@
     },
     {
       "id": "3454c4be-c23f-463c-9710-3d61d4114e74",
-      "title": "<USER_REQUEST>\ni like her commit time and day thing can u ad...",
+      "title": "<USER_REQUEST> i like her commit time and day thing can u ad...",
       "tokens": 43173,
       "cost": 0.24691599999999997,
       "date": "2026-04-24",
@@ -496,7 +508,7 @@
     },
     {
       "id": "3f31209c-a920-47cb-8160-2fc29c36ee0b",
-      "title": "<USER_REQUEST>\n\n- also i really love chessmonitor(to analyse...",
+      "title": "Untitled Session",
       "tokens": 624,
       "cost": 0.0035480000000000004,
       "date": "2026-04-26",
@@ -529,8 +541,8 @@
     }
   ],
   "engineering": {
-    "totalLOC": 1555,
-    "filesAffected": 933,
+    "totalLOC": 1691,
+    "filesAffected": 1019,
     "toolsPerSession": 0,
     "avgResponseTime": 0
   },
@@ -628,24 +640,24 @@
     },
     {
       "date": "2026-04-24",
-      "input": 4449292,
-      "output": 84849,
-      "cost": 5.627311880000001,
-      "tools": 1151
+      "input": 4449811,
+      "output": 85060,
+      "cost": 5.6308818800000005,
+      "tools": 1175
     },
     {
       "date": "2026-04-25",
-      "input": 38039,
-      "output": 28359,
-      "cost": 0.41638600000000003,
-      "tools": 721
+      "input": 37374,
+      "output": 28919,
+      "cost": 0.421776,
+      "tools": 743
     },
     {
       "date": "2026-04-26",
-      "input": 748,
-      "output": 708,
-      "cost": 0.009992000000000001,
-      "tools": 44
+      "input": 3119,
+      "output": 3138,
+      "cost": 0.043893999999999996,
+      "tools": 204
     }
   ]
 }
