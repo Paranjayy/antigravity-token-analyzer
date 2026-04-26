@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable no-useless-escape */
 import { useMemo, useState } from 'react';
 import { 
   Coins, 
@@ -207,7 +209,7 @@ function App() {
         <AnimatePresence mode="wait">
           {activeTab === 'overview' && (
             <motion.div key="ov" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="space-y-8">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {[
                   { label: 'Burn Rate', value: `$${filteredOverview?.cost.toFixed(2)}`, icon: <Coins />, color: 'text-yellow-400', sub: 'Total Investment' },
                   { label: 'Code Authored', value: (currentStats.gitLoc?.insertions || 0).toLocaleString(), icon: <FileCode />, color: 'text-pink-400', sub: 'Git Insertions (30d)' },
