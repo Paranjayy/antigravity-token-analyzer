@@ -63,6 +63,7 @@ async function analyze() {
       
       let convInputTokens = 0;
       let convOutputTokens = 0;
+      let convCost = 0;
       let convDate = null;
       let convTitle = "Untitled Session";
       let projectCwd = 'General';
@@ -86,16 +87,23 @@ async function analyze() {
 
           const text = entry.content || '';
           
-          // Parse Model Change
+          // Parse Model Change with higher accuracy
           if (text.includes('Model Selection')) {
             const match = text.match(/setting `Model Selection` from .* to (.*?)\./);
             if (match) {
               const raw = match[1].toLowerCase();
               if (raw.includes('gemini 3.1 pro')) convModel = 'gemini-3.1-pro-preview';
               else if (raw.includes('gemini 3 flash')) convModel = 'gemini-3-flash-preview';
-              else if (raw.includes('gemini 2.5 pro')) convModel = 'gemini-2.5-pro-preview-05-06';
-              else if (raw.includes('gemini 2.5 flash')) convModel = 'gemini-2.5-flash-preview-05-20';
               else if (raw.includes('gemini 3 pro')) convModel = 'gemini-3-pro-preview';
+              else if (raw.includes('claude sonnet 4.6')) convModel = 'claude-sonnet-4-6';
+              else if (raw.includes('claude sonnet 4.5')) convModel = 'claude-sonnet-4-5';
+              else if (raw.includes('claude opus 4.5')) convModel = 'claude-opus-4-5';
+              else if (raw.includes('gemini 2.5 pro')) convModel = 'gemini-2.5-pro';
+              else if (raw.includes('gemini 2.5 flash')) convModel = 'gemini-2.5-flash';
+              else if (raw.includes('deepseek reasoner')) convModel = 'deepseek-reasoner';
+              else if (raw.includes('deepseek chat')) convModel = 'deepseek-chat';
+              else if (raw.includes('gpt 5')) convModel = 'gpt-5';
+              else if (raw.includes('gpt-4o')) convModel = 'gpt-4o';
             }
           }
 
@@ -103,11 +111,52 @@ async function analyze() {
           const isInput = entry.source === 'USER_EXPLICIT' || entry.type === 'USER_INPUT';
           
           if (isInput) {
+            // Estimate context growth: Add current conversation total to input
+            const estimatedInput = convInputTokens + convOutputTokens + tokens;
             convInputTokens += tokens;
             stats.messageCount.input++;
+            
+            // For pricing, we use the estimated total input (current context)
+            let currentModelData = null;
+            for (const provider in pricing) {
+              if (pricing[provider].models && pricing[provider].models[convModel]) {
+                currentModelData = pricing[provider].models[convModel];
+                break;
+              }
+            }
+            if (currentModelData) {
+              const stepCost = (estimatedInput / 1e6) * (currentModelData.cost.input || 0);
+              convCost += stepCost;
+              stats.totalCost += stepCost;
+              stats.providers.antigravity.cost += stepCost;
+              if (convDate) {
+                if (!stats.timeline[convDate]) stats.timeline[convDate] = { input: 0, output: 0, cost: 0, tools: 0 };
+                stats.timeline[convDate].cost += stepCost;
+              }
+            }
+
           } else {
             convOutputTokens += tokens;
             stats.messageCount.output++;
+
+            // Output pricing
+            let currentModelData = null;
+            for (const provider in pricing) {
+              if (pricing[provider].models && pricing[provider].models[convModel]) {
+                currentModelData = pricing[provider].models[convModel];
+                break;
+              }
+            }
+            if (currentModelData) {
+              const stepCost = (tokens / 1e6) * (currentModelData.cost.output || 0);
+              convCost += stepCost;
+              stats.totalCost += stepCost;
+              stats.providers.antigravity.cost += stepCost;
+              if (convDate) {
+                if (!stats.timeline[convDate]) stats.timeline[convDate] = { input: 0, output: 0, cost: 0, tools: 0 };
+                stats.timeline[convDate].cost += stepCost;
+              }
+            }
           }
 
           if (entry.type === 'TOOL_OUTPUT' && (text.toLowerCase().includes('error') || text.toLowerCase().includes('failed'))) {
@@ -139,25 +188,17 @@ async function analyze() {
         stats.providers.antigravity.artifacts += artifactCount;
       }
 
-      let convModelData = null;
-      for (const provider in pricing) {
-        if (pricing[provider].models && pricing[provider].models[convModel]) {
-          convModelData = pricing[provider].models[convModel];
-          break;
-        }
-      }
-
-      const cost = convModelData ? ((convInputTokens / 1e6) * convModelData.cost.input + (convOutputTokens / 1e6) * convModelData.cost.output) : 0;
-      
-      stats.totalCost += cost;
+      // Final total token aggregation (pricing is now done per step)
       stats.totalTokens.input += convInputTokens;
       stats.totalTokens.output += convOutputTokens;
+      stats.providers.antigravity.tokens.input += convInputTokens;
+      stats.providers.antigravity.tokens.output += convOutputTokens;
       
       const convSummary = { 
         id: dir, 
         title: convTitle, 
         tokens: convInputTokens + convOutputTokens, 
-        cost, 
+        cost: convCost, 
         date: convDate,
         project: projectCwd,
         tools: convTools,
@@ -172,13 +213,13 @@ async function analyze() {
         if (!stats.timeline[convDate]) stats.timeline[convDate] = { input: 0, output: 0, cost: 0, tools: 0 };
         stats.timeline[convDate].input += convInputTokens;
         stats.timeline[convDate].output += convOutputTokens;
-        stats.timeline[convDate].cost += cost;
+        stats.timeline[convDate].cost += convCost;
         stats.timeline[convDate].tools += convTools;
       }
 
       if (!stats.projects[projectCwd]) stats.projects[projectCwd] = { tokens: 0, cost: 0, sessions: 0, errors: 0 };
       stats.projects[projectCwd].tokens += (convInputTokens + convOutputTokens);
-      stats.projects[projectCwd].cost += cost;
+      stats.projects[projectCwd].cost += convCost;
       stats.projects[projectCwd].sessions++;
       stats.projects[projectCwd].errors += convErrors;
     }

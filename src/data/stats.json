@@ -1,24 +1,24 @@
 {
   "totalTokens": {
-    "input": 21204633,
-    "output": 490145
+    "input": 21204356,
+    "output": 490759
   },
-  "totalCost": 6.63360788,
+  "totalCost": 21.61247588,
   "conversations": 22,
   "messageCount": {
-    "input": 1246,
-    "output": 11752
+    "input": 1264,
+    "output": 11926
   },
   "toolUsage": {
-    "list_dir": 96,
-    "view_file": 814,
-    "run_command": 895,
-    "multi_replace_file_content": 210,
-    "replace_file_content": 455,
-    "command_status": 306,
-    "grep_search": 81,
-    "search_web": 17,
-    "write_to_file": 354,
+    "list_dir": 98,
+    "view_file": 842,
+    "run_command": 934,
+    "multi_replace_file_content": 217,
+    "replace_file_content": 479,
+    "command_status": 308,
+    "grep_search": 91,
+    "search_web": 13,
+    "write_to_file": 347,
     "read_url_content": 8,
     "send_command_input": 5,
     "generate_image": 20,
@@ -28,45 +28,45 @@
   },
   "timeline": {
     "2026-04-25": {
-      "input": 37374,
-      "output": 28919,
-      "cost": 0.421776,
-      "tools": 743
+      "input": 37097,
+      "output": 29312,
+      "cost": 16.07282,
+      "tools": 841
     },
     "2026-04-22": {
       "input": 7457,
       "output": 11956,
-      "cost": 0.15838600000000003,
+      "cost": 1.1851039999999995,
       "tools": 330
     },
     "2026-04-24": {
       "input": 4449811,
       "output": 85060,
-      "cost": 5.6308818800000005,
+      "cost": 16.31987988,
       "tools": 1175
     },
     "2026-04-23": {
       "input": 7092,
       "output": 4377,
-      "cost": 0.066708,
+      "cost": 0.55084,
       "tools": 300
     },
     "2026-04-26": {
       "input": 3119,
-      "output": 3138,
-      "cost": 0.043893999999999996,
-      "tools": 204
+      "output": 3359,
+      "cost": 0.12325599999999995,
+      "tools": 207
     },
     "2026-04-18": {
       "input": 8923,
       "output": 17223,
-      "cost": 0.22452199999999997,
+      "cost": 2.819776000000001,
       "tools": 317
     },
     "2026-04-20": {
       "input": 6748,
       "output": 6162,
-      "cost": 0.08743999999999999,
+      "cost": 0.93398,
       "tools": 201
     },
     "2026-03-27": {
@@ -128,10 +128,10 @@
     "antigravity": {
       "conversations": 22,
       "tokens": {
-        "input": 0,
-        "output": 0
+        "input": 112027,
+        "output": 99756
       },
-      "cost": 0,
+      "cost": 16.393180000000005,
       "artifacts": 11,
       "errors": 0
     },
@@ -147,81 +147,87 @@
     }
   },
   "projects": {
-    "7tv-raycast": {
-      "tokens": 2995,
-      "cost": 0.015450000000000002,
+    "Developer": {
+      "tokens": 3998,
+      "cost": 0.06490800000000001,
       "sessions": 1,
       "errors": 0
     },
     "Workout buddy": {
       "tokens": 16658,
-      "cost": 0.12718600000000002,
+      "cost": 0.5331979999999998,
       "sessions": 2,
       "errors": 0
     },
     "ipl-2026-engine": {
       "tokens": 10274,
-      "cost": 0.059278,
+      "cost": 0.261382,
       "sessions": 2,
       "errors": 0
     },
     "Antigravity-Dev-Vault": {
-      "tokens": 79870,
-      "cost": 0.52146,
+      "tokens": 76721,
+      "cost": 8.536274,
       "sessions": 3,
       "errors": 0
     },
     "design-palace-kimi": {
       "tokens": 945,
-      "cost": 0.00329,
+      "cost": 0.005018,
       "sessions": 1,
       "errors": 0
     },
     "paranjayy": {
-      "tokens": 44072,
-      "cost": 0.25294399999999995,
-      "sessions": 2,
+      "tokens": 43173,
+      "cost": 4.934615999999998,
+      "sessions": 1,
       "errors": 0
     },
     "General": {
-      "tokens": 8559,
-      "cost": 0.065768,
+      "tokens": 8780,
+      "cost": 0.11532,
       "sessions": 4,
       "errors": 0
     },
     "Design Palace": {
       "tokens": 2928,
-      "cost": 0.021066,
+      "cost": 0.038875999999999994,
       "sessions": 1,
       "errors": 0
     },
     "antigravity-token-analyzer": {
-      "tokens": 4503,
-      "cost": 0.023326,
+      "tokens": 5324,
+      "cost": 0.11077000000000002,
       "sessions": 1,
       "errors": 0
     },
     "iftt": {
       "tokens": 35858,
-      "cost": 0.288196,
+      "cost": 1.7148320000000004,
       "sessions": 2,
+      "errors": 0
+    },
+    "gemini-design-palace": {
+      "tokens": 2340,
+      "cost": 0.029328,
+      "sessions": 1,
       "errors": 0
     },
     "word-vibe": {
       "tokens": 1209,
-      "cost": 0.006628,
+      "cost": 0.01056,
       "sessions": 1,
       "errors": 0
     },
     "Praduman Khachar": {
       "tokens": 2743,
-      "cost": 0.023275999999999998,
+      "cost": 0.03121399999999999,
       "sessions": 1,
       "errors": 0
     },
     "ideaverse": {
       "tokens": 832,
-      "cost": 0.006444,
+      "cost": 0.0068839999999999995,
       "sessions": 1,
       "errors": 0
     }
@@ -265,11 +271,11 @@
     {
       "id": "ebe0fe5f-3b8e-40e9-bc3b-adb538b5d93d",
       "title": "Untitled Session",
-      "tokens": 57896,
-      "cost": 0.376972,
+      "tokens": 54747,
+      "cost": 7.831404000000001,
       "date": "2026-04-25",
       "project": "Antigravity-Dev-Vault",
-      "tools": 505,
+      "tools": 497,
       "errors": 0,
       "artifacts": 0
     },
@@ -277,7 +283,7 @@
       "id": "3454c4be-c23f-463c-9710-3d61d4114e74",
       "title": "<USER_REQUEST> i like her commit time and day thing can u ad...",
       "tokens": 43173,
-      "cost": 0.24691599999999997,
+      "cost": 4.934615999999998,
       "date": "2026-04-24",
       "project": "paranjayy",
       "tools": 592,
@@ -288,7 +294,7 @@
       "id": "a4f8536f-e71f-41f5-a23a-d4a735217159",
       "title": "Untitled Session",
       "tokens": 26146,
-      "cost": 0.22452199999999997,
+      "cost": 1.4098880000000005,
       "date": "2026-04-18",
       "project": "iftt",
       "tools": 317,
@@ -299,7 +305,7 @@
       "id": "15be178c-d5dc-479d-b8b3-71e74e142283",
       "title": "<USER_REQUEST> - lets create Workout buddy/helper/tracker/co...",
       "tokens": 14502,
-      "cost": 0.11341400000000001,
+      "cost": 0.5113459999999999,
       "date": "2026-04-22",
       "project": "Workout buddy",
       "tools": 314,
@@ -310,7 +316,7 @@
       "id": "ad200bb9-0ed0-47c7-9e68-b5c08262a30f",
       "title": "<USER_REQUEST> - @antigravity named folder -  in our extensi...",
       "tokens": 12910,
-      "cost": 0.08743999999999999,
+      "cost": 0.46699,
       "date": "2026-04-20",
       "project": "Antigravity-Dev-Vault",
       "tools": 201,
@@ -321,7 +327,7 @@
       "id": "d261c27b-8302-4773-b111-e95a136f8789",
       "title": "Untitled Session",
       "tokens": 9712,
-      "cost": 0.06367400000000001,
+      "cost": 0.304944,
       "date": "2026-04-24",
       "project": "iftt",
       "tools": 223,
@@ -332,7 +338,7 @@
       "id": "50957fa0-9948-445d-8758-5e64e3600fe5",
       "title": "Untitled Session",
       "tokens": 9313,
-      "cost": 0.052936,
+      "cost": 0.253568,
       "date": "2026-04-23",
       "project": "ipl-2026-engine",
       "tools": 256,
@@ -343,7 +349,7 @@
       "id": "1b1fe853-13ee-4985-beff-a4d74b7ec129",
       "title": "<USER_REQUEST> is my dom cleaner working well or is it fucke...",
       "tokens": 9064,
-      "cost": 0.057048,
+      "cost": 0.23788000000000004,
       "date": "2026-04-24",
       "project": "Antigravity-Dev-Vault",
       "tools": 134,
@@ -351,10 +357,21 @@
       "artifacts": 0
     },
     {
+      "id": "886a667c-29c8-4411-a988-819f8f2feb92",
+      "title": "Untitled Session",
+      "tokens": 5324,
+      "cost": 0.11077000000000002,
+      "date": "2026-04-25",
+      "project": "antigravity-token-analyzer",
+      "tools": 209,
+      "errors": 0,
+      "artifacts": 2
+    },
+    {
       "id": "4b6fbbfa-1c39-41a6-8ce9-e1a48a653778",
       "title": "Untitled Session",
       "tokens": 4911,
-      "cost": 0.044972,
+      "cost": 0.08120600000000001,
       "date": "2026-04-22",
       "project": "General",
       "tools": 16,
@@ -362,24 +379,13 @@
       "artifacts": 0
     },
     {
-      "id": "886a667c-29c8-4411-a988-819f8f2feb92",
-      "title": "Untitled Session",
-      "tokens": 4503,
-      "cost": 0.023326,
-      "date": "2026-04-25",
-      "project": "antigravity-token-analyzer",
-      "tools": 139,
-      "errors": 0,
-      "artifacts": 2
-    },
-    {
       "id": "13a0d51f-20de-41f7-b76e-f51baf8a1ff9",
       "title": "<USER_REQUEST> what are more raycast ideas(add it to general...",
-      "tokens": 2995,
-      "cost": 0.015450000000000002,
+      "tokens": 3998,
+      "cost": 0.06490800000000001,
       "date": "2026-04-25",
-      "project": "7tv-raycast",
-      "tools": 60,
+      "project": "Developer",
+      "tools": 73,
       "errors": 0,
       "artifacts": 0
     },
@@ -387,7 +393,7 @@
       "id": "6d6ae6cc-5d61-44b5-84dd-14852d5103c6",
       "title": "<USER_REQUEST> - Design palace component library and ppallat...",
       "tokens": 2928,
-      "cost": 0.021066,
+      "cost": 0.038875999999999994,
       "date": "2026-04-24",
       "project": "Design Palace",
       "tools": 64,
@@ -398,7 +404,7 @@
       "id": "e76a9c21-3106-4364-aade-1d275267f79b",
       "title": "<USER_REQUEST> - i have many ideas and things ffor my father...",
       "tokens": 2743,
-      "cost": 0.023275999999999998,
+      "cost": 0.03121399999999999,
       "date": "2026-04-26",
       "project": "Praduman Khachar",
       "tools": 114,
@@ -406,24 +412,24 @@
       "artifacts": 2
     },
     {
-      "id": "82975952-35f4-428b-ae8a-31c18d4562a4",
-      "title": "<USER_REQUEST> can u pull cool features out frmom it ig idk ...",
-      "tokens": 2175,
-      "cost": 0.013249999999999998,
-      "date": "2026-04-24",
-      "project": "General",
-      "tools": 12,
+      "id": "bfa528a4-9688-4eda-8110-5ead13264102",
+      "title": "<USER_REQUEST> # inital prompt for any model(u are currently...",
+      "tokens": 2340,
+      "cost": 0.029328,
+      "date": "2026-04-25",
+      "project": "gemini-design-palace",
+      "tools": 62,
       "errors": 0,
       "artifacts": 0
     },
     {
-      "id": "2733c759-1289-4138-b47b-9aae19dfa258",
-      "title": "<USER_REQUEST> @[conversation:\"Building A Personal Life-Orch...",
-      "tokens": 2156,
-      "cost": 0.013772000000000001,
-      "date": "2026-04-23",
-      "project": "Workout buddy",
-      "tools": 44,
+      "id": "82975952-35f4-428b-ae8a-31c18d4562a4",
+      "title": "<USER_REQUEST> can u pull cool features out frmom it ig idk ...",
+      "tokens": 2175,
+      "cost": 0.021144,
+      "date": "2026-04-24",
+      "project": "General",
+      "tools": 12,
       "errors": 0,
       "artifacts": 0
     }
@@ -432,11 +438,11 @@
     {
       "id": "13a0d51f-20de-41f7-b76e-f51baf8a1ff9",
       "title": "<USER_REQUEST> what are more raycast ideas(add it to general...",
-      "tokens": 2995,
-      "cost": 0.015450000000000002,
+      "tokens": 3998,
+      "cost": 0.06490800000000001,
       "date": "2026-04-25",
-      "project": "7tv-raycast",
-      "tools": 60,
+      "project": "Developer",
+      "tools": 73,
       "errors": 0,
       "artifacts": 0
     },
@@ -444,7 +450,7 @@
       "id": "15be178c-d5dc-479d-b8b3-71e74e142283",
       "title": "<USER_REQUEST> - lets create Workout buddy/helper/tracker/co...",
       "tokens": 14502,
-      "cost": 0.11341400000000001,
+      "cost": 0.5113459999999999,
       "date": "2026-04-22",
       "project": "Workout buddy",
       "tools": 314,
@@ -455,7 +461,7 @@
       "id": "1a96cd87-3301-4748-83a4-d95861f26409",
       "title": "Untitled Session",
       "tokens": 961,
-      "cost": 0.0063419999999999995,
+      "cost": 0.007814,
       "date": "2026-04-24",
       "project": "ipl-2026-engine",
       "tools": 137,
@@ -466,7 +472,7 @@
       "id": "1b1fe853-13ee-4985-beff-a4d74b7ec129",
       "title": "<USER_REQUEST> is my dom cleaner working well or is it fucke...",
       "tokens": 9064,
-      "cost": 0.057048,
+      "cost": 0.23788000000000004,
       "date": "2026-04-24",
       "project": "Antigravity-Dev-Vault",
       "tools": 134,
@@ -477,7 +483,7 @@
       "id": "2733c759-1289-4138-b47b-9aae19dfa258",
       "title": "<USER_REQUEST> @[conversation:\"Building A Personal Life-Orch...",
       "tokens": 2156,
-      "cost": 0.013772000000000001,
+      "cost": 0.021852000000000003,
       "date": "2026-04-23",
       "project": "Workout buddy",
       "tools": 44,
@@ -488,7 +494,7 @@
       "id": "2c67ade4-e30c-421e-a6fc-a7bc7b94fe37",
       "title": "<USER_REQUEST> cd /Users/paranjay/Developer/design-palace-ki...",
       "tokens": 945,
-      "cost": 0.00329,
+      "cost": 0.005018,
       "date": "2026-04-24",
       "project": "design-palace-kimi",
       "tools": 13,
@@ -499,7 +505,7 @@
       "id": "3454c4be-c23f-463c-9710-3d61d4114e74",
       "title": "<USER_REQUEST> i like her commit time and day thing can u ad...",
       "tokens": 43173,
-      "cost": 0.24691599999999997,
+      "cost": 4.934615999999998,
       "date": "2026-04-24",
       "project": "paranjayy",
       "tools": 592,
@@ -510,7 +516,7 @@
       "id": "3f31209c-a920-47cb-8160-2fc29c36ee0b",
       "title": "Untitled Session",
       "tokens": 624,
-      "cost": 0.0035480000000000004,
+      "cost": 0.0040620000000000005,
       "date": "2026-04-26",
       "project": "General",
       "tools": 12,
@@ -521,7 +527,7 @@
       "id": "4b6fbbfa-1c39-41a6-8ce9-e1a48a653778",
       "title": "Untitled Session",
       "tokens": 4911,
-      "cost": 0.044972,
+      "cost": 0.08120600000000001,
       "date": "2026-04-22",
       "project": "General",
       "tools": 16,
@@ -532,7 +538,7 @@
       "id": "50957fa0-9948-445d-8758-5e64e3600fe5",
       "title": "Untitled Session",
       "tokens": 9313,
-      "cost": 0.052936,
+      "cost": 0.253568,
       "date": "2026-04-23",
       "project": "ipl-2026-engine",
       "tools": 256,
@@ -541,8 +547,8 @@
     }
   ],
   "engineering": {
-    "totalLOC": 1691,
-    "filesAffected": 1019,
+    "totalLOC": 1723,
+    "filesAffected": 1043,
     "toolsPerSession": 0,
     "avgResponseTime": 0
   },
@@ -614,50 +620,50 @@
       "date": "2026-04-18",
       "input": 8923,
       "output": 17223,
-      "cost": 0.22452199999999997,
+      "cost": 2.819776000000001,
       "tools": 317
     },
     {
       "date": "2026-04-20",
       "input": 6748,
       "output": 6162,
-      "cost": 0.08743999999999999,
+      "cost": 0.93398,
       "tools": 201
     },
     {
       "date": "2026-04-22",
       "input": 7457,
       "output": 11956,
-      "cost": 0.15838600000000003,
+      "cost": 1.1851039999999995,
       "tools": 330
     },
     {
       "date": "2026-04-23",
       "input": 7092,
       "output": 4377,
-      "cost": 0.066708,
+      "cost": 0.55084,
       "tools": 300
     },
     {
       "date": "2026-04-24",
       "input": 4449811,
       "output": 85060,
-      "cost": 5.6308818800000005,
+      "cost": 16.31987988,
       "tools": 1175
     },
     {
       "date": "2026-04-25",
-      "input": 37374,
-      "output": 28919,
-      "cost": 0.421776,
-      "tools": 743
+      "input": 37097,
+      "output": 29312,
+      "cost": 16.07282,
+      "tools": 841
     },
     {
       "date": "2026-04-26",
       "input": 3119,
-      "output": 3138,
-      "cost": 0.043893999999999996,
-      "tools": 204
+      "output": 3359,
+      "cost": 0.12325599999999995,
+      "tools": 207
     }
   ]
 }
