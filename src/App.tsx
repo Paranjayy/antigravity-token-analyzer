@@ -331,6 +331,45 @@ function App() {
                 ))}
               </div>
               <div className="glass-card border-white/5">
+                <div className="flex items-center justify-between mb-8">
+                  <h3 className="text-xl font-bold flex items-center gap-2"><ActivityIcon size={20} className="text-pink-400" /> Token Activity Heatmap</h3>
+                  <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-[10px] font-black text-white/40 uppercase tracking-widest">
+                    Last 60 Days
+                  </div>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {Array.from({ length: 60 }).map((_, i) => {
+                    const d = new Date();
+                    d.setDate(d.getDate() - (59 - i));
+                    const dateStr = d.toISOString().split('T')[0];
+                    const dayData = (currentStats.timeline as any)?.[dateStr];
+                    const count = dayData ? dayData.input + dayData.output : 0;
+                    
+                    let bgClass = "bg-white/5";
+                    if (count > 0 && count < 50000) bgClass = "bg-pink-900/40";
+                    else if (count >= 50000 && count < 200000) bgClass = "bg-pink-700/60";
+                    else if (count >= 200000 && count < 500000) bgClass = "bg-pink-500/80";
+                    else if (count >= 500000) bgClass = "bg-pink-400 drop-shadow-[0_0_8px_rgba(244,114,182,0.5)]";
+                    
+                    return (
+                      <div key={dateStr} title={`${dateStr}: ${count.toLocaleString()} tokens`} className={`w-5 h-5 rounded-[4px] ${bgClass} border border-white/5 hover:border-pink-400 hover:scale-125 hover:z-10 transition-all cursor-crosshair`} />
+                    );
+                  })}
+                </div>
+                <div className="flex items-center gap-3 mt-6 text-[9px] font-bold text-white/30 uppercase tracking-widest">
+                  <span>Less</span>
+                  <div className="flex gap-1">
+                    <div className="w-3 h-3 rounded-[2px] bg-white/5 border border-white/5" />
+                    <div className="w-3 h-3 rounded-[2px] bg-pink-900/40 border border-white/5" />
+                    <div className="w-3 h-3 rounded-[2px] bg-pink-700/60 border border-white/5" />
+                    <div className="w-3 h-3 rounded-[2px] bg-pink-500/80 border border-white/5" />
+                    <div className="w-3 h-3 rounded-[2px] bg-pink-400 border border-white/5" />
+                  </div>
+                  <span>More</span>
+                </div>
+              </div>
+
+              <div className="glass-card border-white/5">
                 <div className="flex items-center justify-between mb-12">
                   <h3 className="text-xl font-bold flex items-center gap-2"><Code2 size={20} className="text-accent" /> Tool Execution Frequency</h3>
                   <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-[10px] font-black text-white/40 uppercase tracking-widest">
