@@ -22,3 +22,6 @@
 - **PWA Support**: Installable desktop app that stays synced with local logs.
 - **Local SQLite Integration**: Move the `analyze.js` logic into the browser using `sql.js` for truly zero-dependency web usage.
 - **Encrypted Exports**: Shared "View-Only" links for stats with end-to-end encryption.
+- **CodexBar Integration**: Parse and visualize local logs and interactions from CodexBar to provide a unified AI assistant dashboard.
+- **Models.dev API Hookup**: Instead of hardcoding the massive `pricing.json`, fetch live pricing dynamically to guarantee absolute precision across evolving models.
+- **GitHub Contribution-style Heatmaps**: Visualize daily activity density to show continuous "streaks" of AI collaboration.
