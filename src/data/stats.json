@@ -1,24 +1,24 @@
 {
   "totalTokens": {
-    "input": 21202522,
-    "output": 487207
+    "input": 21202408,
+    "output": 486944
   },
-  "totalCost": 6.59412988,
+  "totalCost": 6.590745879999999,
   "conversations": 19,
   "messageCount": {
-    "input": 1216,
-    "output": 11301
+    "input": 1220,
+    "output": 11451
   },
   "toolUsage": {
-    "list_dir": 88,
-    "view_file": 757,
-    "run_command": 839,
-    "multi_replace_file_content": 195,
-    "replace_file_content": 423,
-    "command_status": 313,
-    "grep_search": 75,
-    "search_web": 21,
-    "write_to_file": 319,
+    "list_dir": 85,
+    "view_file": 785,
+    "run_command": 834,
+    "multi_replace_file_content": 199,
+    "replace_file_content": 418,
+    "command_status": 292,
+    "grep_search": 83,
+    "search_web": 18,
+    "write_to_file": 316,
     "read_url_content": 6,
     "send_command_input": 5,
     "generate_image": 18,
@@ -28,10 +28,10 @@
   },
   "timeline": {
     "2026-04-25": {
-      "input": 37254,
-      "output": 28129,
-      "cost": 0.412056,
-      "tools": 733
+      "input": 38039,
+      "output": 28359,
+      "cost": 0.41638600000000003,
+      "tools": 721
     },
     "2026-04-22": {
       "input": 7457,
@@ -40,10 +40,10 @@
       "tools": 330
     },
     "2026-04-24": {
-      "input": 4450191,
-      "output": 85342,
-      "cost": 5.635025880000001,
-      "tools": 1139
+      "input": 4449292,
+      "output": 84849,
+      "cost": 5.627311880000001,
+      "tools": 1151
     },
     "2026-04-23": {
       "input": 7092,
@@ -147,9 +147,9 @@
     }
   },
   "projects": {
-    "7tv-raycast": {
-      "tokens": 2054,
-      "cost": 0.011378,
+    "Developer": {
+      "tokens": 2273,
+      "cost": 0.014006000000000001,
       "sessions": 1,
       "errors": 0
     },
@@ -160,14 +160,14 @@
       "errors": 0
     },
     "ipl-2026-engine": {
-      "tokens": 10936,
-      "cost": 0.06342199999999999,
+      "tokens": 9544,
+      "cost": 0.055707999999999994,
       "sessions": 2,
       "errors": 0
     },
     "Antigravity-Dev-Vault": {
-      "tokens": 82510,
-      "cost": 0.52815,
+      "tokens": 82286,
+      "cost": 0.525552,
       "sessions": 3,
       "errors": 0
     },
@@ -196,8 +196,8 @@
       "errors": 0
     },
     "antigravity-token-analyzer": {
-      "tokens": 2369,
-      "cost": 0.014028,
+      "tokens": 3389,
+      "cost": 0.018328,
       "sessions": 1,
       "errors": 0
     },
@@ -253,11 +253,11 @@
     {
       "id": "ebe0fe5f-3b8e-40e9-bc3b-adb538b5d93d",
       "title": "Untitled Session",
-      "tokens": 60536,
-      "cost": 0.383662,
+      "tokens": 60312,
+      "cost": 0.381064,
       "date": "2026-04-25",
       "project": "Antigravity-Dev-Vault",
-      "tools": 553,
+      "tools": 534,
       "errors": 0,
       "artifacts": 0
     },
@@ -350,6 +350,17 @@
       "artifacts": 0
     },
     {
+      "id": "886a667c-29c8-4411-a988-819f8f2feb92",
+      "title": "<USER_REQUEST>\nreveal ur path for our thing to analyse btw f...",
+      "tokens": 3389,
+      "cost": 0.018328,
+      "date": "2026-04-25",
+      "project": "antigravity-token-analyzer",
+      "tools": 110,
+      "errors": 0,
+      "artifacts": 2
+    },
+    {
       "id": "6d6ae6cc-5d61-44b5-84dd-14852d5103c6",
       "title": "<USER_REQUEST>\n- Design palace component library and ppallat...",
       "tokens": 2928,
@@ -361,15 +372,15 @@
       "artifacts": 0
     },
     {
-      "id": "886a667c-29c8-4411-a988-819f8f2feb92",
-      "title": "<USER_REQUEST>\nreveal ur path for our thing to analyse btw f...",
-      "tokens": 2369,
-      "cost": 0.014028,
+      "id": "13a0d51f-20de-41f7-b76e-f51baf8a1ff9",
+      "title": "<USER_REQUEST>\nwhat are more raycast ideas(add it to general...",
+      "tokens": 2273,
+      "cost": 0.014006000000000001,
       "date": "2026-04-25",
-      "project": "antigravity-token-analyzer",
-      "tools": 105,
+      "project": "Developer",
+      "tools": 52,
       "errors": 0,
-      "artifacts": 2
+      "artifacts": 0
     },
     {
       "id": "82975952-35f4-428b-ae8a-31c18d4562a4",
@@ -394,37 +405,26 @@
       "artifacts": 0
     },
     {
-      "id": "13a0d51f-20de-41f7-b76e-f51baf8a1ff9",
-      "title": "<USER_REQUEST>\nwhat are more raycast ideas(add it to general...",
-      "tokens": 2054,
-      "cost": 0.011378,
-      "date": "2026-04-25",
-      "project": "7tv-raycast",
-      "tools": 50,
+      "id": "2c67ade4-e30c-421e-a6fc-a7bc7b94fe37",
+      "title": "<USER_REQUEST>\ncd /Users/paranjay/Developer/design-palace-ki...",
+      "tokens": 945,
+      "cost": 0.00329,
+      "date": "2026-04-24",
+      "project": "design-palace-kimi",
+      "tools": 13,
       "errors": 0,
       "artifacts": 0
-    },
-    {
-      "id": "1a96cd87-3301-4748-83a4-d95861f26409",
-      "title": "Untitled Session",
-      "tokens": 1623,
-      "cost": 0.010486,
-      "date": "2026-04-24",
-      "project": "ipl-2026-engine",
-      "tools": 101,
-      "errors": 0,
-      "artifacts": 2
     }
   ],
   "recentActivity": [
     {
       "id": "13a0d51f-20de-41f7-b76e-f51baf8a1ff9",
       "title": "<USER_REQUEST>\nwhat are more raycast ideas(add it to general...",
-      "tokens": 2054,
-      "cost": 0.011378,
+      "tokens": 2273,
+      "cost": 0.014006000000000001,
       "date": "2026-04-25",
-      "project": "7tv-raycast",
-      "tools": 50,
+      "project": "Developer",
+      "tools": 52,
       "errors": 0,
       "artifacts": 0
     },
@@ -442,11 +442,11 @@
     {
       "id": "1a96cd87-3301-4748-83a4-d95861f26409",
       "title": "Untitled Session",
-      "tokens": 1623,
-      "cost": 0.010486,
+      "tokens": 231,
+      "cost": 0.002772,
       "date": "2026-04-24",
       "project": "ipl-2026-engine",
-      "tools": 101,
+      "tools": 113,
       "errors": 0,
       "artifacts": 2
     },
@@ -529,8 +529,8 @@
     }
   ],
   "engineering": {
-    "totalLOC": 1561,
-    "filesAffected": 937,
+    "totalLOC": 1555,
+    "filesAffected": 933,
     "toolsPerSession": 0,
     "avgResponseTime": 0
   },
@@ -628,17 +628,17 @@
     },
     {
       "date": "2026-04-24",
-      "input": 4450191,
-      "output": 85342,
-      "cost": 5.635025880000001,
-      "tools": 1139
+      "input": 4449292,
+      "output": 84849,
+      "cost": 5.627311880000001,
+      "tools": 1151
     },
     {
       "date": "2026-04-25",
-      "input": 37254,
-      "output": 28129,
-      "cost": 0.412056,
-      "tools": 733
+      "input": 38039,
+      "output": 28359,
+      "cost": 0.41638600000000003,
+      "tools": 721
     },
     {
       "date": "2026-04-26",
