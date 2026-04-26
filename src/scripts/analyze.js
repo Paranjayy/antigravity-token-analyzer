@@ -267,6 +267,13 @@ async function analyze() {
             stats.timeline[date].input += input;
             stats.timeline[date].output += output;
             stats.timeline[date].cost += cost;
+
+            const opModel = data.modelID || (data.model && data.model.modelID);
+            if (opModel) {
+              if (!stats.models[opModel]) stats.models[opModel] = { tokens: 0, sessions: 0, cost: 0 };
+              stats.models[opModel].tokens += (input + output);
+              stats.models[opModel].cost += cost;
+            }
           }
           if (data.role === 'user') stats.messageCount.input++;
           else stats.messageCount.output++;

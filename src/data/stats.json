@@ -1,22 +1,22 @@
 {
   "totalTokens": {
-    "input": 28843194,
-    "output": 495790
+    "input": 28874915,
+    "output": 496225
   },
-  "totalCost": 21.978469880000002,
+  "totalCost": 22.047131880000006,
   "conversations": 23,
   "messageCount": {
-    "input": 1320,
-    "output": 12621
+    "input": 1329,
+    "output": 12748
   },
   "toolUsage": {
-    "list_dir": 110,
-    "view_file": 917,
-    "run_command": 962,
+    "list_dir": 123,
+    "view_file": 922,
+    "run_command": 984,
     "multi_replace_file_content": 243,
-    "replace_file_content": 516,
-    "command_status": 315,
-    "grep_search": 118,
+    "replace_file_content": 537,
+    "command_status": 325,
+    "grep_search": 119,
     "search_web": 14,
     "write_to_file": 389,
     "read_url_content": 9,
@@ -28,10 +28,10 @@
   },
   "timeline": {
     "2026-04-25": {
-      "input": 3960591,
-      "output": 31789,
-      "cost": 16.6053,
-      "tools": 954,
+      "input": 3983243,
+      "output": 32019,
+      "cost": 16.701427999999993,
+      "tools": 974,
       "inputMessages": null,
       "outputMessages": null
     },
@@ -44,10 +44,10 @@
       "outputMessages": null
     },
     "2026-04-24": {
-      "input": 6921934,
-      "output": 82010,
-      "cost": 15.857759880000007,
-      "tools": 1118,
+      "input": 6917093,
+      "output": 81795,
+      "cost": 15.833235880000004,
+      "tools": 1123,
       "inputMessages": null,
       "outputMessages": null
     },
@@ -60,10 +60,10 @@
       "outputMessages": null
     },
     "2026-04-26": {
-      "input": 142443,
-      "output": 8963,
-      "cost": 0.7848840000000002,
-      "tools": 418,
+      "input": 156353,
+      "output": 9383,
+      "cost": 0.8506040000000002,
+      "tools": 465,
       "inputMessages": null,
       "outputMessages": null
     },
@@ -142,10 +142,10 @@
     "antigravity": {
       "conversations": 23,
       "tokens": {
-        "input": 7750865,
-        "output": 104787
+        "input": 7782586,
+        "output": 105222
       },
-      "cost": 16.75917400000001,
+      "cost": 16.82783600000001,
       "artifacts": 12,
       "errors": 0
     },
@@ -174,8 +174,8 @@
       "errors": 0
     },
     "ipl-2026-engine": {
-      "tokens": 109851,
-      "cost": 0.254012,
+      "tokens": 112544,
+      "cost": 0.261978,
       "sessions": 2,
       "errors": 0
     },
@@ -197,10 +197,10 @@
       "sessions": 1,
       "errors": 0
     },
-    "chess-analytics-extension": {
-      "tokens": 22156,
-      "cost": 0.068322,
-      "sessions": 2,
+    "dev": {
+      "tokens": 16679,
+      "cost": 0.046048000000000006,
+      "sessions": 1,
       "errors": 0
     },
     "General": {
@@ -216,14 +216,20 @@
       "errors": 0
     },
     "antigravity-token-analyzer": {
-      "tokens": 163443,
-      "cost": 0.365166,
+      "tokens": 186325,
+      "cost": 0.41323,
+      "sessions": 1,
+      "errors": 0
+    },
+    "chess-analytics-extension": {
+      "tokens": 8564,
+      "cost": 0.028447999999999994,
       "sessions": 1,
       "errors": 0
     },
     "iftt": {
-      "tokens": 650371,
-      "cost": 1.4911420000000004,
+      "tokens": 642622,
+      "cost": 1.4709140000000005,
       "sessions": 2,
       "errors": 0
     },
@@ -240,8 +246,8 @@
       "errors": 0
     },
     "Praduman Khachar": {
-      "tokens": 122824,
-      "cost": 0.29776800000000003,
+      "tokens": 134067,
+      "cost": 0.324454,
       "sessions": 1,
       "errors": 0
     },
@@ -346,22 +352,22 @@
     {
       "id": "886a667c-29c8-4411-a988-819f8f2feb92",
       "title": "Untitled Session",
-      "tokens": 163443,
-      "cost": 0.365166,
+      "tokens": 186325,
+      "cost": 0.41323,
       "date": "2026-04-25",
       "project": "antigravity-token-analyzer",
-      "tools": 310,
+      "tools": 330,
       "errors": 0,
       "artifacts": 2
     },
     {
       "id": "e76a9c21-3106-4364-aade-1d275267f79b",
       "title": "<USER_REQUEST> - i have many ideas and things ffor my father...",
-      "tokens": 122824,
-      "cost": 0.29776800000000003,
+      "tokens": 134067,
+      "cost": 0.324454,
       "date": "2026-04-26",
       "project": "Praduman Khachar",
-      "tools": 232,
+      "tools": 249,
       "errors": 0,
       "artifacts": 3
     },
@@ -388,17 +394,6 @@
       "artifacts": 0
     },
     {
-      "id": "d261c27b-8302-4773-b111-e95a136f8789",
-      "title": "Untitled Session",
-      "tokens": 31542,
-      "cost": 0.081254,
-      "date": "2026-04-24",
-      "project": "iftt",
-      "tools": 248,
-      "errors": 0,
-      "artifacts": 0
-    },
-    {
       "id": "13a0d51f-20de-41f7-b76e-f51baf8a1ff9",
       "title": "<USER_REQUEST> what are more raycast ideas(add it to general...",
       "tokens": 24094,
@@ -406,6 +401,17 @@
       "date": "2026-04-25",
       "project": "Developer",
       "tools": 73,
+      "errors": 0,
+      "artifacts": 0
+    },
+    {
+      "id": "d261c27b-8302-4773-b111-e95a136f8789",
+      "title": "Untitled Session",
+      "tokens": 23793,
+      "cost": 0.061026000000000004,
+      "date": "2026-04-24",
+      "project": "iftt",
+      "tools": 236,
       "errors": 0,
       "artifacts": 0
     },
@@ -423,11 +429,11 @@
     {
       "id": "3f31209c-a920-47cb-8160-2fc29c36ee0b",
       "title": "Untitled Session",
-      "tokens": 13592,
-      "cost": 0.03987400000000001,
+      "tokens": 16679,
+      "cost": 0.046048000000000006,
       "date": "2026-04-26",
-      "project": "chess-analytics-extension",
-      "tools": 43,
+      "project": "dev",
+      "tools": 73,
       "errors": 0,
       "artifacts": 0
     },
@@ -480,11 +486,11 @@
     {
       "id": "1a96cd87-3301-4748-83a4-d95861f26409",
       "title": "Untitled Session",
-      "tokens": 222,
-      "cost": 0.000444,
+      "tokens": 2915,
+      "cost": 0.008409999999999999,
       "date": "2026-04-24",
       "project": "ipl-2026-engine",
-      "tools": 55,
+      "tools": 72,
       "errors": 0,
       "artifacts": 2
     },
@@ -535,11 +541,11 @@
     {
       "id": "3f31209c-a920-47cb-8160-2fc29c36ee0b",
       "title": "Untitled Session",
-      "tokens": 13592,
-      "cost": 0.03987400000000001,
+      "tokens": 16679,
+      "cost": 0.046048000000000006,
       "date": "2026-04-26",
-      "project": "chess-analytics-extension",
-      "tools": 43,
+      "project": "dev",
+      "tools": 73,
       "errors": 0,
       "artifacts": 0
     },
@@ -567,16 +573,66 @@
     }
   ],
   "engineering": {
-    "totalLOC": 1907,
-    "filesAffected": 1148,
+    "totalLOC": 1941,
+    "filesAffected": 1169,
     "toolsPerSession": 0,
     "avgResponseTime": 0
   },
   "models": {
     "gemini-3-pro-preview": {
-      "tokens": 7855652,
+      "tokens": 7887808,
       "sessions": 23,
-      "cost": 16.759173999999998
+      "cost": 16.827836
+    },
+    "mimo-v2-omni-free": {
+      "tokens": 13174532,
+      "sessions": 0,
+      "cost": 0
+    },
+    "gpt-5-nano": {
+      "tokens": 2118640,
+      "sessions": 0,
+      "cost": 0
+    },
+    "minimax-m2.5-free": {
+      "tokens": 11112,
+      "sessions": 0,
+      "cost": 0
+    },
+    "antigravity-claude-sonnet-4-5-thinking": {
+      "tokens": 0,
+      "sessions": 0,
+      "cost": 0
+    },
+    "grok-code-fast-1": {
+      "tokens": 252768,
+      "sessions": 0,
+      "cost": 0
+    },
+    "gpt-5.4-mini": {
+      "tokens": 1242022,
+      "sessions": 0,
+      "cost": 0
+    },
+    "big-pickle": {
+      "tokens": 137649,
+      "sessions": 0,
+      "cost": 0
+    },
+    "claude-sonnet-4.6": {
+      "tokens": 0,
+      "sessions": 0,
+      "cost": 0
+    },
+    "nemotron-3-super-free": {
+      "tokens": 80696,
+      "sessions": 0,
+      "cost": 0
+    },
+    "moonshotai/kimi-k2.6": {
+      "tokens": 4465913,
+      "sessions": 0,
+      "cost": 5.21929588
     }
   },
   "timelineArray": [
@@ -681,28 +737,28 @@
     },
     {
       "date": "2026-04-24",
-      "input": 6921934,
-      "output": 82010,
-      "cost": 15.857759880000007,
-      "tools": 1118,
+      "input": 6917093,
+      "output": 81795,
+      "cost": 15.833235880000004,
+      "tools": 1123,
       "inputMessages": null,
       "outputMessages": null
     },
     {
       "date": "2026-04-25",
-      "input": 3960591,
-      "output": 31789,
-      "cost": 16.6053,
-      "tools": 954,
+      "input": 3983243,
+      "output": 32019,
+      "cost": 16.701427999999993,
+      "tools": 974,
       "inputMessages": null,
       "outputMessages": null
     },
     {
       "date": "2026-04-26",
-      "input": 142443,
-      "output": 8963,
-      "cost": 0.7848840000000002,
-      "tools": 418,
+      "input": 156353,
+      "output": 9383,
+      "cost": 0.8506040000000002,
+      "tools": 465,
       "inputMessages": null,
       "outputMessages": null
     }
