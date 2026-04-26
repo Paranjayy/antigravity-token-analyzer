@@ -10,7 +10,7 @@ A high-fidelity, local-first intelligence dashboard for tracking AI usage, token
 
 ## ✨ Features
 
-- **Multi-Provider Support**: Seamlessly aggregates data from **Antigravity** (NDJSON logs) and **OpenCode** (SQLite databases).
+- **Multi-Provider Support**: Seamlessly aggregates data from **Antigravity** (NDJSON logs), **OpenCode** (SQLite databases), and **Codex** desktop logs.
 - **Comprehensive Analytics**:
   - **Token Throughput**: Accurate counting using `tiktoken` (cl100k_base).
   - **Financial Tracking**: Real-time cost estimation based on [models.dev](https://models.dev) pricing.
@@ -49,6 +49,12 @@ Open [http://localhost:5173](http://localhost:5173) in your browser.
 - `src/scripts/analyze.js`: The "brain" that crawls local directories and parses various log formats.
 - `src/data/stats.json`: The aggregated intelligence layer consumed by the UI.
 - `src/data/pricing.json`: A local snapshot of the global model pricing catalog.
+
+### Local Sources
+
+- Antigravity: `~/.gemini/antigravity/brain`
+- OpenCode: `~/.local/share/opencode/opencode.db`
+- Codex: `~/.codex/logs_2.sqlite` plus `~/.codex/session_index.jsonl`
 
 ## 🛠️ Future Roadmap
 

@@ -1,31 +1,32 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
-  
-  --color-background: hsl(240, 10%, 3.9%);
-  --color-foreground: hsl(0, 0%, 98%);
-  
-  --color-card: hsl(240, 10%, 3.9%);
-  --color-card-foreground: hsl(0, 0%, 98%);
-  
-  --color-border: hsl(240, 3.7%, 15.9%);
-  --color-input: hsl(240, 3.7%, 15.9%);
-  
-  --color-primary: hsl(0, 0%, 98%);
-  --color-primary-foreground: hsl(240, 5.9%, 10%);
-  
-  --color-muted: hsl(240, 3.7%, 15.9%);
-  --color-muted-foreground: hsl(240, 5%, 64.9%);
-  
-  --color-accent: hsl(240, 3.7%, 15.9%);
-  --color-accent-foreground: hsl(0, 0%, 98%);
-  
-  --radius-sm: 0.25rem;
-  --radius: 0.5rem;
-  --radius-md: 0.5rem;
-  --radius-lg: 0.75rem;
-  --radius-xl: 1rem;
+  --font-sans: "Avenir Next", "SF Pro Display", "Segoe UI", sans-serif;
+  --font-mono: "SF Mono", "Menlo", "Monaco", monospace;
+
+  --color-background: oklch(0.15 0.02 255);
+  --color-foreground: oklch(0.98 0.01 255);
+
+  --color-card: oklch(0.18 0.02 255);
+  --color-card-foreground: oklch(0.98 0.01 255);
+
+  --color-border: oklch(0.27 0.02 255);
+  --color-input: oklch(0.27 0.02 255);
+
+  --color-primary: oklch(0.88 0.07 235);
+  --color-primary-foreground: oklch(0.15 0.02 255);
+
+  --color-muted: oklch(0.23 0.02 255);
+  --color-muted-foreground: oklch(0.76 0.02 255);
+
+  --color-accent: oklch(0.28 0.03 180);
+  --color-accent-foreground: oklch(0.98 0.01 255);
+
+  --radius-sm: 0.4rem;
+  --radius: 0.65rem;
+  --radius-md: 0.8rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.35rem;
 }
 
 * {
@@ -35,12 +36,16 @@
 }
 
 body {
-  background-color: var(--color-background);
+  background:
+    radial-gradient(circle at top left, color-mix(in oklab, var(--color-primary) 12%, transparent), transparent 32%),
+    radial-gradient(circle at 85% 15%, color-mix(in oklab, var(--color-accent) 12%, transparent), transparent 28%),
+    linear-gradient(180deg, color-mix(in oklab, var(--color-background) 95%, white) 0%, var(--color-background) 60%, color-mix(in oklab, var(--color-background) 94%, black) 100%);
   color: var(--color-foreground);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   min-height: 100vh;
   overflow-x: hidden;
+  letter-spacing: -0.01em;
 }
 
 .scrollbar-hide::-webkit-scrollbar {
@@ -76,3 +81,7 @@ button {
   outline: none;
 }
 
+::selection {
+  background: color-mix(in oklab, var(--color-primary) 40%, transparent);
+  color: var(--color-primary-foreground);
+}
