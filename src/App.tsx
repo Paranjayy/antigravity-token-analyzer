@@ -171,7 +171,8 @@ function App() {
         </div>
       </nav>
 
-      <main className="pl-24 pr-8 py-8 max-w-7xl mx-auto min-h-screen flex flex-col">
+      <div className="ml-20 flex-1 flex flex-col min-h-screen">
+        <main className="p-8 max-w-7xl mx-auto w-full flex flex-col flex-1">
         <header className="mb-12 flex items-center justify-between">
           <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
             <h1 className="text-6xl font-black tracking-tighter text-gradient italic leading-none">ANTIGRAVITY PRIME</h1>
@@ -400,19 +401,20 @@ function App() {
             </motion.div>
           )}
         </AnimatePresence>
-      </main>
+        </main>
 
-      <footer className="pl-24 pr-8 py-12 border-t border-white/5 bg-black/60 mt-auto">
-        <div className="max-w-7xl mx-auto flex justify-between items-center opacity-30 hover:opacity-100 transition-opacity">
-          <div className="flex items-center gap-3">
-            <div className="h-8 w-8 rounded-lg bg-white/5 flex items-center justify-center">
-              <Cpu size={16} className="text-accent" />
+        <footer className="p-12 border-t border-white/5 bg-black/60 mt-auto">
+          <div className="max-w-7xl mx-auto flex justify-between items-center opacity-30 hover:opacity-100 transition-opacity">
+            <div className="flex items-center gap-3">
+              <div className="h-8 w-8 rounded-lg bg-white/5 flex items-center justify-center">
+                <Cpu size={16} className="text-accent" />
+              </div>
+              <span className="text-[10px] font-black tracking-[0.3em] uppercase">Antigravity Intelligence Protocol v2.5</span>
             </div>
-            <span className="text-[10px] font-black tracking-[0.3em] uppercase">Antigravity Intelligence Protocol v2.5</span>
+            <p className="text-[9px] font-black tracking-widest text-white/40">DESIGNED FOR UNSTOPPABLE PRODUCTIVITY · {new Date().getFullYear()}</p>
           </div>
-          <p className="text-[9px] font-black tracking-widest text-white/40">DESIGNED FOR UNSTOPPABLE PRODUCTIVITY · {new Date().getFullYear()}</p>
-        </div>
-      </footer>
+        </footer>
+      </div>
     </div>
   );
 }
