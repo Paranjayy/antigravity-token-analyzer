@@ -5,9 +5,10 @@ export function Card({ className, ...props }: React.HTMLAttributes<HTMLDivElemen
   return (
     <div
       className={cn(
-        'rounded-[1.75rem] border border-[var(--color-border)]/90 bg-[color-mix(in_oklab,var(--color-card)_88%,transparent)] text-[var(--color-card-foreground)] shadow-[0_18px_70px_rgba(0,0,0,0.14)]',
+        'rounded-[2rem] border border-[var(--color-border)]/60 bg-[color-mix(in_oklab,var(--color-card)_82%,transparent)] text-[var(--color-card-foreground)] shadow-[0_24px_80px_rgba(0,0,0,0.3)] transition-all duration-200 backdrop-blur-xl',
         className
       )}
+      style={{ backdropFilter: 'blur(20px) saturate(160%)' }}
       {...props}
     />
   );
