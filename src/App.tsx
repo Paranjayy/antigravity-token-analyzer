@@ -203,84 +203,64 @@ function App() {
 
   return (
     <div className="relative min-h-screen text-[var(--color-foreground)]">
-      {/* Ambient blobs */}
-      <div className="pointer-events-none fixed inset-0 overflow-hidden">
-        <div className="absolute -top-40 right-[-10rem] h-96 w-96 rounded-full opacity-60"
-          style={{ background: 'radial-gradient(circle, oklch(0.72 0.24 290 / 0.18), transparent 70%)' }} />
-        <div className="absolute left-[-8rem] top-40 h-80 w-80 rounded-full opacity-50"
-          style={{ background: 'radial-gradient(circle, oklch(0.68 0.20 198 / 0.16), transparent 70%)' }} />
-        <div className="absolute bottom-20 right-[20%] h-64 w-64 rounded-full opacity-30"
-          style={{ background: 'radial-gradient(circle, oklch(0.65 0.22 340 / 0.14), transparent 70%)' }} />
+      {/* Ambient blobs — fixed, behind everything */}
+      <div className="pointer-events-none fixed inset-0 overflow-hidden" style={{ zIndex: 0 }}>
+        <div className="absolute -top-40 right-[-10rem] h-96 w-96 rounded-full opacity-50"
+          style={{ background: 'radial-gradient(circle, oklch(0.72 0.24 290 / 0.16), transparent 70%)' }} />
+        <div className="absolute left-[-8rem] top-60 h-80 w-80 rounded-full opacity-40"
+          style={{ background: 'radial-gradient(circle, oklch(0.68 0.20 198 / 0.13), transparent 70%)' }} />
+        <div className="absolute bottom-20 right-[20%] h-64 w-64 rounded-full opacity-25"
+          style={{ background: 'radial-gradient(circle, oklch(0.65 0.22 340 / 0.12), transparent 70%)' }} />
       </div>
 
-      <div className="relative mx-auto flex min-h-screen w-full max-w-[1840px] flex-col px-5 py-5 lg:px-8">
-        {/* Header */}
-        <header className="sticky top-4 z-20 mb-8">
-          <Card className="overflow-hidden">
-            <div className="px-6 py-5 lg:px-8">
-              <div className="flex flex-col gap-6 xl:flex-row xl:items-center xl:justify-between">
-                {/* Brand */}
-                <div className="flex items-center gap-4">
-                  <div className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl"
+      <div className="relative mx-auto flex min-h-screen w-full max-w-[1600px] flex-col px-4 py-4 lg:px-6 lg:py-5" style={{ zIndex: 1 }}>
+
+        {/* ── Sticky Header ── */}
+        <header className="sticky top-4 z-30 mb-5">
+          <Card>
+            <div className="px-5 py-4 lg:px-6">
+
+              {/* Row 1: Brand + Actions */}
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex items-center gap-3 min-w-0">
+                  <div
+                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl"
                     style={{
-                      background: 'linear-gradient(135deg, oklch(0.72 0.24 290 / 0.25), oklch(0.68 0.20 198 / 0.15))',
-                      border: '1px solid oklch(0.72 0.24 290 / 0.35)',
-                      boxShadow: '0 0 20px oklch(0.72 0.24 290 / 0.25)'
-                    }}>
-                    <Cpu size={20} style={{ color: 'oklch(0.85 0.18 290)' }} />
+                      background: 'linear-gradient(135deg, oklch(0.72 0.24 290 / 0.22), oklch(0.68 0.20 198 / 0.14))',
+                      border: '1px solid oklch(0.72 0.24 290 / 0.32)',
+                    }}
+                  >
+                    <Cpu size={17} style={{ color: 'oklch(0.84 0.18 290)' }} />
                   </div>
-                  <div>
-                    <div className="text-[10px] font-semibold uppercase tracking-[0.38em] text-[var(--color-muted-foreground)]">
+                  <div className="min-w-0">
+                    <p className="text-[9px] font-semibold uppercase tracking-[0.4em] text-[var(--color-muted-foreground)]">
                       Analyzer Console
-                    </div>
-                    <h1 className="gradient-text-violet mt-0.5 text-2xl font-bold tracking-tight leading-tight">
+                    </p>
+                    <h1 className="gradient-text-violet text-lg font-bold tracking-tight leading-tight truncate">
                       Antigravity Token Analyzer
                     </h1>
-                    <p className="mt-1 text-xs text-[var(--color-muted-foreground)] leading-relaxed max-w-lg">
-                      Real-time session counts, model costs, and engineering signals — Antigravity, OpenCode &amp; Codex.
-                    </p>
                   </div>
                 </div>
 
-                {/* Stat mini-cards */}
-                <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 xl:min-w-[480px]">
-                  {statCards.map((item) => {
-                    const Icon = item.icon;
-                    return (
-                      <div
-                        key={item.label}
-                        className="relative overflow-hidden rounded-2xl p-4 transition-all duration-200 hover:scale-[1.02]"
-                        style={{
-                          background: `color-mix(in oklab, ${item.color} 8%, var(--color-card))`,
-                          border: `1px solid color-mix(in oklab, ${item.color} 22%, var(--color-border))`,
-                          boxShadow: `0 4px 24px ${item.glow}`
-                        }}
-                      >
-                        <div className="flex items-start justify-between">
-                          <div>
-                            <div className="text-[10px] font-semibold uppercase tracking-[0.32em] text-[var(--color-muted-foreground)]">
-                              {item.label}
-                            </div>
-                            <div className="mt-2.5 text-2xl font-bold tracking-tight" style={{ color: item.color }}>
-                              {item.value}
-                            </div>
-                          </div>
-                          <div className="rounded-xl p-2" style={{ background: `color-mix(in oklab, ${item.color} 15%, transparent)` }}>
-                            <Icon size={14} style={{ color: item.color }} />
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
+                <div className="flex shrink-0 items-center gap-2">
+                  <label className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-[var(--color-border)]/60 bg-[var(--color-muted)]/40 px-3 py-1.5 text-[11px] font-medium text-[var(--color-muted-foreground)] transition-colors hover:text-[var(--color-foreground)]">
+                    <FolderOpen size={12} />
+                    Import
+                    <input type="file" className="hidden" accept=".json" onChange={handleUpload} />
+                  </label>
+                  <Button variant="outline" size="sm" onClick={handleDownload}>
+                    <Download size={12} />
+                    Export
+                  </Button>
                 </div>
               </div>
 
-              <Separator className="my-5 opacity-50" />
+              <Separator className="my-3.5 opacity-40" />
 
-              {/* Controls row */}
-              <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
-                {/* Tabs */}
-                <div className="flex flex-wrap gap-1.5 rounded-2xl border border-[var(--color-border)]/60 bg-[var(--color-muted)]/50 p-1.5 w-fit">
+              {/* Row 2: Tabs (left) + Filters (right) */}
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                {/* Tab group */}
+                <div className="flex items-center gap-1 rounded-xl border border-[var(--color-border)]/50 bg-[var(--color-muted)]/40 p-1">
                   {tabs.map((tab) => {
                     const Icon = tab.icon;
                     const active = activeTab === tab.id;
@@ -288,324 +268,380 @@ function App() {
                       <button
                         key={tab.id}
                         onClick={() => setActiveTab(tab.id)}
-                        className="inline-flex items-center gap-2 rounded-xl px-3.5 py-2 text-xs font-semibold transition-all duration-150"
-                        style={active ? {
-                          background: 'linear-gradient(135deg, oklch(0.72 0.24 290), oklch(0.68 0.26 315))',
-                          color: 'white',
-                          boxShadow: '0 2px 14px oklch(0.72 0.24 290 / 0.45)'
-                        } : { color: 'var(--color-muted-foreground)' }}
-                        onMouseEnter={(e) => { if (!active) (e.currentTarget as HTMLElement).style.color = 'var(--color-foreground)'; }}
-                        onMouseLeave={(e) => { if (!active) (e.currentTarget as HTMLElement).style.color = 'var(--color-muted-foreground)'; }}
+                        className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition-all duration-150"
+                        style={
+                          active
+                            ? {
+                                background: 'linear-gradient(135deg, oklch(0.72 0.24 290), oklch(0.68 0.26 315))',
+                                color: 'white',
+                                boxShadow: '0 1px 10px oklch(0.72 0.24 290 / 0.4)',
+                              }
+                            : { color: 'var(--color-muted-foreground)' }
+                        }
                       >
-                        <Icon size={12} />
+                        <Icon size={11} />
                         {tab.label}
                       </button>
                     );
                   })}
                 </div>
 
-                {/* Filters */}
+                {/* Filter groups */}
                 <div className="flex flex-wrap items-center gap-2">
-                  <div className="flex rounded-xl border border-[var(--color-border)]/60 bg-[var(--color-muted)]/40 p-1">
-                    {(['all', 'antigravity', 'opencode', 'codex'] as SourceId[]).map((source) => (
-                      <button
-                        key={source}
-                        onClick={() => setSourceFilter(source)}
-                        className="rounded-lg px-3 py-1.5 text-[11px] font-medium transition-all"
-                        style={sourceFilter === source ? {
-                          background: source === 'all' ? 'linear-gradient(135deg, oklch(0.72 0.24 290), oklch(0.68 0.26 315))' :
-                            `${SOURCE_COLORS[source]}22`,
-                          color: source === 'all' ? 'white' : SOURCE_COLORS[source],
-                          border: source !== 'all' ? `1px solid ${SOURCE_COLORS[source]}44` : 'none',
-                          boxShadow: source === 'all' ? '0 2px 12px oklch(0.72 0.24 290 / 0.4)' : `0 2px 10px ${SOURCE_COLORS[source]}33`
-                        } : { color: 'var(--color-muted-foreground)' }}
-                      >
-                        {sourceLabel(source)}
-                      </button>
-                    ))}
+                  {/* Source filter */}
+                  <div className="flex items-center gap-1 rounded-xl border border-[var(--color-border)]/50 bg-[var(--color-muted)]/40 p-1">
+                    {(['all', 'antigravity', 'opencode', 'codex'] as SourceId[]).map((source) => {
+                      const active = sourceFilter === source;
+                      return (
+                        <button
+                          key={source}
+                          onClick={() => setSourceFilter(source)}
+                          className="rounded-lg px-2.5 py-1.5 text-[11px] font-medium transition-all"
+                          style={
+                            active
+                              ? source === 'all'
+                                ? {
+                                    background: 'linear-gradient(135deg, oklch(0.72 0.24 290), oklch(0.68 0.26 315))',
+                                    color: 'white',
+                                    boxShadow: '0 1px 10px oklch(0.72 0.24 290 / 0.35)',
+                                  }
+                                : {
+                                    background: `${SOURCE_COLORS[source]}20`,
+                                    color: SOURCE_COLORS[source],
+                                    border: `1px solid ${SOURCE_COLORS[source]}40`,
+                                  }
+                              : { color: 'var(--color-muted-foreground)' }
+                          }
+                        >
+                          {sourceLabel(source)}
+                        </button>
+                      );
+                    })}
                   </div>
 
-                  <div className="flex rounded-xl border border-[var(--color-border)]/60 bg-[var(--color-muted)]/40 p-1">
-                    {(['all', '30', '7'] as RangeId[]).map((range) => (
-                      <button
-                        key={range}
-                        onClick={() => setDateRange(range)}
-                        className="rounded-lg px-3 py-1.5 text-[11px] font-medium transition-all"
-                        style={dateRange === range ? {
-                          background: 'linear-gradient(135deg, oklch(0.72 0.24 290), oklch(0.68 0.26 315))',
-                          color: 'white',
-                          boxShadow: '0 2px 12px oklch(0.72 0.24 290 / 0.4)'
-                        } : { color: 'var(--color-muted-foreground)' }}
-                      >
-                        {range === 'all' ? 'All' : `${range}d`}
-                      </button>
-                    ))}
+                  {/* Date range filter */}
+                  <div className="flex items-center gap-1 rounded-xl border border-[var(--color-border)]/50 bg-[var(--color-muted)]/40 p-1">
+                    {(['all', '30', '7'] as RangeId[]).map((range) => {
+                      const active = dateRange === range;
+                      return (
+                        <button
+                          key={range}
+                          onClick={() => setDateRange(range)}
+                          className="rounded-lg px-2.5 py-1.5 text-[11px] font-medium transition-all"
+                          style={
+                            active
+                              ? {
+                                  background: 'linear-gradient(135deg, oklch(0.72 0.24 290), oklch(0.68 0.26 315))',
+                                  color: 'white',
+                                  boxShadow: '0 1px 10px oklch(0.72 0.24 290 / 0.35)',
+                                }
+                              : { color: 'var(--color-muted-foreground)' }
+                          }
+                        >
+                          {range === 'all' ? 'All time' : `${range}d`}
+                        </button>
+                      );
+                    })}
                   </div>
-
-                  <label className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-[var(--color-border)]/60 bg-[var(--color-muted)]/40 px-3 py-2 text-[11px] font-medium text-[var(--color-muted-foreground)] transition hover:text-[var(--color-foreground)]">
-                    <FolderOpen size={13} />
-                    Import
-                    <input type="file" className="hidden" accept=".json" onChange={handleUpload} />
-                  </label>
-
-                  <Button variant="outline" size="sm" onClick={handleDownload} className="rounded-xl">
-                    <Download size={13} />
-                    Export
-                  </Button>
                 </div>
               </div>
             </div>
           </Card>
         </header>
 
-        {/* Main content */}
-        <main className="flex-1 pb-10">
-          {/* Overview section (always visible) */}
-          <motion.section
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.45, ease: 'easeOut' }}
-            className="grid gap-6 xl:grid-cols-[minmax(0,1.6fr)_320px]"
-          >
-            {/* Chart card */}
-            <Card className="overflow-hidden">
-              <CardHeader className="px-7 pt-7">
-                <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-                  <div>
-                    <Badge variant="soft" className="w-fit mb-3">Usage over time</Badge>
-                    <CardTitle className="gradient-text text-[clamp(1.5rem,2.2vw,2.4rem)] leading-tight font-bold">
-                      Daily token flow
-                    </CardTitle>
-                    <CardDescription className="mt-2 text-sm">
-                      Input &amp; output tokens across all active sources.
-                    </CardDescription>
+        {/* ── Stat cards row (always visible) ── */}
+        <div className="mb-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
+          {statCards.map((item) => {
+            const Icon = item.icon;
+            return (
+              <Card key={item.label} className="p-0">
+                <CardContent className="p-4">
+                  <div className="flex items-start justify-between">
+                    <div className="min-w-0 flex-1">
+                      <p className="text-[10px] font-semibold uppercase tracking-[0.32em] text-[var(--color-muted-foreground)]">
+                        {item.label}
+                      </p>
+                      <p
+                        className="mt-2 text-[1.7rem] font-bold leading-none tracking-tight"
+                        style={{ color: item.color }}
+                      >
+                        {item.value}
+                      </p>
+                    </div>
+                    <div
+                      className="ml-3 shrink-0 rounded-xl p-2"
+                      style={{ background: `color-mix(in oklab, ${item.color} 14%, transparent)` }}
+                    >
+                      <Icon size={14} style={{ color: item.color }} />
+                    </div>
                   </div>
-                  <div className="grid grid-cols-2 gap-2.5 text-xs lg:min-w-[200px]">
-                    {[
-                      { label: 'Cost', value: totalCost, accent: 'oklch(0.72 0.24 290)' },
-                      { label: 'Tokens', value: totalTokens, accent: 'oklch(0.68 0.20 198)' },
-                      { label: 'Tool calls', value: formatPlain(overview.tools), accent: 'oklch(0.78 0.18 75)' },
-                      { label: 'Sessions', value: totalSessions, accent: 'oklch(0.65 0.22 340)' },
-                    ].map((s) => (
-                      <div key={s.label} className="rounded-xl border border-[var(--color-border)]/60 bg-[var(--color-background)]/80 px-3.5 py-3">
-                        <div className="text-[10px] uppercase tracking-[0.24em] text-[var(--color-muted-foreground)]">{s.label}</div>
-                        <div className="mt-1.5 text-base font-bold" style={{ color: s.accent }}>{s.value}</div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent className="px-7 pt-6">
-                <div className="h-[420px]">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart data={timelineChart}>
-                      <defs>
-                        <linearGradient id="inputFill" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor={chartInputColor} stopOpacity={0.32} />
-                          <stop offset="95%" stopColor={chartInputColor} stopOpacity={0} />
-                        </linearGradient>
-                        <linearGradient id="outputFill" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor={chartOutputColor} stopOpacity={0.26} />
-                          <stop offset="95%" stopColor={chartOutputColor} stopOpacity={0} />
-                        </linearGradient>
-                      </defs>
-                      <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" opacity={0.22} vertical={false} />
-                      <XAxis
-                        dataKey="dateLabel"
-                        stroke="var(--color-muted-foreground)"
-                        tickLine={false}
-                        axisLine={false}
-                        fontSize={10}
-                        minTickGap={28}
-                      />
-                      <YAxis hide />
-                      <Tooltip
-                        cursor={{ stroke: 'oklch(0.72 0.24 290 / 0.4)', strokeWidth: 1 }}
-                        contentStyle={{
-                          backgroundColor: 'oklch(0.12 0.015 265 / 0.95)',
-                          border: '1px solid var(--color-border)',
-                          borderRadius: '14px',
-                          color: 'var(--color-foreground)',
-                          backdropFilter: 'blur(12px)',
-                          fontSize: '12px',
-                        }}
-                      />
-                      <Area type="monotone" dataKey="input" stroke={chartInputColor} strokeWidth={2.5} fill="url(#inputFill)" name="Input" />
-                      <Area type="monotone" dataKey="output" stroke={chartOutputColor} strokeWidth={2.5} fill="url(#outputFill)" name="Output" />
-                    </AreaChart>
-                  </ResponsiveContainer>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
 
-            {/* Sidebar */}
-            <div className="space-y-5">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-sm">
-                    <Zap size={14} style={{ color: 'oklch(0.72 0.24 290)' }} />
-                    Current view
-                  </CardTitle>
-                  <CardDescription>Filter-aware snapshot.</CardDescription>
+        {/* ── Main content ── */}
+        <main className="flex-1 pb-10">
+
+          {/* ── Overview tab ── */}
+          {activeTab === 'overview' && (
+            <motion.div
+              key="overview"
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, ease: 'easeOut' }}
+              className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_400px]"
+            >
+              {/* Chart card */}
+              <Card className="overflow-hidden">
+                <CardHeader className="px-6 pt-6">
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <Badge variant="soft" className="mb-2.5 w-fit">Usage over time</Badge>
+                      <CardTitle className="gradient-text text-2xl font-bold leading-tight">
+                        Daily token flow
+                      </CardTitle>
+                      <CardDescription className="mt-1.5 text-sm">
+                        Input &amp; output tokens across all active sources.
+                      </CardDescription>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 text-xs shrink-0">
+                      {[
+                        { label: 'Cost', value: totalCost, accent: '#a78bfa' },
+                        { label: 'Tokens', value: totalTokens, accent: '#67e8f9' },
+                        { label: 'Tools', value: formatPlain(overview.tools), accent: '#fcd34d' },
+                        { label: 'Sessions', value: totalSessions, accent: '#f9a8d4' },
+                      ].map((s) => (
+                        <div
+                          key={s.label}
+                          className="rounded-xl border border-[var(--color-border)]/50 bg-[var(--color-background)]/80 px-3 py-2.5"
+                        >
+                          <p className="text-[9px] uppercase tracking-[0.26em] text-[var(--color-muted-foreground)]">{s.label}</p>
+                          <p className="mt-1 text-sm font-bold" style={{ color: s.accent }}>{s.value}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                  <div>
-                    <div className="mb-1.5 flex items-center justify-between text-xs">
-                      <span className="text-[var(--color-muted-foreground)]">Tokens</span>
-                      <span className="font-semibold" style={{ color: 'oklch(0.72 0.24 290)' }}>{totalTokens}</span>
-                    </div>
-                    <Progress value={88} />
-                  </div>
-                  <div>
-                    <div className="mb-1.5 flex items-center justify-between text-xs">
-                      <span className="text-[var(--color-muted-foreground)]">Spend</span>
-                      <span className="font-semibold" style={{ color: 'oklch(0.65 0.22 340)' }}>{totalCost}</span>
-                    </div>
-                    <Progress value={64} />
-                  </div>
-                  <div className="grid grid-cols-2 gap-2.5">
-                    {[
-                      { label: 'Input msgs', value: formatPlain(overview.inputMessages) },
-                      { label: 'Output msgs', value: formatPlain(overview.outputMessages) },
-                    ].map((item) => (
-                      <div key={item.label} className="rounded-xl border border-[var(--color-border)]/60 bg-[var(--color-background)]/80 p-3">
-                        <div className="text-[10px] uppercase tracking-[0.22em] text-[var(--color-muted-foreground)]">{item.label}</div>
-                        <div className="mt-1.5 text-lg font-bold">{item.value}</div>
-                      </div>
-                    ))}
+                <CardContent className="px-6 pt-5 pb-6">
+                  <div className="h-[320px]">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <AreaChart data={timelineChart} margin={{ top: 4, right: 4, bottom: 0, left: 0 }}>
+                        <defs>
+                          <linearGradient id="inputFill" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor={chartInputColor} stopOpacity={0.3} />
+                            <stop offset="95%" stopColor={chartInputColor} stopOpacity={0} />
+                          </linearGradient>
+                          <linearGradient id="outputFill" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor={chartOutputColor} stopOpacity={0.24} />
+                            <stop offset="95%" stopColor={chartOutputColor} stopOpacity={0} />
+                          </linearGradient>
+                        </defs>
+                        <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" opacity={0.2} vertical={false} />
+                        <XAxis
+                          dataKey="dateLabel"
+                          stroke="var(--color-muted-foreground)"
+                          tickLine={false}
+                          axisLine={false}
+                          fontSize={10}
+                          minTickGap={32}
+                        />
+                        <YAxis hide />
+                        <Tooltip
+                          cursor={{ stroke: 'oklch(0.72 0.24 290 / 0.35)', strokeWidth: 1 }}
+                          contentStyle={{
+                            backgroundColor: 'oklch(0.11 0.015 265 / 0.96)',
+                            border: '1px solid oklch(0.22 0.018 265)',
+                            borderRadius: '12px',
+                            color: 'oklch(0.97 0.008 255)',
+                            fontSize: '12px',
+                          }}
+                        />
+                        <Area type="monotone" dataKey="input" stroke={chartInputColor} strokeWidth={2} fill="url(#inputFill)" name="Input" />
+                        <Area type="monotone" dataKey="output" stroke={chartOutputColor} strokeWidth={2} fill="url(#outputFill)" name="Output" />
+                      </AreaChart>
+                    </ResponsiveContainer>
                   </div>
                 </CardContent>
               </Card>
 
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-sm">Source split</CardTitle>
-                  <CardDescription>Token share by provider.</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  {providers.map((provider) => {
-                    const totalProviderTokens = (provider.tokens?.input || 0) + (provider.tokens?.output || 0);
-                    const share = (totalProviderTokens / Math.max(overview.input + overview.output, 1)) * 100;
-                    return (
-                      <div
-                        key={provider.id}
-                        className="rounded-xl border p-3.5 transition-all"
-                        style={{
-                          background: `color-mix(in oklab, ${provider.color} 6%, var(--color-background))`,
-                          borderColor: `color-mix(in oklab, ${provider.color} 20%, var(--color-border))`
-                        }}
-                      >
-                        <div className="flex items-start justify-between gap-3">
-                          <div>
-                            <div className="text-sm font-semibold" style={{ color: provider.color }}>{provider.label}</div>
-                            <div className="mt-0.5 text-xs text-[var(--color-muted-foreground)]">
-                              {formatPlain(totalProviderTokens)} tk · {formatMoney(provider.cost || 0)}
+              {/* Sidebar — 400px, three stacked cards */}
+              <div className="flex flex-col gap-4">
+
+                {/* Snapshot */}
+                <Card>
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center gap-2">
+                      <Zap size={13} style={{ color: 'oklch(0.72 0.24 290)' }} />
+                      <CardTitle className="text-sm">Current view</CardTitle>
+                    </div>
+                    <CardDescription className="text-xs">Filter-aware snapshot.</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-3 pt-0">
+                    <div>
+                      <div className="mb-1.5 flex items-center justify-between text-xs">
+                        <span className="text-[var(--color-muted-foreground)]">Tokens</span>
+                        <span className="font-semibold" style={{ color: '#a78bfa' }}>{totalTokens}</span>
+                      </div>
+                      <Progress value={88} />
+                    </div>
+                    <div>
+                      <div className="mb-1.5 flex items-center justify-between text-xs">
+                        <span className="text-[var(--color-muted-foreground)]">Spend</span>
+                        <span className="font-semibold" style={{ color: '#f9a8d4' }}>{totalCost}</span>
+                      </div>
+                      <Progress value={64} />
+                    </div>
+                    <div className="grid grid-cols-2 gap-2">
+                      {[
+                        { label: 'Input msgs', value: formatPlain(overview.inputMessages) },
+                        { label: 'Output msgs', value: formatPlain(overview.outputMessages) },
+                      ].map((item) => (
+                        <div
+                          key={item.label}
+                          className="rounded-xl border border-[var(--color-border)]/50 bg-[var(--color-background)]/80 p-3"
+                        >
+                          <p className="text-[9px] uppercase tracking-[0.24em] text-[var(--color-muted-foreground)]">{item.label}</p>
+                          <p className="mt-1.5 text-lg font-bold">{item.value}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Source split */}
+                <Card>
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-sm">Source split</CardTitle>
+                    <CardDescription className="text-xs">Token share by provider.</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-2.5 pt-0">
+                    {providers.map((provider) => {
+                      const totalProviderTokens = (provider.tokens?.input || 0) + (provider.tokens?.output || 0);
+                      const share = (totalProviderTokens / Math.max(overview.input + overview.output, 1)) * 100;
+                      return (
+                        <div
+                          key={provider.id}
+                          className="rounded-xl p-3"
+                          style={{
+                            background: `color-mix(in oklab, ${provider.color} 7%, var(--color-muted))`,
+                            border: `1px solid color-mix(in oklab, ${provider.color} 22%, var(--color-border))`,
+                          }}
+                        >
+                          <div className="flex items-start justify-between gap-3">
+                            <div className="min-w-0">
+                              <p className="text-sm font-semibold" style={{ color: provider.color }}>{provider.label}</p>
+                              <p className="mt-0.5 text-xs text-[var(--color-muted-foreground)] truncate">
+                                {formatPlain(totalProviderTokens)} tk · {formatMoney(provider.cost || 0)}
+                              </p>
+                            </div>
+                            <div className="shrink-0 text-right text-[11px] text-[var(--color-muted-foreground)]">
+                              <p>{formatPlain(provider.conversations || 0)} sessions</p>
+                              <p>{formatPlain(provider.errors || 0)} errors</p>
                             </div>
                           </div>
-                          <div className="text-right text-xs text-[var(--color-muted-foreground)]">
-                            <div>{formatPlain(provider.conversations || 0)} sessions</div>
-                            <div>{formatPlain(provider.errors || 0)} errors</div>
+                          <div className="mt-2.5 h-1.5 overflow-hidden rounded-full bg-[var(--color-muted)]">
+                            <div
+                              className="h-full rounded-full transition-all duration-500"
+                              style={{
+                                width: `${Math.max(6, share)}%`,
+                                backgroundColor: provider.color,
+                                boxShadow: `0 0 6px ${provider.color}55`,
+                              }}
+                            />
                           </div>
                         </div>
-                        <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-[var(--color-muted)]">
-                          <div
-                            className="h-full rounded-full transition-all duration-500"
-                            style={{ width: `${Math.max(6, share)}%`, backgroundColor: provider.color, boxShadow: `0 0 8px ${provider.color}66` }}
-                          />
-                        </div>
-                      </div>
-                    );
-                  })}
-                </CardContent>
-              </Card>
+                      );
+                    })}
+                  </CardContent>
+                </Card>
 
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-sm">Model coverage</CardTitle>
-                  <CardDescription>Pricing via models.dev.</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div
-                    className="flex items-center justify-between rounded-xl p-4"
-                    style={{
-                      background: 'linear-gradient(135deg, oklch(0.72 0.24 290 / 0.12), oklch(0.68 0.20 198 / 0.08))',
-                      border: '1px solid oklch(0.72 0.24 290 / 0.22)'
-                    }}
-                  >
-                    <div>
-                      <div className="text-[10px] uppercase tracking-[0.28em] text-[var(--color-muted-foreground)]">Active models</div>
-                      <div className="mt-1 text-3xl font-bold gradient-text-violet">{modelCount}</div>
+                {/* Model coverage */}
+                <Card>
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-sm">Model coverage</CardTitle>
+                    <CardDescription className="text-xs">Pricing via models.dev.</CardDescription>
+                  </CardHeader>
+                  <CardContent className="pt-0">
+                    <div
+                      className="rounded-xl p-4"
+                      style={{
+                        background: 'linear-gradient(135deg, oklch(0.72 0.24 290 / 0.1), oklch(0.68 0.20 198 / 0.07))',
+                        border: '1px solid oklch(0.72 0.24 290 / 0.2)',
+                      }}
+                    >
+                      <p className="text-[9px] uppercase tracking-[0.3em] text-[var(--color-muted-foreground)]">Active models</p>
+                      <p className="mt-1.5 text-4xl font-bold gradient-text-violet">{modelCount}</p>
+                      <p className="mt-2 text-[11px] text-[var(--color-muted-foreground)]">models.dev pricing</p>
                     </div>
-                    <Badge variant="soft">models.dev</Badge>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </motion.section>
+                  </CardContent>
+                </Card>
 
-          {/* Sessions tab */}
+              </div>
+            </motion.div>
+          )}
+
+          {/* ── Sessions tab ── */}
           {activeTab === 'sessions' && (
             <motion.div
               key="sessions"
               initial={{ opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35, ease: 'easeOut' }}
-              className="mt-6 grid gap-5 xl:grid-cols-[1.4fr_0.6fr]"
+              className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_340px]"
             >
-              <Card className="p-0 overflow-hidden">
-                <div className="flex items-center justify-between gap-4 px-7 pt-7 pb-5">
+              <Card className="overflow-hidden p-0">
+                <div className="flex items-center justify-between gap-4 px-6 pt-6 pb-4">
                   <div>
                     <Badge variant="soft" className="mb-2.5">Top sessions</Badge>
                     <h3 className="gradient-text text-xl font-bold tracking-tight">Largest conversations</h3>
                     <p className="mt-1 text-xs text-[var(--color-muted-foreground)]">Ranked by total token load.</p>
                   </div>
-                  <Briefcase size={16} className="text-[var(--color-muted-foreground)]" />
+                  <Briefcase size={15} className="shrink-0 text-[var(--color-muted-foreground)]" />
                 </div>
-
-                <div className="px-7 pb-7 space-y-2.5">
+                <div className="px-6 pb-6 space-y-2">
                   {sessions.map((session: any) => (
                     <div
                       key={session.id}
-                      className="group rounded-2xl border border-[var(--color-border)]/60 bg-[var(--color-background)]/80 p-4 transition-all hover:border-[var(--color-border)] hover:bg-[var(--color-background)]"
+                      className="group rounded-xl border border-[var(--color-border)]/50 bg-[var(--color-background)]/80 p-4 transition-colors hover:border-[var(--color-border)] hover:bg-[var(--color-background)]"
                     >
-                      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                         <div className="min-w-0 flex-1">
                           <div className="flex flex-wrap items-center gap-1.5">
-                            <span className="rounded-full border border-[var(--color-border)]/60 bg-[var(--color-muted)] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.24em] text-[var(--color-muted-foreground)]">
+                            <span className="rounded-full border border-[var(--color-border)]/50 bg-[var(--color-muted)] px-2 py-0.5 text-[10px] font-semibold text-[var(--color-muted-foreground)]">
                               {formatPlain(session.tokens || 0)} tk
                             </span>
                             <span
-                              className="rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.24em]"
+                              className="rounded-full px-2 py-0.5 text-[10px] font-semibold"
                               style={{
                                 backgroundColor: `${SOURCE_COLORS[session.source as keyof typeof SOURCE_COLORS] || SOURCE_COLORS.all}18`,
                                 color: SOURCE_COLORS[session.source as keyof typeof SOURCE_COLORS] || SOURCE_COLORS.all,
-                                border: `1px solid ${SOURCE_COLORS[session.source as keyof typeof SOURCE_COLORS] || SOURCE_COLORS.all}35`
+                                border: `1px solid ${SOURCE_COLORS[session.source as keyof typeof SOURCE_COLORS] || SOURCE_COLORS.all}35`,
                               }}
                             >
                               {sourceLabel(session.source as SourceId)}
                             </span>
                             {session.model && (
-                              <span className="rounded-full border border-[var(--color-border)]/60 px-2.5 py-1 text-[10px] font-medium text-[var(--color-muted-foreground)]">
+                              <span className="rounded-full border border-[var(--color-border)]/50 px-2 py-0.5 text-[10px] text-[var(--color-muted-foreground)] truncate max-w-[12rem]">
                                 {session.model}
                               </span>
                             )}
                           </div>
-
-                          <h4 className="mt-2.5 truncate text-base font-semibold tracking-tight">{session.title}</h4>
-                          <div className="mt-1.5 flex flex-wrap items-center gap-3.5 text-xs text-[var(--color-muted-foreground)]">
-                            <span className="inline-flex items-center gap-1.5"><Briefcase size={11} />{session.project || 'General'}</span>
-                            <span className="inline-flex items-center gap-1.5"><Calendar size={11} />{session.date || 'unknown'}</span>
-                            <span className="inline-flex items-center gap-1.5"><Terminal size={11} />{formatPlain(session.tools || 0)} tools</span>
-                            <span className="inline-flex items-center gap-1.5"><ShieldCheck size={11} />{formatPlain(session.errors || 0)} errors</span>
+                          <h4 className="mt-2 truncate text-sm font-semibold">{session.title}</h4>
+                          <div className="mt-1.5 flex flex-wrap items-center gap-3 text-xs text-[var(--color-muted-foreground)]">
+                            <span className="inline-flex items-center gap-1"><Briefcase size={10} />{session.project || 'General'}</span>
+                            <span className="inline-flex items-center gap-1"><Calendar size={10} />{session.date || 'unknown'}</span>
+                            <span className="inline-flex items-center gap-1"><Terminal size={10} />{formatPlain(session.tools || 0)} tools</span>
+                            <span className="inline-flex items-center gap-1"><ShieldCheck size={10} />{formatPlain(session.errors || 0)} errors</span>
                           </div>
                         </div>
-
-                        <div className="flex items-center gap-3">
+                        <div className="flex shrink-0 items-center gap-2">
                           <div className="text-right">
-                            <div className="text-[10px] font-semibold uppercase tracking-[0.24em] text-[var(--color-muted-foreground)]">Cost</div>
-                            <div className="mt-0.5 text-base font-bold" style={{ color: 'oklch(0.65 0.22 340)' }}>{formatMoney(session.cost || 0)}</div>
+                            <p className="text-[9px] font-semibold uppercase tracking-[0.24em] text-[var(--color-muted-foreground)]">Cost</p>
+                            <p className="mt-0.5 text-sm font-bold" style={{ color: '#f9a8d4' }}>{formatMoney(session.cost || 0)}</p>
                           </div>
-                          <ChevronRight size={16} className="text-[var(--color-muted-foreground)] transition-transform group-hover:translate-x-0.5 group-hover:text-[var(--color-foreground)]" />
+                          <ChevronRight size={15} className="text-[var(--color-muted-foreground)] transition-transform group-hover:translate-x-0.5" />
                         </div>
                       </div>
                     </div>
@@ -613,49 +649,50 @@ function App() {
                 </div>
               </Card>
 
-              <div className="space-y-5">
-                <Card>
-                  <CardHeader>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <CardTitle className="text-sm">Recent activity</CardTitle>
-                        <CardDescription className="mt-1">Latest sessions in view.</CardDescription>
-                      </div>
-                      <Activity size={14} className="text-[var(--color-muted-foreground)]" />
+              <Card>
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <CardTitle className="text-sm">Recent activity</CardTitle>
+                      <CardDescription className="mt-0.5 text-xs">Latest sessions in view.</CardDescription>
                     </div>
-                  </CardHeader>
-                  <CardContent className="space-y-2">
-                    {(currentStats.recentActivity || [])
-                      .filter((session: any) => sourceFilter === 'all' || session.source === sourceFilter)
-                      .slice(0, 6)
-                      .map((session: any) => (
-                        <div key={session.id} className="rounded-xl border border-[var(--color-border)]/60 bg-[var(--color-background)]/80 p-3.5">
-                          <div className="flex items-center justify-between gap-3">
-                            <div className="min-w-0">
-                              <div className="truncate text-xs font-semibold">{session.title}</div>
-                              <div className="mt-0.5 text-[11px] text-[var(--color-muted-foreground)]">{session.project || 'General'} · {session.date || 'unknown'}</div>
-                            </div>
-                            <div className="text-right text-[11px] text-[var(--color-muted-foreground)]">
-                              <div>{formatPlain(session.tokens || 0)} tk</div>
-                              <div style={{ color: 'oklch(0.65 0.22 340)' }}>{formatMoney(session.cost || 0)}</div>
-                            </div>
+                    <Activity size={13} className="shrink-0 text-[var(--color-muted-foreground)]" />
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-2 pt-0">
+                  {(currentStats.recentActivity || [])
+                    .filter((s: any) => sourceFilter === 'all' || s.source === sourceFilter)
+                    .slice(0, 6)
+                    .map((s: any) => (
+                      <div
+                        key={s.id}
+                        className="rounded-xl border border-[var(--color-border)]/50 bg-[var(--color-background)]/80 p-3"
+                      >
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="min-w-0">
+                            <p className="truncate text-xs font-semibold">{s.title}</p>
+                            <p className="mt-0.5 text-[11px] text-[var(--color-muted-foreground)]">{s.project || 'General'} · {s.date || 'unknown'}</p>
+                          </div>
+                          <div className="shrink-0 text-right text-[11px] text-[var(--color-muted-foreground)]">
+                            <p>{formatPlain(s.tokens || 0)} tk</p>
+                            <p style={{ color: '#f9a8d4' }}>{formatMoney(s.cost || 0)}</p>
                           </div>
                         </div>
-                      ))}
-                  </CardContent>
-                </Card>
-              </div>
+                      </div>
+                    ))}
+                </CardContent>
+              </Card>
             </motion.div>
           )}
 
-          {/* Engineering tab */}
+          {/* ── Engineering tab ── */}
           {activeTab === 'engineering' && (
             <motion.div
               key="engineering"
               initial={{ opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35, ease: 'easeOut' }}
-              className="mt-6 grid gap-5 xl:grid-cols-[1fr_1fr]"
+              className="grid gap-5 lg:grid-cols-2"
             >
               <Card>
                 <CardHeader>
@@ -664,35 +701,40 @@ function App() {
                       <Badge variant="soft" className="mb-2.5">Engineering</Badge>
                       <h3 className="gradient-text text-xl font-bold">Files &amp; code churn</h3>
                     </div>
-                    <Code2 size={15} className="text-[var(--color-muted-foreground)]" />
+                    <Code2 size={14} className="shrink-0 text-[var(--color-muted-foreground)]" />
                   </div>
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent className="space-y-4 pt-0">
                   <div className="grid grid-cols-2 gap-2.5">
                     {[
-                      { label: 'Files touched', value: formatPlain(currentStats.engineering?.filesAffected || 0), color: 'oklch(0.72 0.24 290)' },
-                      { label: 'LOC written', value: formatPlain(currentStats.engineering?.totalLOC || 0), color: 'oklch(0.68 0.20 198)' },
-                      { label: 'Summary files', value: formatPlain(currentStats.engineering?.summaryFiles || 0), color: 'oklch(0.78 0.18 75)' },
-                      { label: 'Tools/session', value: (currentStats.engineering?.toolsPerSession || 0).toFixed(1), color: 'oklch(0.65 0.22 340)' },
+                      { label: 'Files touched', value: formatPlain(currentStats.engineering?.filesAffected || 0), color: '#a78bfa' },
+                      { label: 'LOC written', value: formatPlain(currentStats.engineering?.totalLOC || 0), color: '#67e8f9' },
+                      { label: 'Summary files', value: formatPlain(currentStats.engineering?.summaryFiles || 0), color: '#fcd34d' },
+                      { label: 'Tools/session', value: (currentStats.engineering?.toolsPerSession || 0).toFixed(1), color: '#f9a8d4' },
                     ].map((item) => (
-                      <div key={item.label} className="rounded-xl border border-[var(--color-border)]/60 bg-[var(--color-background)]/80 p-4"
-                        style={{ borderColor: `color-mix(in oklab, ${item.color} 18%, var(--color-border))` }}>
-                        <div className="text-[10px] font-semibold uppercase tracking-[0.24em] text-[var(--color-muted-foreground)]">{item.label}</div>
-                        <div className="mt-2.5 text-2xl font-bold" style={{ color: item.color }}>{item.value}</div>
+                      <div
+                        key={item.label}
+                        className="rounded-xl border border-[var(--color-border)]/50 bg-[var(--color-background)]/80 p-4"
+                        style={{ borderColor: `color-mix(in oklab, ${item.color} 20%, oklch(0.22 0.018 265))` }}
+                      >
+                        <p className="text-[9px] font-semibold uppercase tracking-[0.26em] text-[var(--color-muted-foreground)]">{item.label}</p>
+                        <p className="mt-2.5 text-2xl font-bold" style={{ color: item.color }}>{item.value}</p>
                       </div>
                     ))}
                   </div>
-
                   <div className="space-y-2">
                     {projectRows.map((project: any) => (
-                      <div key={project.name} className="flex items-center justify-between rounded-xl border border-[var(--color-border)]/60 bg-[var(--color-background)]/80 px-4 py-3">
+                      <div
+                        key={project.name}
+                        className="flex items-center justify-between rounded-xl border border-[var(--color-border)]/50 bg-[var(--color-background)]/80 px-4 py-3"
+                      >
                         <div className="min-w-0">
-                          <div className="truncate text-sm font-semibold">{project.name}</div>
-                          <div className="mt-0.5 text-xs text-[var(--color-muted-foreground)]">{formatPlain(project.sessions || 0)} sessions · {formatPlain(project.tools || 0)} tools</div>
+                          <p className="truncate text-sm font-semibold">{project.name}</p>
+                          <p className="mt-0.5 text-xs text-[var(--color-muted-foreground)]">{formatPlain(project.sessions || 0)} sessions · {formatPlain(project.tools || 0)} tools</p>
                         </div>
-                        <div className="text-right">
-                          <div className="text-sm font-bold" style={{ color: 'oklch(0.65 0.22 340)' }}>{formatMoney(project.cost || 0)}</div>
-                          <div className="text-xs text-[var(--color-muted-foreground)]">{formatPlain(project.totalTokens || 0)} tk</div>
+                        <div className="ml-4 shrink-0 text-right">
+                          <p className="text-sm font-bold" style={{ color: '#f9a8d4' }}>{formatMoney(project.cost || 0)}</p>
+                          <p className="text-xs text-[var(--color-muted-foreground)]">{formatPlain(project.totalTokens || 0)} tk</p>
                         </div>
                       </div>
                     ))}
@@ -707,15 +749,20 @@ function App() {
                       <Badge variant="soft" className="mb-2.5">Protocol</Badge>
                       <h3 className="gradient-text text-xl font-bold">Most used tools</h3>
                     </div>
-                    <Terminal size={15} className="text-[var(--color-muted-foreground)]" />
+                    <Terminal size={14} className="shrink-0 text-[var(--color-muted-foreground)]" />
                   </div>
                 </CardHeader>
-                <CardContent className="space-y-2.5">
+                <CardContent className="space-y-2 pt-0">
                   {toolRows.map((tool, index) => (
-                    <div key={tool.name} className="rounded-xl border border-[var(--color-border)]/60 bg-[var(--color-background)]/80 p-3.5">
-                      <div className="flex items-center justify-between gap-3 mb-2">
-                        <div className="truncate text-sm font-semibold">{tool.name}</div>
-                        <div className="text-sm font-bold" style={{ color: MODEL_COLORS[index % MODEL_COLORS.length] }}>{formatPlain(tool.count)}</div>
+                    <div
+                      key={tool.name}
+                      className="rounded-xl border border-[var(--color-border)]/50 bg-[var(--color-background)]/80 p-3.5"
+                    >
+                      <div className="mb-2 flex items-center justify-between gap-3">
+                        <p className="truncate text-sm font-semibold">{tool.name}</p>
+                        <p className="shrink-0 text-sm font-bold" style={{ color: MODEL_COLORS[index % MODEL_COLORS.length] }}>
+                          {formatPlain(tool.count)}
+                        </p>
                       </div>
                       <div className="h-1.5 overflow-hidden rounded-full bg-[var(--color-muted)]">
                         <div
@@ -723,7 +770,6 @@ function App() {
                           style={{
                             width: `${Math.max(6, (tool.count / Math.max(toolRows[0]?.count || 1, 1)) * 100)}%`,
                             backgroundColor: MODEL_COLORS[index % MODEL_COLORS.length],
-                            boxShadow: `0 0 6px ${MODEL_COLORS[index % MODEL_COLORS.length]}66`
                           }}
                         />
                       </div>
@@ -734,14 +780,14 @@ function App() {
             </motion.div>
           )}
 
-          {/* Models tab */}
+          {/* ── Models tab ── */}
           {activeTab === 'models' && (
             <motion.div
               key="models"
               initial={{ opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35, ease: 'easeOut' }}
-              className="mt-6 grid gap-5 xl:grid-cols-[1.1fr_0.9fr]"
+              className="grid gap-5 lg:grid-cols-2"
             >
               <Card>
                 <CardHeader>
@@ -750,39 +796,43 @@ function App() {
                       <Badge variant="soft" className="mb-2.5">Models</Badge>
                       <h3 className="gradient-text text-xl font-bold">Usage by model ID</h3>
                     </div>
-                    <Brain size={15} className="text-[var(--color-muted-foreground)]" />
+                    <Brain size={14} className="shrink-0 text-[var(--color-muted-foreground)]" />
                   </div>
                 </CardHeader>
-                <CardContent>
-                  <div className="overflow-hidden rounded-2xl border border-[var(--color-border)]/60">
-                    <div className="grid grid-cols-[1.8fr_0.6fr_0.5fr_0.6fr] border-b border-[var(--color-border)]/60 bg-[var(--color-muted)]/60 px-4 py-3 text-[10px] font-semibold uppercase tracking-[0.28em] text-[var(--color-muted-foreground)]">
+                <CardContent className="pt-0">
+                  <div className="overflow-hidden rounded-xl border border-[var(--color-border)]/50">
+                    <div className="grid grid-cols-[1fr_auto_auto_auto] gap-x-4 border-b border-[var(--color-border)]/50 bg-[var(--color-muted)]/50 px-4 py-3 text-[9px] font-semibold uppercase tracking-[0.3em] text-[var(--color-muted-foreground)]">
                       <div>Model</div>
                       <div>Source</div>
                       <div className="text-right">Sessions</div>
                       <div className="text-right">Tokens</div>
                     </div>
-                    <div className="divide-y divide-[var(--color-border)]/50">
+                    <div className="divide-y divide-[var(--color-border)]/40">
                       {modelRows.map((model: any, index: number) => (
-                        <div key={model.name} className="grid grid-cols-[1.8fr_0.6fr_0.5fr_0.6fr] items-center bg-[var(--color-background)]/80 px-4 py-3.5 transition hover:bg-[var(--color-muted)]/30">
-                          <div className="min-w-0 pr-4">
-                            <div className="truncate text-sm font-semibold">{model.name}</div>
-                            <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-[var(--color-muted)]">
+                        <div
+                          key={model.name}
+                          className="grid grid-cols-[1fr_auto_auto_auto] gap-x-4 items-center bg-[var(--color-background)]/80 px-4 py-3 transition-colors hover:bg-[var(--color-muted)]/30"
+                        >
+                          <div className="min-w-0">
+                            <p className="truncate text-xs font-semibold">{model.name}</p>
+                            <div className="mt-1.5 h-1 w-full overflow-hidden rounded-full bg-[var(--color-muted)]">
                               <div
                                 className="h-full rounded-full"
                                 style={{
                                   width: `${Math.max(8, (model.tokens / Math.max(modelRows[0]?.tokens || 1, 1)) * 100)}%`,
                                   backgroundColor: MODEL_COLORS[index % MODEL_COLORS.length],
-                                  boxShadow: `0 0 6px ${MODEL_COLORS[index % MODEL_COLORS.length]}55`
                                 }}
                               />
                             </div>
                           </div>
-                          <div className="text-[11px] font-medium uppercase tracking-[0.2em]"
-                            style={{ color: SOURCE_COLORS[model.source as keyof typeof SOURCE_COLORS] || 'var(--color-muted-foreground)' }}>
+                          <p
+                            className="shrink-0 text-[10px] font-medium uppercase tracking-[0.2em]"
+                            style={{ color: SOURCE_COLORS[model.source as keyof typeof SOURCE_COLORS] || 'var(--color-muted-foreground)' }}
+                          >
                             {model.source}
-                          </div>
-                          <div className="text-right text-sm font-semibold">{formatPlain(model.sessions || 0)}</div>
-                          <div className="text-right text-sm font-semibold">{formatPlain(model.tokens || 0)}</div>
+                          </p>
+                          <p className="shrink-0 text-right text-xs font-semibold">{formatPlain(model.sessions || 0)}</p>
+                          <p className="shrink-0 text-right text-xs font-semibold">{formatPlain(model.tokens || 0)}</p>
                         </div>
                       ))}
                     </div>
@@ -797,27 +847,26 @@ function App() {
                       <Badge variant="soft" className="mb-2.5">Providers</Badge>
                       <h3 className="gradient-text text-xl font-bold">Tokens, spend &amp; errors</h3>
                     </div>
-                    <LineChart size={15} className="text-[var(--color-muted-foreground)]" />
+                    <LineChart size={14} className="shrink-0 text-[var(--color-muted-foreground)]" />
                   </div>
                 </CardHeader>
-                <CardContent>
-                  <div className="h-[320px]">
+                <CardContent className="pt-0">
+                  <div className="h-72">
                     <ResponsiveContainer width="100%" height="100%">
-                      <BarChart data={providers} barCategoryGap="30%">
-                        <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" opacity={0.28} vertical={false} />
+                      <BarChart data={providers} barCategoryGap="30%" margin={{ top: 4, right: 4, bottom: 0, left: 0 }}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" opacity={0.25} vertical={false} />
                         <XAxis dataKey="label" stroke="var(--color-muted-foreground)" tickLine={false} axisLine={false} fontSize={11} />
                         <YAxis hide />
                         <Tooltip
                           contentStyle={{
-                            backgroundColor: 'oklch(0.12 0.015 265 / 0.95)',
-                            border: '1px solid var(--color-border)',
-                            borderRadius: '14px',
-                            color: 'var(--color-foreground)',
-                            backdropFilter: 'blur(12px)',
-                            fontSize: '12px'
+                            backgroundColor: 'oklch(0.11 0.015 265 / 0.96)',
+                            border: '1px solid oklch(0.22 0.018 265)',
+                            borderRadius: '12px',
+                            color: 'oklch(0.97 0.008 255)',
+                            fontSize: '12px',
                           }}
                         />
-                        <Bar dataKey="cost" radius={[10, 10, 0, 0]}>
+                        <Bar dataKey="cost" radius={[8, 8, 0, 0]}>
                           {providers.map((entry, index) => (
                             <Cell key={`cell-${index}`} fill={entry.color} />
                           ))}
@@ -829,28 +878,31 @@ function App() {
               </Card>
             </motion.div>
           )}
+
         </main>
 
-        {/* Footer */}
-        <footer className="mt-4 overflow-hidden rounded-2xl border border-[var(--color-border)]/60 bg-[color-mix(in_oklab,var(--color-card)_75%,transparent)] px-6 py-4"
-          style={{ backdropFilter: 'blur(16px)' }}>
-          <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between text-xs text-[var(--color-muted-foreground)]">
-            <div className="inline-flex items-center gap-3">
-              <div className="flex h-8 w-8 items-center justify-center rounded-xl"
+        {/* ── Footer ── */}
+        <footer className="mt-4 rounded-2xl border border-[var(--color-border)]/50 bg-[color-mix(in_oklab,var(--color-card)_72%,transparent)] px-5 py-3.5">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between text-xs text-[var(--color-muted-foreground)]">
+            <div className="flex items-center gap-3">
+              <div
+                className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg"
                 style={{
-                  background: 'linear-gradient(135deg, oklch(0.72 0.24 290 / 0.2), oklch(0.68 0.20 198 / 0.12))',
-                  border: '1px solid oklch(0.72 0.24 290 / 0.25)'
-                }}>
-                <Cpu size={14} style={{ color: 'oklch(0.80 0.18 290)' }} />
+                  background: 'linear-gradient(135deg, oklch(0.72 0.24 290 / 0.18), oklch(0.68 0.20 198 / 0.1))',
+                  border: '1px solid oklch(0.72 0.24 290 / 0.22)',
+                }}
+              >
+                <Cpu size={13} style={{ color: 'oklch(0.78 0.18 290)' }} />
               </div>
               <div>
-                <div className="font-semibold text-[var(--color-foreground)]">Antigravity Token Analyzer</div>
-                <div className="text-[11px]">Local-only dashboard for Antigravity, OpenCode &amp; imported chat stats.</div>
+                <p className="font-semibold text-[var(--color-foreground)] text-xs">Antigravity Token Analyzer</p>
+                <p className="text-[10px]">Local-only dashboard for Antigravity, OpenCode &amp; imported chat stats.</p>
               </div>
             </div>
-            <div className="uppercase tracking-[0.24em] text-[11px]">{new Date().getFullYear()} · Paranjay</div>
+            <p className="uppercase tracking-[0.24em] text-[10px]">{new Date().getFullYear()} · Paranjay</p>
           </div>
         </footer>
+
       </div>
     </div>
   );
